@@ -40,7 +40,7 @@ class Migration_Init extends \app\Migration_Template_MySQL
 					`ipaddress` :ipaddress,
 					`passwordverifier` :secure_hash,
 					`passwordsalt` :secure_hash,
-					`passworddate` :date_required,
+					`passworddate` :datetime_required,
 					`datetime`     :timestamp,
 					
 					PRIMARY KEY (`id`)
