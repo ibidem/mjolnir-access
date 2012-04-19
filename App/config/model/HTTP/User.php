@@ -2,6 +2,10 @@
 	(
 		'signup' => array
 			(
-				'role' => null
-			)
+				'role' => 1
+			),
+		'dependencies' => array
+			(
+			
+			),
 	);

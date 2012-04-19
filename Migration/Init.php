@@ -70,15 +70,17 @@ class Migration_Init extends \app\Migration_Template_MySQL
 				"
 			);
 		
-		\app\SQL::insert
+		\app\SQL::prepare
 			(
 				'ibidem/access:migration_init_simplerole',
-				array
-				(
-					'title' => 'member',
-				),
-				\app\Model_HTTP_User::roles_table()
-			);
+				'
+					INSERT INTO `'.\app\Model_HTTP_User::roles_table().'`
+						(title) VALUES (:title)
+				',
+				'mysql'
+			)
+			->set(':title', 'member')
+			->execute();
 		
 		// return a callback to binding
 		return $this->bind_callback();

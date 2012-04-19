@@ -47,13 +47,13 @@ class Model_HTTP_User extends \app\Model_Factory
 	public static function validator(array $fields) 
 	{
 		$user_config = \app\CFS::config('model/User');
-		return \app\Validator::instance()
-			->fields($fields)
+		
+		return \app\Validator::instance($fields)
 			->rule('nickname', 'not_empty')
-			->rule('nickname', 'max_length', array(':value', $user_config['fields']['nickname']['maxlength']))
-			->rule('nickname', __NAMESPACE__.'\Model_User::valid_uniquenickname')
+			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
+			->rule('nickname', \app\Model_HTTP_User::valid_uniquenickname)
 			->rule('password', 'not_empty')
-			->rule('password', 'min_length', array(':value', $user_config['fields']['password']['minlength']));
+			->rule('password', 'min_length', $user_config['fields']['password']['minlength']);
 	}	
 	
 	/**
@@ -92,23 +92,26 @@ class Model_HTTP_User extends \app\Model_Factory
 	 */
 	public static function dependencies($id)
 	{
-		$user_config = \app\CFS::config('model/User');
+		$user_config = \app\CFS::config('model/HTTP/User');
 		
 		foreach ($user_config['dependencies'] as $dependency)
 		{
 			$dependency::inject($id);
 		}
 
-		\app\SQL::insert
+		\app\SQL::prepare
 			(
 				'ibidem/access:dependencies_role_assoc',
-				array
-				(
-					'user' => $id,
-					'role' => $user_config['signup']['role'],
-				),
-				static::user_role_table()
-			);
+				'
+					INSERT INTO `'.static::user_role_table().'`
+						(user, role)
+					VALUES
+						(:user, :role)
+				'
+			)
+			->bindInt(':user', $id)
+			->bindInt(':role', $user_config['signup']['role'])
+			->execute();
 	}
 	
 	/**
@@ -117,7 +120,7 @@ class Model_HTTP_User extends \app\Model_Factory
 	public static function assemble(array $fields) 
 	{
 		// load configuration
-		$security = \app\CFS::config('security');
+		$security = \app\CFS::config('ibidem/security');
 		
 		// generate password salt and hash
 		$passwordsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
@@ -139,27 +142,33 @@ class Model_HTTP_User extends \app\Model_Factory
 					)
 				);
 
-			list($user_id) = \app\SQL::insert
+			\app\SQL::prepare
 				(
 					'ibidem/access:assemble',
-					array
-					(
-						'nickname' => HTML::chars($fields['nickname']),
-						'ipaddress' => $encrypted_ipaddress,
-						'passwordverifier' => $passwordverifier,
-						'passworddate' => \date('c'), // ISO 8601 date
-						'passwordsalt' => $passwordsalt,
-					),
-					static::table()
-				);
+					'
+						INSERT INTO `'.static::table().'`
+							(nickname, ipaddress, passwordverifier, passworddate, passwordsalt)
+						VALUES
+							(:nickname, :ipaddress, :passwordverifier, :passworddate, :passwordsalt)
+					',
+					'mysql'
+				)
+				->set(':nickname', \htmlspecialchars($fields['nickname']))
+				->set(':ipaddress', $encrypted_ipaddress)
+				->set(':passwordverifier', $passwordverifier)
+				->set(':passworddate', \date('c'))
+				->set(':passwordsalt', $passwordsalt)
+				->execute();
+			
+			$user_id = \app\SQL::last_inserted_id();
 
 			static::dependencies($user_id);
 			
-			SQL::commit();
+			\app\SQL::commit();
 		} 
 		catch (\Exception $exception)
 		{
-			SQL::rollback();
+			\app\SQL::rollback();
 			throw $exception;
 		}
 	}
