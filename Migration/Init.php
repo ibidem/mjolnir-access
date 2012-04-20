@@ -35,7 +35,7 @@ class Migration_Init extends \app\Migration_Template_MySQL
 				\app\Model_HTTP_User::table(), 
 				"
 					`id`        :key_primary,
-					`email`     :email,
+				--	`email`     :email,
 					`nickname`  :username,
 					`ipaddress` :ipaddress,
 					`passwordverifier` :secure_hash,
@@ -85,7 +85,6 @@ class Migration_Init extends \app\Migration_Template_MySQL
 		// return a callback to binding
 		return $this->bind_callback();
 	}
-	
 	
 	/**
 	 * Tear down all tables

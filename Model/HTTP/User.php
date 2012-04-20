@@ -48,10 +48,10 @@ class Model_HTTP_User extends \app\Model_Factory
 	{
 		$user_config = \app\CFS::config('model/User');
 		
-		return \app\Validator::instance($fields)
+		return \app\Validator::instance($user_config['errors'], $fields)
 			->rule('nickname', 'not_empty')
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
-			->rule('nickname', \app\Model_HTTP_User::valid_uniquenickname)
+			->rule('nickname', '\app\Model_HTTP_User::valid_uniquenickname')
 			->rule('password', 'not_empty')
 			->rule('password', 'min_length', $user_config['fields']['password']['minlength']);
 	}	
@@ -92,7 +92,7 @@ class Model_HTTP_User extends \app\Model_Factory
 	 */
 	public static function dependencies($id)
 	{
-		$user_config = \app\CFS::config('model/HTTP/User');
+		$user_config = \app\CFS::config('model/User');
 		
 		foreach ($user_config['dependencies'] as $dependency)
 		{
