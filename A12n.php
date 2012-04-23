@@ -8,6 +8,7 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class A12n extends \app\Instantiatable
+	implements \ibidem\types\Auth
 {
 	/**
 	 * @return int 
@@ -25,6 +26,37 @@ class A12n extends \app\Instantiatable
 	{
 		// @todo \ibidem\access\A12n::role
 		return 'member';
+	}
+	
+	public function current()
+	{
+		static $current = null;
+		
+		if (($id = $this->id()) === null)
+		{
+			return null;
+		}
+		else
+		{	
+			if ($current === null)
+			{
+				$current = \app\SQL::prepare
+					(
+						'ibidem\access\a12n:current',
+						'
+							SELECT * 
+							  FROM `'.\app\Model_HTTP_User::table().'`
+							 WHERE id = :id
+						',
+						'mysql'
+					)
+					->setInt(':id', $id)
+					->execute()
+					->fetch_array();
+			}
+			
+			return $current;
+		}
 	}
 	
 	/**
