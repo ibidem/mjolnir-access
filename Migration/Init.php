@@ -70,17 +70,32 @@ class Migration_Init extends \app\Migration_Template_MySQL
 				"
 			);
 		
-		\app\SQL::prepare
-			(
-				'ibidem/access:migration_init_simplerole',
-				'
-					INSERT INTO `'.\app\Model_HTTP_User::roles_table().'`
-						(title) VALUES (:title)
-				',
-				'mysql'
-			)
-			->set(':title', 'member')
-			->execute();
+		$access_config = \app\CFS::config('ibidem/access');
+		$roles = $access_config['roles'];
+		if ( ! empty($roles))
+		{
+			$id = null;
+			$title = null;
+			$statement = \app\SQL::prepare
+				(
+					'ibidem/access:migration_init_simplerole',
+					'
+						INSERT INTO `'.\app\Model_HTTP_User::roles_table().'`
+							(id, title) VALUES (:id, :title)
+					',
+					'mysql'
+				)
+				->bindInt(':id', $id)
+				->bind(':title', $title);
+			
+			foreach ($roles as $desired_title => $desired_id)
+			{
+			
+				$title = $desired_title;
+				$id = $desired_id;
+				$statement->execute();
+			}
+		}
 		
 		// return a callback to binding
 		return $this->bind_callback();

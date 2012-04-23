@@ -76,6 +76,11 @@ class Layer_Access extends \app\Layer
 			
 			// continue execution
 			parent::execute();
+			
+			if ($this->layer)
+			{
+				$this->contents($this->layer->get_contents());
+			}
 		}
 		catch (\Exception $e)
 		{

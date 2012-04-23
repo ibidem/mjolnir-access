@@ -1,6 +1,6 @@
 <?php return array
 	(
-		'\ibidem\access\A12n' => array
+		'\ibidem\access\a12n' => array
 			(
 				'route' => \app\Route_Pattern::instance()
 					->standard
@@ -14,7 +14,9 @@
 				'enabled' => true,
 			// MVC
 				'controller' => '\ibidem\access\Controller_A12n',
-				'action' => 'index',
-				'target' => null, # theme targeting
+				'action'  => 'action_index',
+				'target'  => null, # theme targeting
+				'control' => '\ibidem\access\Controller_A12n',
+				'context' => '\ibidem\access\Model_HTTP_User',
 			),
 	);

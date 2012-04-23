@@ -3,7 +3,7 @@
 <? $access_relay = \app\CFS::config('ibidem/relays') ?>
 
 <?= $form = \app\Form::instance()
-	->action($access_relay['\ibidem\access\A12n']['route']->url(array('action' => 'signin')))
+	->action($access_relay['\ibidem\access\a12n']['route']->url(array('action' => 'signin')))
 	->method('POST')
 	->field_template('<dt>:name</dt><dd>:field</dd>')
 	->secure()
