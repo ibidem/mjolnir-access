@@ -130,17 +130,7 @@ class Model_DB_User extends \app\Model_Factory
 		\app\SQL::begin(); # begin transaction
 		try
 		{
-			$encrypted_ipaddress = \base64_encode
-				(
-					\mcrypt_encrypt
-					(
-						MCRYPT_RIJNDAEL_256,                    # cipher
-						\md5($security['keys']['apikey']),      # key
-						\app\Layer_HTTP::detect_ip(),           # data
-						MCRYPT_MODE_CBC,                        # mode
-						\md5(\md5($security['keys']['apikey'])) # iv
-					)
-				);
+			$ipaddress = \app\Layer_HTTP::detect_ip();
 
 			\app\SQL::prepare
 				(
@@ -154,7 +144,7 @@ class Model_DB_User extends \app\Model_Factory
 					'mysql'
 				)
 				->set(':nickname', \htmlspecialchars($fields['nickname']))
-				->set(':ipaddress', $encrypted_ipaddress)
+				->set(':ipaddress', $ipaddress)
 				->set(':passwordverifier', $passwordverifier)
 				->set(':passworddate', \date('c'))
 				->set(':passwordsalt', $passwordsalt)

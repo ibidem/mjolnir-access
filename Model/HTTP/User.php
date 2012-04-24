@@ -46,128 +46,86 @@ class Model_HTTP_User extends \app\Model_DB_User
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
 		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
 		// update
-		if (\strpos($fields['identification'], '@') === false)
-		{
-			\app\SQL::prepare	
-				(
-					'ibidem/access:remcompute_password',
-					'
-						UPDATE '.static::table().'
-						   SET passwordverifier = :passwordverifier
-						   SET passwordsalt = :passwordsalt
-						   SET passworddate = :passworddate
-						   SET ipaddress = :ipaddress
-						 WHERE nickname = :nickname
-					',
-					'mysql'
-				)
-				->bind(':passwordverifier', $passwordverifier)
-				->bind(':passwordsalt', $passwordsalt)
-				->bind(':passworddate', \time())
-				->bind(':nickname', $fields['identification'])
-				->bind(':ipaddress', $fields['identification'])
-				->execute();
-		}
-		else # email identification
-		{
-			$encrypted_email = \base64_encode
-				(
-					\mcrypt_encrypt
-					(
-						MCRYPT_RIJNDAEL_256,                    # cipher
-						\md5($security['keys']['apikey']),      # key
-						$fields['identification'],              # data
-						MCRYPT_MODE_CBC,                        # mode
-						\md5(\md5($security['keys']['apikey'])) # iv
-					)
-				);
-			
-			\app\SQL::prepare
-				(
-					'ibidem/access:remcompute_password_email',
-					'
-						UPDATE '.static::table().'
-						   SET passwordverifier = :passwordverifier
-						   SET passwordsalt = :passwordsalt
-						   SET passworddate = :passworddate
-						   SET ipaddress = :ipaddress
-						 WHERE email = :email
-					',
-					'mysql'
-				)
-				->bind(':passwordverifier', $passwordverifier)
-				->bind(':passwordsalt', $passwordsalt)
-				->bind(':passworddate', \time())
-				->bind(':email', $encrypted_email)
-				->bind(':ipaddress', $fields['identification'])
-				->execute();
-		}
+		\app\SQL::prepare	
+			(
+				'ibidem/access:remcompute_password',
+				'
+					UPDATE '.static::table().'
+					   SET passwordverifier = :passwordverifier
+					   SET passwordsalt = :passwordsalt
+					   SET passworddate = :passworddate
+					   SET ipaddress = :ipaddress
+					 WHERE nickname = :nickname
+				',
+				'mysql'
+			)
+			->bind(':passwordverifier', $passwordverifier)
+			->bind(':passwordsalt', $passwordsalt)
+			->bind(':passworddate', \time())
+			->bind(':nickname', $fields['nickname'])
+			->bind(':ipaddress', $fields['nickname'])
+			->execute();
 	}
 	
 	/**
 	 * @param array fields
 	 * @return boolean 
 	 */
-	public static function signin_check(array $fields)
+	public static function signin_check(array $fields = null)
 	{
+		// got fields?
+		if ( ! $fields)
+		{
+			return null;
+		}
+		
+		\var_dump($fields);
+		
+		// got required fields
+		if ( ! isset($fields['nickname']) || ! isset($fields['password']))
+		{
+			return null;
+		}
+		
 		// load configuration
 		$security = \app\CFS::config('ibidem/security');
 		
-		if (\strpos($fields['identification'], '@') === false)
-		{
-			$user = \app\SQL::prepare
-				('
+		$user = \app\SQL::prepare
+			(
+				'ibidem/access:signin_check',
+				'
 					SELECT *
-					  FROM '.static::table().'
-					 WHERE nickname = :nickname
-				')
-				->bind(':nickname', $fields['identification'])
-				->execute()
-				->fetch_array();
-			
-			if ( ! $user)
-			{
-				return null;
-			}
-			
-			$passwordsalt = $user['passwordsalt'];
-		}
-		else # email identification
-		{
-			// encrypt email
-			$encrypted_email = \base64_encode
-				(
-					\mcrypt_encrypt
-					(
-						MCRYPT_RIJNDAEL_256,            # cipher
-						\md5($fields['password']),      # key
-						$fields['identification'],      # data
-						MCRYPT_MODE_CBC,                # mode
-						\md5(\md5($fields['password'])) # iv
-					)
-				);
-			
-			$user = SQL::select
-				('
-					SELECT *
-					  FROM '.static::table().'
-					 WHERE email = :email
-				')
-				->bind(':email', $encrypted_email)
-				->execute()
-				->fetch_array();
+					FROM '.static::table().'
+					WHERE nickname = :nickname
+				',
+				'mysql'
+			)
+			->bind(':nickname', $fields['nickname'])
+			->execute()
+			->fetch_array();
 
-			if ( ! $user)
-			{
-				return null;
-			}
-			
-			$passwordsalt = $user['passwordsalt'];
+		if ( ! $user)
+		{
+			return null;
 		}
+
+		$passwordsalt = $user['passwordsalt'];
 		
 		// generate password salt and hash
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
-		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
+		$apilocked_password = \hash_hmac
+			(
+				$security['hash']['algorythm'], 
+				$fields['password'], 
+				$security['keys']['apikey'], 
+				true
+			);
+		$passwordverifier = \hash_hmac
+			(
+				$security['hash']['algorythm'], 
+				$apilocked_password, 
+				$passwordsalt, 
+				true
+			);
 		
 		// verify
 		if ($passwordverifier !== $user['passwordverifier'])

@@ -11,7 +11,7 @@
 								'action' => '(signin|signout|signup)'
 							)
 						),
-				'enabled' => true,
+				'enabled' => false,
 			// MVC
 				'controller' => '\ibidem\access\Controller_A12n',
 				'action'  => 'action_index',

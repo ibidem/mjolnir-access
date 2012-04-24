@@ -70,6 +70,13 @@ class Layer_Access extends \app\Layer
 			
 			if ( ! \app\Access::can($this->target, $context))
 			{
+				$http_layer = \app\Layer::find('http');
+				if ($http_layer)
+				{
+					// redirect to the access route
+					$http_layer->redirect('\ibidem\access\a12n', array('action' => 'signin'));
+				}
+				// else; or if the redirect fails 
 				throw new \app\Exception_NotAllowed
 					('Acceess denied.');
 			}

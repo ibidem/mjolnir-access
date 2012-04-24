@@ -16,7 +16,7 @@ class A12n extends \app\Instantiatable
 	public function id()
 	{
 		// @todo \ibidem\access\A12n::id
-		return 1234;
+		return null;
 	}
 	
 	/**
@@ -25,7 +25,7 @@ class A12n extends \app\Instantiatable
 	public function role()
 	{
 		// @todo \ibidem\access\A12n::role
-		return 'member';
+		return null;
 	}
 	
 	public function current()
@@ -36,7 +36,7 @@ class A12n extends \app\Instantiatable
 		{
 			return null;
 		}
-		else
+		else # actual id provided
 		{	
 			if ($current === null)
 			{
