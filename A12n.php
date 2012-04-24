@@ -13,7 +13,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @var int
 	 */
-	private $id;
+	private $user;
 	
 	/**
 	 * @var string 
@@ -31,7 +31,7 @@ class A12n extends \app\Instantiatable
 		{
 			$instance = parent::instance();
 			// check session
-			$instance->id = \app\Session::get('id', null);
+			$instance->user = \app\Session::get('user', null);
 			$instance->role = \app\Session::get('role', static::guest());
 			// @todo encrypt, sign and timestamp session data
 		}
@@ -44,7 +44,7 @@ class A12n extends \app\Instantiatable
 	 */
 	public function id()
 	{
-		return $this->id;
+		return $this->user;
 	}
 	
 	/**
@@ -62,7 +62,7 @@ class A12n extends \app\Instantiatable
 	{
 		static $current = null;
 		
-		if (($id = $this->id()) === null)
+		if ($this->user === null)
 		{
 			return null;
 		}
@@ -80,7 +80,7 @@ class A12n extends \app\Instantiatable
 						',
 						'mysql'
 					)
-					->setInt(':id', $id)
+					->setInt(':id', $this->user)
 					->execute()
 					->fetch_array();
 			}
