@@ -11,23 +11,53 @@ class A12n extends \app\Instantiatable
 	implements \ibidem\types\Auth
 {
 	/**
+	 * @var int
+	 */
+	private $id;
+	
+	/**
+	 * @var string 
+	 */
+	private $role;
+	
+	/**
+	 * @return \ibidem\access\A12n
+	 */
+	public static function instance()
+	{
+		static $instance = null;
+		
+		if ($instance === null)
+		{
+			$instance = parent::instance();
+			// check session
+			$instance->id = \app\Session::get('id', null);
+			$instance->role = \app\Session::get('role', static::guest());
+			// @todo encrypt, sign and timestamp session data
+		}
+		
+		return $instance;
+	}
+	
+	/**
 	 * @return int 
 	 */
 	public function id()
 	{
-		// @todo \ibidem\access\A12n::id
-		return null;
+		return $this->id;
 	}
 	
 	/**
 	 * @return string 
 	 */
 	public function role()
-	{
-		// @todo \ibidem\access\A12n::role
-		return null;
+	{		
+		return $this->role;
 	}
 	
+	/**
+	 * @return array|null user information
+	 */
 	public function current()
 	{
 		static $current = null;

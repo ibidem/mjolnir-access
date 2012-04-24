@@ -35,7 +35,6 @@ class Migration_Init extends \app\Migration_Template_MySQL
 				\app\Model_HTTP_User::table(), 
 				"
 					`id`        :key_primary,
-				--	`email`     :email,
 					`nickname`  :username,
 					`ipaddress` :ipaddress,
 					`passwordverifier` :secure_hash,

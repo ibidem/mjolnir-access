@@ -79,8 +79,6 @@ class Model_HTTP_User extends \app\Model_DB_User
 			return null;
 		}
 		
-		\var_dump($fields);
-		
 		// got required fields
 		if ( ! isset($fields['nickname']) || ! isset($fields['password']))
 		{
@@ -135,6 +133,31 @@ class Model_HTTP_User extends \app\Model_DB_User
 		
 		// all tests passed
 		return $user['id'];
+	}
+	
+	/**
+	 * @param int id
+	 * @return string
+	 */
+	public static function user_role($id)
+	{
+		$result = \app\SQL::prepare
+			(
+				'\ibidem\access\a12n',
+				'
+					SELECT roles.title role
+					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
+						   `'.\app\Model_DB_User::user_role_table().'` AS assoc
+					 WHERE roles.id = assoc.role
+					   AND assoc.user = :user
+				',
+				'mysql'
+			)
+			->bindInt(':user', $id)
+			->execute()
+			->fetch_array();
+		
+		return $result['role'];
 	}
 
 } # class
