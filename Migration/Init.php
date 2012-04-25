@@ -61,7 +61,7 @@ class Migration_Init extends \app\Migration_Template_MySQL
 			(
 				\app\Model_HTTP_User::user_role_table(),
 				"
-					`user` :key_foreign DEFAULT NULL,
+					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
 					
 					KEY `user` (`user`,`role`),

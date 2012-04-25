@@ -7,20 +7,11 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_DB_User extends \app\Model_Factory
+class Model_DB_User extends \app\Model_SQL_Factory
 {
 	protected static $table = 'users';
 	protected static $roles_table = 'roles';
-	protected static $user_role_table = 'user_role';	
-	
-	/**
-	 * @return string 
-	 */
-	public static function table()
-	{
-		$database_config = \app\CFS::config('ibidem\database');
-		return $database_config['table_prefix'].static::$table;
-	}
+	protected static $user_role_table = 'user_role';
 	
 	/**
 	 * @return string 
@@ -89,15 +80,11 @@ class Model_DB_User extends \app\Model_Factory
 	
 	/**
 	 * @param string user id 
+	 * @param array config
 	 */
-	public static function dependencies($id)
+	public static function dependencies($id, array $config = null)
 	{
-		$user_config = \app\CFS::config('model/User');
-		
-		foreach ($user_config['dependencies'] as $dependency)
-		{
-			$dependency::inject($id);
-		}
+		parent::dependencies($id, $config);
 
 		\app\SQL::prepare
 			(
@@ -110,7 +97,7 @@ class Model_DB_User extends \app\Model_Factory
 				'
 			)
 			->bindInt(':user', $id)
-			->bindInt(':role', $user_config['signup']['role'])
+			->bindInt(':role', $config['signup']['role'])
 			->execute();
 	}
 	
@@ -152,7 +139,7 @@ class Model_DB_User extends \app\Model_Factory
 			
 			$user_id = \app\SQL::last_inserted_id();
 
-			static::dependencies($user_id);
+			static::dependencies($user_id, \app\CFS::config('model/User'));
 			
 			\app\SQL::commit();
 		} 
