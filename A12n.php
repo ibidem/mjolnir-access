@@ -42,7 +42,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @return int 
 	 */
-	public function id()
+	public function user()
 	{
 		return $this->user;
 	}
