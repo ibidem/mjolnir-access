@@ -63,7 +63,7 @@ class Layer_Access extends \app\Layer
 		{
 			// build context
 			$context = $this->relay['route']->get_context();
-			if (isset($this->relay['context']))
+			if (isset($this->relay['context']) && \is_array($this->relay['context']))
 			{
 				$context = \array_merge($context, $this->relay['context']);
 			}
@@ -94,16 +94,19 @@ class Layer_Access extends \app\Layer
 			$this->exception($e);
 		}
 	}
-	
+		
 	/**
-	 * @param array relay
-	 * @return \ibidem\access\Layer_Access $this
+	 * @param array relay configuration
+	 * @return \ibidem\base\Layer_MVC $this
 	 */
-	public function relay($relay)
+	public function relay_config(array $relay)
 	{
+		// [!!] don't do actual configuration here; do it in the execution loop;
+		// not only is it potentially unused configuration but when this is 
+		// called there is also no gurantee the Layer itself is configured
 		$this->relay = $relay;
 		return $this;
-	}
+	}	
 	
 	/**
 	 * @param string context

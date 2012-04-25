@@ -36,8 +36,8 @@ class Controller_A12n extends \app\Controller_HTTP
 			if ($user !== null)
 			{
 				// logged in
-				\app\Session::set('user', $user);
-				\app\Session::set('role', \app\Model_HTTP_User::user_role($user));
+				\app\A12n::signin($user, \app\Model_HTTP_User::user_role($user));
+				
 				// redirect
 				$base_config = \app\CFS::config('ibidem/base');
 				if (isset($base_config['frontend']))
@@ -64,6 +64,12 @@ class Controller_A12n extends \app\Controller_HTTP
 			throw new \app\Exception_NotAllowed
 				('Forbidden request method.');
 		}
+	}
+	
+	public function action_signout()
+	{
+		\app\A12n::signout();
+		\app\Layer_HTTP::redirect('\ibidem\access\a12n', array('action' => 'signin'));
 	}
 
 } # class

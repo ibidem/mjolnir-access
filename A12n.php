@@ -100,5 +100,16 @@ class A12n extends \app\Instantiatable
 	{
 		return '\ibidem\access\A12n::guest';
 	}
+	
+	public static function signout()
+	{
+		 \app\Session::destroy();
+	}
+	
+	public static function signin($user, $role)
+	{
+		\app\Session::set('user', $user);
+		\app\Session::set('role', $role);
+	}
 
 } # class

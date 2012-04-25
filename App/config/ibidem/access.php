@@ -20,6 +20,7 @@
 				 * exceptions. If there is an exception for an alias the 
 				 * exception will not apply for the permission category.
 				 */
+			
 				// examples
 				# 'member' => array(\app\A12n::guest()),
 				# 'admin' => array(\app\A12n::guest(), 'member'),
