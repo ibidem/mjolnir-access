@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Migration_Init extends \app\Migration_Template_MySQL
+class Migration_User extends \app\Migration_Template_MySQL
 {
 	/**
 	 * Perform post migration binding operations between tables. 
