@@ -115,14 +115,14 @@ class Model_HTTP_User extends \app\Model_DB_User
 				$security['hash']['algorythm'], 
 				$fields['password'], 
 				$security['keys']['apikey'], 
-				true
+				false
 			);
 		$passwordverifier = \hash_hmac
 			(
 				$security['hash']['algorythm'], 
 				$apilocked_password, 
 				$passwordsalt, 
-				true
+				false
 			);
 		
 		// verify

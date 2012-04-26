@@ -110,9 +110,9 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		$security = \app\CFS::config('ibidem/security');
 		
 		// generate password salt and hash
-		$passwordsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
-		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
+		$passwordsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], false);
+		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, false);
 
 		\app\SQL::begin(); # begin transaction
 		try
