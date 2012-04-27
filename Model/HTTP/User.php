@@ -46,7 +46,7 @@ class Model_HTTP_User extends \app\Model_DB_User
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
 		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
 		// update
-		\app\SQL::prepare	
+		\app\SQL::prepare
 			(
 				'ibidem/access:remcompute_password',
 				'

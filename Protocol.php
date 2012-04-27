@@ -25,6 +25,11 @@ class Protocol extends \app\Instantiatable
 	private $parameters;
 	
 	/**
+	 * @var boolean 
+	 */
+	private $all_parameters = false;
+	
+	/**
 	 * null is a control value. If the attribute is set to null this means there
 	 * is no self constraint in action. Otherwise, if the value is a boolean 
 	 * then if the value is true the permission will only apply if the owner in
@@ -112,6 +117,15 @@ class Protocol extends \app\Instantiatable
 	}
 	
 	/**
+	 * @return \ibidem\access\Protocol $this
+	 */
+	public function all_parameters()
+	{
+		$this->all_parameters = true;
+		return $this;
+	}
+	
+	/**
 	 * @param string relay
 	 * @param array context
 	 * @param string attribute 
@@ -169,6 +183,14 @@ class Protocol extends \app\Instantiatable
 							return false;
 						}
 					}
+				}
+				else if ( ! empty($context) && ! $this->all_parameters)
+				{
+					// context requires paramters but rights only give access
+					// to non-paramters; the resolution is that it's not allowed
+					// unless the all_parameters flag was passed when creating 
+					// the protocol
+					return false;
 				}
 
 				// every paramter matched to at least one value. Now we check if 

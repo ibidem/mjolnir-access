@@ -5,7 +5,8 @@
 				\app\A12n::guest() => array
 					(
 						\app\Protocol::instance()
-							->relays(array('\ibidem\access\a12n')),
+							->relays(array('\ibidem\access\a12n'))
+							->all_parameters(),
 					),
 			),
 		'blacklist' => array # disallow! (no matter what)
