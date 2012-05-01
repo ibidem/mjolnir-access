@@ -84,7 +84,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 					',
 					'mysql'
 				)
-				->bindInt(':id', $id)
+				->bind_int(':id', $id)
 				->bind(':title', $title);
 			
 			foreach ($roles as $desired_title => $desired_id)

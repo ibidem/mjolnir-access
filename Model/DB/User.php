@@ -96,8 +96,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 						(:user, :role)
 				'
 			)
-			->bindInt(':user', $id)
-			->bindInt(':role', $config['signup']['role'])
+			->bind_int(':user', $id)
+			->bind_int(':role', $config['signup']['role'])
 			->execute();
 	}
 	

@@ -153,7 +153,7 @@ class Model_HTTP_User extends \app\Model_DB_User
 				',
 				'mysql'
 			)
-			->bindInt(':user', $id)
+			->bind_int(':user', $id)
 			->execute()
 			->fetch_array();
 		

@@ -80,7 +80,7 @@ class A12n extends \app\Instantiatable
 						',
 						'mysql'
 					)
-					->setInt(':id', $this->user)
+					->set_int(':id', $this->user)
 					->execute()
 					->fetch_array();
 			}
