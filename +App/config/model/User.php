@@ -41,10 +41,16 @@
 				'nickname' => array
 					(
 						'not_empty' => 'You must type in a nickname.',
+						'\app\Model_DB_User::unique_nickname' => 'User with same name already exists.'
 					),
 				'password' => array
 					(
 						'min_length' => 'Your password is too short.',
-					)
+						'\app\Model_DB_User::matching_password' => 'You\'ve entered an incorrect password'
+					),
+				'verifier' => array
+					(
+						'equal_to' => 'Passwords do not match',
+					),
 			),
 	);
