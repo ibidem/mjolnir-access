@@ -45,8 +45,9 @@
 					),
 				'password' => array
 					(
+						'not_empty' => 'Password is required.',
 						'min_length' => 'Your password is too short.',
-						'\app\Model_DB_User::matching_password' => 'You\'ve entered an incorrect password'
+						'\app\Model_DB_User::matching_password' => 'Passwords do not match.',
 					),
 				'verifier' => array
 					(
