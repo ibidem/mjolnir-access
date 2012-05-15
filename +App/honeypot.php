@@ -4,11 +4,11 @@
 
 // HowTo: minion honeypot -n "ibidem\\access"
 
-class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ function instance() {} }
+class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \ibidem\access\Access {}
-class Controller_A12n extends \ibidem\access\Controller_A12n { /** @return \ibidem\access\Controller_A12n */ function instance() {} }
-class Layer_Access extends \ibidem\access\Layer_Access { /** @return \ibidem\access\Layer_Access */ function instance() {} }
-class Migration_Init extends \ibidem\access\Migration_Init { /** @return \ibidem\access\Migration_Init */ function instance() {} }
-class Model_DB_User extends \ibidem\access\Model_DB_User { /** @return \ibidem\access\Model_DB_User */ function instance() {} }
-class Model_HTTP_User extends \ibidem\access\Model_HTTP_User { /** @return \ibidem\access\Model_HTTP_User */ function instance() {} }
-class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ function instance() {} }
+class Controller_A12n extends \ibidem\access\Controller_A12n { /** @return \ibidem\access\Controller_A12n */ static function instance() { return parent::instance(); } }
+class Layer_Access extends \ibidem\access\Layer_Access { /** @return \ibidem\access\Layer_Access */ static function instance() { return parent::instance(); } }
+class Migration_User extends \ibidem\access\Migration_User { /** @return \ibidem\access\Migration_User */ static function instance() { return parent::instance(); } }
+class Model_DB_User extends \ibidem\access\Model_DB_User { /** @return \ibidem\access\Model_DB_User */ static function instance() { return parent::instance(); } }
+class Model_HTTP_User extends \ibidem\access\Model_HTTP_User { /** @return \ibidem\access\Model_HTTP_User */ static function instance() { return parent::instance(); } }
+class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ static function instance() { return parent::instance(); } }
