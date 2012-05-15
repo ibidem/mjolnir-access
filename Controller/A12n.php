@@ -47,12 +47,25 @@ class Controller_A12n extends \app\Controller_HTTP
 
 				// no default frontend; we display the checkin page; which now 
 				// will show the user's credentials.
-				// $this->action_index();
-				echo 'success';
+				$this->action_index();
 			}
 			else # signin failed
 			{
-				$this->body('failed to signin');
+				$relay = $this->layer->get_relay();
+				
+				$errors = array
+					(
+						'ibidem\a12n\signin' => array('form' => array('Sign in failed. Please check your credentials or try a different password.'))
+					);
+				
+				$view = \app\ThemeView::instance()
+					->target($relay['target'])
+					->errors($errors)
+					->layer($this->layer)
+					->context($relay['context']::instance()->auth(A12n::instance()))
+					->control($relay['control']::instance());
+				
+				$this->body($view->render());
 			}
 		}
 		else if (\app\Layer_HTTP::request_method() === \ibidem\types\HTTP::GET)

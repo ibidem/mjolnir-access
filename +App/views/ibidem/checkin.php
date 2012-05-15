@@ -5,6 +5,7 @@
 <?= $form = \app\Form::instance()
 	->action($access_relay['\ibidem\access\a12n']['route']->url(array('action' => 'signin')))
 	->method('POST')
+	->errors($errors['ibidem\a12n\signin'])
 	->field_template('<dt>:name</dt><dd>:field</dd>')
 	->secure()
 	?>
