@@ -21,6 +21,17 @@ class A12n extends \app\Instantiatable
 	private $role;
 	
 	/**
+	 * @param mixed instance 
+	 */
+	protected static function init($instance)
+	{
+		// check session
+		$instance->user = \app\Session::get('user', null);
+		$instance->role = \app\Session::get('role', static::guest());
+		// @todo encrypt, sign and timestamp session data
+	}
+	
+	/**
 	 * @return \ibidem\access\A12n
 	 */
 	public static function instance()
@@ -30,10 +41,7 @@ class A12n extends \app\Instantiatable
 		if ($instance === null)
 		{
 			$instance = parent::instance();
-			// check session
-			$instance->user = \app\Session::get('user', null);
-			$instance->role = \app\Session::get('role', static::guest());
-			// @todo encrypt, sign and timestamp session data
+			static::init($instance);
 		}
 		
 		return $instance;
@@ -101,11 +109,18 @@ class A12n extends \app\Instantiatable
 		return '\ibidem\access\A12n::guest';
 	}
 	
+	/**
+	 * Sign out current user. 
+	 */
 	public static function signout()
 	{
 		 \app\Session::destroy();
 	}
 	
+	/**
+	 * @param int user
+	 * @param string role 
+	 */
 	public static function signin($user, $role)
 	{
 		\app\Session::set('user', $user);

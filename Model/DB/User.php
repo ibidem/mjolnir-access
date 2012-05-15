@@ -18,16 +18,16 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	 */
 	public static function roles_table()
 	{
-		$database_config = \app\CFS::config('ibidem\database');
+		$database_config = \app\CFS::config('ibidem/database');
 		return $database_config['table_prefix'].static::$roles_table;
 	}
 	
 	/**
 	 * @return string 
 	 */
-	public static function user_role_table()
+	public static function assoc_roles()
 	{
-		$database_config = \app\CFS::config('ibidem\database');
+		$database_config = \app\CFS::config('ibidem/database');
 		return $database_config['table_prefix'].static::$user_role_table;
 	}
 	
@@ -91,7 +91,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			(
 				'ibidem/access:dependencies_role_assoc',
 				'
-					INSERT INTO `'.static::user_role_table().'`
+					INSERT INTO `'.static::assoc_roles().'`
 						(user, role)
 					VALUES
 						(:user, :role)
@@ -159,9 +159,9 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				->set(':passwordsalt', $password['salt'])
 				->execute();
 			
-			$user_id = \app\SQL::last_inserted_id();
+			static::$last_inserted_id = \app\SQL::last_inserted_id();
 
-			static::dependencies($user_id, \app\CFS::config('model/User'));
+			static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
 			
 			\app\SQL::commit();
 		} 

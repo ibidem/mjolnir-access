@@ -147,7 +147,7 @@ class Model_HTTP_User extends \app\Model_DB_User
 				'
 					SELECT roles.title role
 					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
-						   `'.\app\Model_DB_User::user_role_table().'` AS assoc
+						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc
 					 WHERE roles.id = assoc.role
 					   AND assoc.user = :user
 				',

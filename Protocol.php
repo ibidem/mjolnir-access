@@ -198,8 +198,15 @@ class Protocol extends \app\Instantiatable
 				if ($test_attribute !== null)
 				{
 					$match = false;
-					// if we do we go though all objects
-					// and check with the test object
+					// if we do we go though all objects and check with the 
+					// test object
+
+					// do we actually have anything to test?
+					if ($this->attributes === null)
+					{
+						return false;
+					}
+					
 					foreach ($this->attributes as $attribute)
 					{
 						if ($attribute === $test_attribute)

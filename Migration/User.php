@@ -16,7 +16,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->constraints
 			(
-				\app\Model_HTTP_User::user_role_table(),
+				\app\Model_HTTP_User::assoc_roles(),
 				array
 				(
 					'user' => array(\app\Model_HTTP_User::table(), 'CASCADE', 'CASCADE'),
@@ -59,7 +59,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_HTTP_User::user_role_table(),
+				\app\Model_HTTP_User::assoc_roles(),
 				"
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
@@ -111,7 +111,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				(
 					\app\Model_HTTP_User::table(), 
 					\app\Model_HTTP_User::roles_table(), 
-					\app\Model_HTTP_User::user_role_table()
+					\app\Model_HTTP_User::assoc_roles()
 				)
 			);
 	}
