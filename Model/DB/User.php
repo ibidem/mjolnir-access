@@ -159,9 +159,25 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				->set(':passwordsalt', $password['salt'])
 				->execute();
 			
-			static::$last_inserted_id = \app\SQL::last_inserted_id();
+			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 
 			static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
+			
+			// assign role if set
+			if (isset($fields['role']))
+			{
+				\app\SQL::prepare
+					(
+						'ibidem/access:assemble:assign_role',
+						'
+							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
+							SET role = :role
+							WHERE user = '.$user.'
+						'
+					)
+					->set_int(':role', $fields['role'])
+					->execute();
+			}
 			
 			\app\SQL::commit();
 		} 
