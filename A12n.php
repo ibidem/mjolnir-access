@@ -80,10 +80,10 @@ class A12n extends \app\Instantiatable
 			{
 				$current = \app\SQL::prepare
 					(
-						'ibidem\access\a12n:current',
+						__METHOD__,
 						'
 							SELECT * 
-							  FROM `'.\app\Model_HTTP_User::table().'`
+							  FROM `'.\app\Model_DB_User::table().'`
 							 WHERE id = :id
 						',
 						'mysql'
@@ -106,6 +106,7 @@ class A12n extends \app\Instantiatable
 	 */
 	public static function guest()
 	{
+		// unique identifier
 		return '\ibidem\access\A12n::guest';
 	}
 	

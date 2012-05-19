@@ -56,7 +56,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	{
 		$first_row = \app\SQL::prepare
 			(
-				'ibidem/access:valid_uniquenickname', 
+				__METHOD__, 
 				'
 					SELECT COUNT(*)
 					  FROM '.static::table().'
@@ -89,7 +89,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 
 		\app\SQL::prepare
 			(
-				'ibidem/access:dependencies_role_assoc',
+				__METHOD__,
 				'
 					INSERT INTO `'.static::assoc_roles().'`
 						(user, role)
@@ -143,16 +143,37 @@ class Model_DB_User extends \app\Model_SQL_Factory
 
 			\app\SQL::prepare
 				(
-					'ibidem/access:assemble',
+					__METHOD__,
 					'
 						INSERT INTO `'.static::table().'`
-							(nickname, ipaddress, passwordverifier, passworddate, passwordsalt)
+							(
+								nickname, 
+								email,
+								given_name,
+								family_name,
+								ipaddress, 
+								passwordverifier, 
+								passworddate, 
+								passwordsalt
+							)
 						VALUES
-							(:nickname, :ipaddress, :passwordverifier, :passworddate, :passwordsalt)
+							(
+								:nickname, 
+								:email,
+								:given_name,
+								:family_name,
+								:ipaddress, 
+								:passwordverifier, 
+								:passworddate, 
+								:passwordsalt
+							)
 					',
 					'mysql'
 				)
 				->set(':nickname', \htmlspecialchars($fields['nickname']))
+				->set(':email', \htmlspecialchars($fields['email']))
+				->set(':given_name', \htmlspecialchars($fields['given_name']))
+				->set(':family_name', \htmlspecialchars($fields['family_name']))
 				->set(':ipaddress', $ipaddress)
 				->set(':passwordverifier', $password['verifier'])
 				->set(':passworddate', \date('c'))
@@ -168,7 +189,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			{
 				\app\SQL::prepare
 					(
-						'ibidem/access:assemble:assign_role',
+						__METHOD__.':assign_role',
 						'
 							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
 							SET role = :role
@@ -200,7 +221,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		// get user data
 		$user_info = \app\SQL::prepare
 			(
-				'\ibidem\access\user::matching_password:getuser',
+				__METHOD__,
 				'
 					SELECT users.passwordsalt salt,
 					       users.passwordverifier verifier
@@ -247,7 +268,6 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
-	 *
 	 * @param array fields
 	 * @param int user
 	 * @return \app\Validator|null 
@@ -263,7 +283,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			
 			\app\SQL::prepare
 				(
-					'\ibidem\access\user:change_password',
+					__METHOD__,
 					'
 						UPDATE `'.static::table().'` users
 						   SET users.passwordverifier = :verifier,
@@ -282,6 +302,174 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		else # invalid
 		{
 			return $validator;
+		}
+	}
+	
+	/**
+	 * @param array fields 
+	 */
+	public static function recompute_password(array $fields)
+	{
+		// load configuration
+		$security = \app\CFS::config('ibidem/security');
+		// generate password salt and hash
+		$passwordsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
+		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
+		// update
+		\app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					UPDATE '.static::table().'
+					   SET passwordverifier = :passwordverifier
+					   SET passwordsalt = :passwordsalt
+					   SET passworddate = :passworddate
+					   SET ipaddress = :ipaddress
+					 WHERE nickname = :nickname
+				',
+				'mysql'
+			)
+			->bind(':passwordverifier', $passwordverifier)
+			->bind(':passwordsalt', $passwordsalt)
+			->bind(':passworddate', \time())
+			->bind(':nickname', $fields['nickname'])
+			->bind(':ipaddress', $fields['nickname'])
+			->execute();
+	}
+	
+	/**
+	 * @param array fields
+	 * @return boolean 
+	 */
+	public static function signin_check(array $fields = null)
+	{
+		// got fields?
+		if ( ! $fields)
+		{
+			return null;
+		}
+		
+		// got required fields
+		if ( ! isset($fields['nickname']) || ! isset($fields['password']))
+		{
+			return null;
+		}
+		
+		// load configuration
+		$security = \app\CFS::config('ibidem/security');
+		
+		$user = \app\SQL::prepare
+			(
+				'ibidem/access:signin_check',
+				'
+					SELECT *
+					FROM '.static::table().'
+					WHERE nickname = :nickname
+				',
+				'mysql'
+			)
+			->bind(':nickname', $fields['nickname'])
+			->execute()
+			->fetch_array();
+
+		if ( ! $user)
+		{
+			return null;
+		}
+
+		$passwordsalt = $user['passwordsalt'];
+		
+		// generate password salt and hash
+		$apilocked_password = \hash_hmac
+			(
+				$security['hash']['algorythm'], 
+				$fields['password'], 
+				$security['keys']['apikey'], 
+				false
+			);
+		$passwordverifier = \hash_hmac
+			(
+				$security['hash']['algorythm'], 
+				$apilocked_password, 
+				$passwordsalt, 
+				false
+			);
+		
+		// verify
+		if ($passwordverifier !== $user['passwordverifier'])
+		{
+			return null;
+		}
+		
+		// all tests passed
+		return $user['id'];
+	}	
+		
+	/**
+	 * @param int id
+	 * @return string
+	 */
+	public static function user_role($id)
+	{
+		$result = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT roles.title role
+					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
+						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc
+					 WHERE roles.id = assoc.role
+					   AND assoc.user = :user
+				',
+				'mysql'
+			)
+			->bind_int(':user', $id)
+			->execute()
+			->fetch_array();
+		
+		return $result['role'];
+	}
+	
+	/**
+	 * @return array (id, title)
+	 */
+	public static function user_roles()
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT role.id id,
+					       role.title title
+					  FROM `'.static::roles_table().'` role
+				'
+			)
+			->execute()
+			->fetch_all();
+	}
+	
+	/**
+	 * @param array user id's 
+	 */
+	public static function mass_delete(array $user_ids)
+	{
+		$user = null;
+		$statement = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					UPDATE `'.static::table().'` user
+					   SET user.deleted = TRUE
+					 WHERE user.id = :user
+				'
+			)
+			->bind_int(':user', $user);
+		
+		foreach ($user_ids as $id)
+		{
+			$user = $id;
+			$statement->execute();
 		}
 	}
 	

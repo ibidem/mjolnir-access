@@ -16,11 +16,11 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->constraints
 			(
-				\app\Model_HTTP_User::assoc_roles(),
+				\app\Model_DB_User::assoc_roles(),
 				array
 				(
-					'user' => array(\app\Model_HTTP_User::table(), 'CASCADE', 'CASCADE'),
-					'role' => array(\app\Model_HTTP_User::roles_table(), 'CASCADE', 'CASCADE'),
+					'user' => array(\app\Model_DB_User::table(), 'CASCADE', 'CASCADE'),
+					'role' => array(\app\Model_DB_User::roles_table(), 'CASCADE', 'CASCADE'),
 				)
 			);
 	}
@@ -32,15 +32,19 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->createtable
 			(
-				\app\Model_HTTP_User::table(), 
+				\app\Model_DB_User::table(), 
 				"
-					`id`        :key_primary,
-					`nickname`  :username,
-					`ipaddress` :ipaddress,
+					`id`           :key_primary,
+					`nickname`     :username,
+					`given_name`   :name,
+					`family_name`  :name,
+					`email`        :email,
+					`ipaddress`    :ipaddress,
 					`passwordverifier` :secure_hash,
 					`passwordsalt` :secure_hash,
 					`passworddate` :datetime_required,
 					`datetime`     :timestamp,
+					`deleted`      :boolean DEFAULT FALSE,
 					
 					PRIMARY KEY (`id`)
 				"
@@ -48,7 +52,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_HTTP_User::roles_table(), 
+				\app\Model_DB_User::roles_table(), 
 				"
 					`id`    :key_primary,
 					`title` :title NOT NULL,
@@ -59,7 +63,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_HTTP_User::assoc_roles(),
+				\app\Model_DB_User::assoc_roles(),
 				"
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
@@ -79,7 +83,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				(
 					'ibidem/access:migration_init_simplerole',
 					'
-						INSERT INTO `'.\app\Model_HTTP_User::roles_table().'`
+						INSERT INTO `'.\app\Model_DB_User::roles_table().'`
 							(id, title) VALUES (:id, :title)
 					',
 					'mysql'
@@ -109,9 +113,9 @@ class Migration_User extends \app\Migration_Template_MySQL
 			(
 				array
 				(
-					\app\Model_HTTP_User::table(), 
-					\app\Model_HTTP_User::roles_table(), 
-					\app\Model_HTTP_User::assoc_roles()
+					\app\Model_DB_User::table(), 
+					\app\Model_DB_User::roles_table(), 
+					\app\Model_DB_User::assoc_roles()
 				)
 			);
 	}
