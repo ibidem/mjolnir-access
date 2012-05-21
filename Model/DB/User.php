@@ -58,7 +58,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			(
 				__METHOD__, 
 				'
-					SELECT COUNT(*)
+					SELECT COUNT(1)
 					  FROM '.static::table().'
 					 WHERE nickname = :nickname
 				', 
@@ -68,7 +68,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			->execute()
 			->fetch_array();
 		
-		$count = $first_row['COUNT(*)'];
+		$count = $first_row['COUNT(1)'];
 		
 		if (\intval($count) != 0)
 		{
@@ -366,6 +366,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					SELECT *
 					FROM '.static::table().'
 					WHERE nickname = :nickname
+					  AND deleted = FALSE
+					LIMIT 1
 				',
 				'mysql'
 			)
