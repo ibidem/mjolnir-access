@@ -130,6 +130,102 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
+	 * @param type $id
+	 * @param array $fields 
+	 * @return \app\Validator
+	 */
+	public static function update_validator($id, array $fields)
+	{
+		$user_config = \app\CFS::config('model/User');
+		return \app\Validator::instance($user_config['errors'], $fields);
+	}
+	
+	/**
+	 * @param int id
+	 * @param array fields 
+	 */
+	public static function update($id, array $fields)
+	{
+		$validator = static::update_validator($id, $fields);
+		
+		if ($validator->validate() === null)
+		{
+			\app\SQL::begin();
+			try
+			{
+				// get current nickname
+				$current_info = \app\SQL::prepare
+					(
+						__METHOD__.':check_nickname',
+						'
+							SELECT *
+							  FROM `'.static::table().'` user
+							 WHERE user.id = :id
+						'
+					)
+					->bind_int(':id', $id)
+					->execute()
+					->fetch_array();
+				
+				if ($current_info['nickname'] != $fields['nickname'])
+				{
+					// check if available
+					if ( ! static::unique_nickname($fields['nickname']))
+					{
+						$fields['nickname'] = $current_info['nickname'];
+					}
+				}
+				
+				// update role
+				\app\SQL::prepare
+					(
+						__METHOD__.':update_role',
+						'
+							UPDATE `'.static::assoc_roles().'`
+							   SET role = :role
+							 WHERE user = :user
+						'
+					)
+					->set_int(':user', $id)
+					->set_int(':role', $fields['role'])
+					->execute();
+				
+				\app\SQL::prepare
+					(
+						__METHOD__,
+						'
+							UPDATE `'.static::table().'`
+							   SET nickname = :nickname,
+							       given_name = :given_name,
+							       family_name = :family_name,
+							       email = :email
+							 WHERE id = :id
+						'
+					)
+					->set(':nickname', $fields['nickname'])
+					->set(':given_name', $fields['given_name'])
+					->set(':family_name', $fields['family_name'])
+					->set(':email', $fields['email'])
+					->bind_int(':id', $id)
+					->execute();
+				
+				\app\SQL::commit();
+			}
+			catch (\Exception $e)
+			{
+				\app\SQL::rollback();
+				throw $e;
+			}
+			
+			return null;
+		}
+		else # invalid
+		{
+			return $validator;
+		}
+	}
+	
+	/**
 	 * @param array fields 
 	 */
 	public static function assemble(array $fields) 
@@ -412,7 +508,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	 * @param int id
 	 * @return string
 	 */
-	public static function user_role($id)
+	public static function user_role($user)
 	{
 		$result = \app\SQL::prepare
 			(
@@ -426,11 +522,36 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				',
 				'mysql'
 			)
-			->bind_int(':user', $id)
+			->bind_int(':user', $user)
 			->execute()
 			->fetch_array();
 		
 		return $result['role'];
+	}
+	
+	/**
+	 * @param int id
+	 * @return string
+	 */
+	public static function user_role_id($user)
+	{
+		$result = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT roles.id role_id
+					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
+						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc
+					 WHERE roles.id = assoc.role
+					   AND assoc.user = :user
+				',
+				'mysql'
+			)
+			->bind_int(':user', $user)
+			->execute()
+			->fetch_array();
+		
+		return $result['role_id'];
 	}
 	
 	/**

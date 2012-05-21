@@ -16,15 +16,22 @@ class Model_User extends \app\Model_Instantiatable
 	 */
 	public function user_roles()
 	{
-		return \app\Model_DB_User::user_roles();
+		$roles = \app\Model_DB_User::user_roles();
+		
+		foreach ($roles as & $role)
+		{
+			$role['title'] = \ucfirst(\app\Lang::tr($role['title']));
+		}
+		
+		return $roles;
 	}
 	
 	/**
 	 * @return string 
 	 */
-	public function role()
+	public function role_id()
 	{
-		\app\Model_DB_User::user_role($this->get('id'));
+		return \app\Model_DB_User::user_role_id($this->get('id'));
 	}
 
 } # class
