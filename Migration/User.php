@@ -81,7 +81,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 			$title = null;
 			$statement = \app\SQL::prepare
 				(
-					'ibidem/access:migration_init_simplerole',
+					__METHOD__,
 					'
 						INSERT INTO `'.\app\Model_DB_User::roles_table().'`
 							(id, title) VALUES (:id, :title)
