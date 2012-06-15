@@ -1,0 +1,11 @@
+/* Image:
+ *   image-width($image), image-height($image)
+ * Embedding:
+ *   inline-image($image, [$mime-type])
+ *   inline-font-files([$font, $format]*)
+ * Math:
+ *   pi(), sin($number), cos($number), tan($number)
+ * Contrast:
+ *   contrast-color($color, [$dark], [$light], [$threshold]), 
+ *   contrasted($background-color, [$dark], [$light], [$threshold])
+ */

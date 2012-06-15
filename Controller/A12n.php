@@ -13,15 +13,32 @@ class Controller_A12n extends \app\Controller_HTTP
 	{
 		$relay = $this->layer->get_relay();
 		
-		$this->body
-			(
-				\app\ThemeView::instance()
-					->target($relay['target'])
-					->layer($this->layer)
-					->context($relay['context']::instance())
-					->control($relay['control']::instance())
-					->render()
-			);
+		if ($relay['target'] === null)
+		{
+			$this->body
+				(
+					\app\ThemeView::instance()
+						->theme('ibidem/access')
+						->style('default')
+						->target('access/signin')
+						->layer($this->layer)
+						->context($relay['context']::instance())
+						->control($relay['control']::instance())
+						->render()
+				);
+		}
+		else # target provided
+		{
+			$this->body
+				(
+					\app\ThemeView::instance()
+						->target($relay['target'])
+						->layer($this->layer)
+						->context($relay['context']::instance())
+						->control($relay['control']::instance())
+						->render()
+				);
+		}
 	}
 	
 	/**
@@ -58,12 +75,26 @@ class Controller_A12n extends \app\Controller_HTTP
 						'ibidem\a12n\signin' => array('form' => array('Sign in failed. Please check your credentials or try a different password.'))
 					);
 				
-				$view = \app\ThemeView::instance()
-					->target($relay['target'])
-					->errors($errors)
-					->layer($this->layer)
-					->context($relay['context']::instance())
-					->control($relay['control']::instance());
+				if ($relay['target'] === null)
+				{
+					$view = \app\ThemeView::instance()
+						->theme('ibidem/access')
+						->style('default')
+						->target('access/signin')
+						->errors($errors)
+						->layer($this->layer)
+						->context($relay['context']::instance())
+						->control($relay['control']::instance());
+				}
+				else # target provided
+				{
+					$view = \app\ThemeView::instance()
+						->target($relay['target'])
+						->errors($errors)
+						->layer($this->layer)
+						->context($relay['context']::instance())
+						->control($relay['control']::instance());
+				}
 				
 				$this->body($view->render());
 			}

@@ -47,6 +47,20 @@ class A12n extends \app\Instantiatable
 		return $instance;
 	}
 	
+	public function set_role($role)
+	{
+		// allow role manipulation in development for mockup purposes
+		if (\defined('DEVELOPMENT') && DEVELOPMENT)
+		{
+			$this->role = $role;
+		}
+		else # access violation
+		{
+			throw new \app\Exception_NotAllowed
+				('Security role manipulation violation.');
+		}
+	}
+	
 	/**
 	 * @return int 
 	 */
