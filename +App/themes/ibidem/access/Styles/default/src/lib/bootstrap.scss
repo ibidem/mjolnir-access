@@ -76,10 +76,4 @@ $contrasted-lightness-threshold : 30%;
 // == etc ======================================================================
 
 // default image folder; relative to output
-$images-dir : "images/" !default;
-
-// variables
-
-$fg_color : #222;
-$bg_color : #eee;
-
+$gIMAGES : "images/" !default;

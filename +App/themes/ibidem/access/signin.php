@@ -13,7 +13,7 @@
 
 		<h1><?= Lang::msg('ibidem.access.stats.title') ?></h1>
 		<? $user = \app\A12n::instance()->current() ?>
-		<p><?= Lang::msg('ibidem.access.stats.currently_logged_as', ['username' => $user['nickname']]) ?></p>
+		<p><?= Lang::msg('ibidem.access.stats.currently_logged_as', [':username' => $user['nickname']]) ?></p>
 
 	<? endif; ?>
 

@@ -7,15 +7,15 @@
 	->method('POST')
 	->errors($errors['ibidem\a12n\signin'])
 	->field_template('<dt>:name</dt><dd>:field</dd>')
-	->secure()
-	?>
+	->secure() ?>
 
-	<div>
+	<div class="sigin-form">
 		<dl>
 			<?= $form->text(\app\Lang::tr('Username'), 'nickname') ?>
 			<?= $form->password(\app\Lang::tr('Password'), 'password') ?>
 		</dl>
 		<button tabindex="<?= \app\Form::tabindex() ?>"><?= \app\Lang::tr('Sign In') ?></button>
+		<span class="rememberme"><input type="checkbox" /> <span class="label"><?= Lang::msg('ibidem.access.signin.remember_me') ?></span></span>
 	</div>
 
 <?= $form->close() ?>
