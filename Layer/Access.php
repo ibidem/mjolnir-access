@@ -35,7 +35,7 @@ class Layer_Access extends \app\Layer
 	 * @param \Exception exception
 	 * @param boolean $origin 
 	 */
-	public function exception(\Exception $exception, $origin = false)
+	public function exception(\Exception $exception, $no_throw = false, $origin = false)
 	{
 		if (\is_a($exception, '\\ibidem\\types\\Exception'))
 		{
@@ -51,7 +51,7 @@ class Layer_Access extends \app\Layer
 		}
 		
 		// default execution from Layer
-		parent::exception($exception);
+		parent::exception($exception, $no_throw);
 	}
 	
 	/**

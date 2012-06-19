@@ -43,9 +43,180 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			->rule('nickname', 'not_empty')
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->rule('nickname', '\app\Model_DB_User::unique_nickname')
+			->rule('email', 'not_empty')
 			->rule('password', 'not_empty')
-			->rule('password', 'min_length', $user_config['fields']['password']['minlength']);
-	}	
+			->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
+			->rule('verifier', 'equal_to', $fields['password'])
+			->rule('role', 'not_empty');
+	}
+	
+	/**
+	 * @param array (nickname, email, password, verifier) 
+	 */
+	public static function assemble(array $fields) 
+	{
+		$password = static::generate_password($fields['password']);
+
+		\app\SQL::begin(); # begin transaction
+		try
+		{
+			$ipaddress = \app\Layer_HTTP::detect_ip();
+
+			\app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						INSERT INTO `'.static::table().'`
+							(
+								nickname, 
+								email,
+								ipaddress, 
+								passwordverifier, 
+								passworddate, 
+								passwordsalt
+							)
+						VALUES
+							(
+								:nickname, 
+								:email,
+								:ipaddress, 
+								:passwordverifier, 
+								:passworddate, 
+								:passwordsalt
+							)
+					',
+					'mysql'
+				)
+				->set(':nickname', \htmlspecialchars($fields['nickname']))
+				->set(':email', \htmlspecialchars($fields['email']))
+				->set(':ipaddress', $ipaddress)
+				->set(':passwordverifier', $password['verifier'])
+				->set(':passworddate', \date('c'))
+				->set(':passwordsalt', $password['salt'])
+				->execute();
+			
+			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
+
+			static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
+			
+			// assign role if set
+			if (isset($fields['role']))
+			{
+				\app\SQL::prepare
+					(
+						__METHOD__.':assign_role',
+						'
+							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
+							SET role = :role
+							WHERE user = '.$user.'
+						'
+					)
+					->set_int(':role', $fields['role'])
+					->execute();
+			}
+			
+			\app\SQL::commit();
+		} 
+		catch (\Exception $exception)
+		{
+			\app\SQL::rollback();
+			throw $exception;
+		}
+	}
+	
+	/**
+	 * Validator helper.
+	 * 
+	 * @return boolean
+	 */
+	public static function unique_role($role)
+	{
+		$first_row = \app\SQL::prepare
+			(
+				__METHOD__, 
+				'
+					SELECT COUNT(1)
+					  FROM '.static::roles_table().'
+					 WHERE role = :role
+				', 
+				'mysql'
+			)
+			->bind(':role', $role)
+			->execute()
+			->fetch_array();
+		
+		$count = $first_row['COUNT(1)'];
+		
+		if (\intval($count) != 0)
+		{
+			return false;
+		}
+		
+		// test passed
+		return true;
+	}
+	
+	function validator_role(array $fields)
+	{
+		$user_config = \app\CFS::config('model/UserRole');
+		
+		return \app\Validator::instance($user_config['errors'], $fields)
+			->rule('title', 'not_empty')
+			->rule('title', '\app\Model_DB_User::unique_role');
+	}
+	
+	function assemble_role(array $fields)
+	{
+		\app\SQL::begin(); # begin transaction
+		try
+		{
+			\app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						INSERT INTO `'.static::table().'`
+							(
+								title
+							)
+						VALUES
+							(
+								:title 
+							)
+					',
+					'mysql'
+				)
+				->set(':title', \htmlspecialchars($fields['title']))
+				->execute();
+			
+			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
+			
+			\app\SQL::commit();
+		} 
+		catch (\Exception $exception)
+		{
+			\app\SQL::rollback();
+			throw $exception;
+		}
+	}
+	
+	function build_role(array $fields)
+	{
+		$validator = static::validator_role($fields);
+		
+		if ($validator === null || $validator->validate() === null)
+		{
+			static::assemble_role($fields);
+			
+			// invalidate caches
+			static::cache_reset($fields);
+		}
+		else # did not pass validation
+		{
+			return $validator;
+		}
+		
+		return null;
+	}
 	
 	/**
 	 * Validator helper.
@@ -222,86 +393,6 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		else # invalid
 		{
 			return $validator;
-		}
-	}
-	
-	/**
-	 * @param array fields 
-	 */
-	public static function assemble(array $fields) 
-	{
-		$password = static::generate_password($fields['password']);
-
-		\app\SQL::begin(); # begin transaction
-		try
-		{
-			$ipaddress = \app\Layer_HTTP::detect_ip();
-
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						INSERT INTO `'.static::table().'`
-							(
-								nickname, 
-								email,
-								given_name,
-								family_name,
-								ipaddress, 
-								passwordverifier, 
-								passworddate, 
-								passwordsalt
-							)
-						VALUES
-							(
-								:nickname, 
-								:email,
-								:given_name,
-								:family_name,
-								:ipaddress, 
-								:passwordverifier, 
-								:passworddate, 
-								:passwordsalt
-							)
-					',
-					'mysql'
-				)
-				->set(':nickname', \htmlspecialchars($fields['nickname']))
-				->set(':email', \htmlspecialchars($fields['email']))
-				->set(':given_name', \htmlspecialchars($fields['given_name']))
-				->set(':family_name', \htmlspecialchars($fields['family_name']))
-				->set(':ipaddress', $ipaddress)
-				->set(':passwordverifier', $password['verifier'])
-				->set(':passworddate', \date('c'))
-				->set(':passwordsalt', $password['salt'])
-				->execute();
-			
-			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
-
-			static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
-			
-			// assign role if set
-			if (isset($fields['role']))
-			{
-				\app\SQL::prepare
-					(
-						__METHOD__.':assign_role',
-						'
-							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
-							SET role = :role
-							WHERE user = '.$user.'
-						'
-					)
-					->set_int(':role', $fields['role'])
-					->execute();
-			}
-			
-			\app\SQL::commit();
-		} 
-		catch (\Exception $exception)
-		{
-			\app\SQL::rollback();
-			throw $exception;
 		}
 	}
 	
@@ -530,6 +621,35 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
+	 * @param int page
+	 * @param int limit
+	 * @return array (id, nickname, email, role)
+	 */
+	public static function users($page = 1, $limit = 10)
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT  user.id id,
+					        user.nickname nickname, 
+					        user.email email,
+					        role.title role,
+							user.ipaddress ipaddress
+					  FROM `'.\app\Model_DB_User::table().'` AS user,
+						   `'.\app\Model_DB_User::roles_table().'` AS role,
+						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc_roles
+					 WHERE assoc_roles.role = role.id 
+					   AND assoc_roles.user = user.id 
+					   AND user.deleted = FALSE
+					 ORDER BY user.id ASC
+				'
+			)
+			->execute()
+			->fetch_all();
+	}
+	
+	/**
 	 * @param int id
 	 * @return string
 	 */
@@ -594,6 +714,37 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			$user = $id;
 			$statement->execute();
 		}
+	}
+	
+	public static function count()
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT COUNT(1)
+					  FROM `'.static::table().'` user
+					 WHERE user.deleted = FALSE
+				'
+			)
+			->execute()
+			->fetch_array()
+			['COUNT(1)'];
+	}
+	
+	public static function roles_count()
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT COUNT(1)
+					  FROM `'.static::roles_table().'` role
+				'
+			)
+			->execute()
+			->fetch_array()
+			['COUNT(1)'];
 	}
 	
 } # class

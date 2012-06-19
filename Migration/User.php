@@ -36,8 +36,6 @@ class Migration_User extends \app\Migration_Template_MySQL
 				"
 					`id`           :key_primary,
 					`nickname`     :username,
-					`given_name`   :name,
-					`family_name`  :name,
 					`email`        :email,
 					`ipaddress`    :ipaddress,
 					`passwordverifier` :secure_hash,
