@@ -5,8 +5,24 @@
 				\app\A12n::guest() => array
 					(
 						\app\Protocol::instance()
-							->relays(array('\ibidem\access\a12n'))
+							->relays(['\ibidem\access\a12n'])
 							->all_parameters(),
+					),
+			
+				// the following role acts as a template, include it in the
+				// alias list of your own administrator role
+				'+admin' => array
+					(
+						\app\Protocol::instance()
+							->relays(['\ibidem\backend'])
+							->attributes
+								(
+									[
+										'user-manager', 
+										'user-edit',
+										'user-roles'
+									]
+								)
 					),
 			),
 		'blacklist' => array # disallow! (no matter what)

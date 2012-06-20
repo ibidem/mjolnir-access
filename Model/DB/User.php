@@ -109,7 +109,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
 							SET role = :role
 							WHERE user = '.$user.'
-						'
+						',
+						'mysql'
 					)
 					->set_int(':role', $fields['role'])
 					->execute();
@@ -137,7 +138,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				'
 					SELECT COUNT(1)
 					  FROM '.static::roles_table().'
-					 WHERE role = :role
+					 WHERE title = :role
 				', 
 				'mysql'
 			)
@@ -156,7 +157,12 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		return true;
 	}
 	
-	function validator_role(array $fields)
+	/**
+	 * 
+	 * @param array (title)
+	 * @return \app\Validator
+	 */
+	static function validator_role(array $fields)
 	{
 		$user_config = \app\CFS::config('model/UserRole');
 		
@@ -165,7 +171,11 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			->rule('title', '\app\Model_DB_User::unique_role');
 	}
 	
-	function assemble_role(array $fields)
+	/**
+	 * @param array (title)
+	 * @throws \ibidem\access\Exception
+	 */
+	static function assemble_role(array $fields)
 	{
 		\app\SQL::begin(); # begin transaction
 		try
@@ -174,7 +184,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				(
 					__METHOD__,
 					'
-						INSERT INTO `'.static::table().'`
+						INSERT INTO `'.static::roles_table().'`
 							(
 								title
 							)
@@ -188,7 +198,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				->set(':title', \htmlspecialchars($fields['title']))
 				->execute();
 			
-			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
+			static::$last_inserted_id = \app\SQL::last_inserted_id();
 			
 			\app\SQL::commit();
 		} 
@@ -199,7 +209,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		}
 	}
 	
-	function build_role(array $fields)
+	static function build_role(array $fields)
 	{
 		$validator = static::validator_role($fields);
 		
@@ -266,7 +276,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 						(user, role)
 					VALUES
 						(:user, :role)
-				'
+				',
+				'mysql'
 			)
 			->bind_int(':user', $id)
 			->bind_int(':role', $config['signup']['role'])
@@ -332,7 +343,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 							SELECT *
 							  FROM `'.static::table().'` user
 							 WHERE user.id = :id
-						'
+						',
+						'mysql'
 					)
 					->bind_int(':id', $id)
 					->execute()
@@ -355,7 +367,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 							UPDATE `'.static::assoc_roles().'`
 							   SET role = :role
 							 WHERE user = :user
-						'
+						',
+						'mysql'
 					)
 					->set_int(':user', $id)
 					->set_int(':role', $fields['role'])
@@ -371,7 +384,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 							       family_name = :family_name,
 							       email = :email
 							 WHERE id = :id
-						'
+						',
+						'mysql'
 					)
 					->set(':nickname', $fields['nickname'])
 					->set(':given_name', $fields['given_name'])
@@ -643,7 +657,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					   AND assoc_roles.user = user.id 
 					   AND user.deleted = FALSE
 					 ORDER BY user.id ASC
-				'
+				',
+				'mysql'
 			)
 			->execute()
 			->fetch_all();
@@ -686,7 +701,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					SELECT role.id id,
 					       role.title title
 					  FROM `'.static::roles_table().'` role
-				'
+				',
+				'mysql'
 			)
 			->execute()
 			->fetch_all();
@@ -705,13 +721,35 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					UPDATE `'.static::table().'` user
 					   SET user.deleted = TRUE
 					 WHERE user.id = :user
-				'
+				',
+				'mysql'
 			)
 			->bind_int(':user', $user);
 		
 		foreach ($user_ids as $id)
 		{
 			$user = $id;
+			$statement->execute();
+		}
+	}
+	
+	public static function mass_delete_roles(array $role_ids)
+	{
+		$role = null;
+		$statement = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					DELETE FROM `'.static::roles_table().'`
+					 WHERE id = :role
+				',
+				'mysql'
+			)
+			->bind_int(':role', $role);
+		
+		foreach ($role_ids as $id)
+		{
+			$role = $id;
 			$statement->execute();
 		}
 	}
@@ -725,7 +763,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					SELECT COUNT(1)
 					  FROM `'.static::table().'` user
 					 WHERE user.deleted = FALSE
-				'
+				',
+				'mysql'
 			)
 			->execute()
 			->fetch_array()
@@ -740,7 +779,8 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				'
 					SELECT COUNT(1)
 					  FROM `'.static::roles_table().'` role
-				'
+				',
+				'mysql'
 			)
 			->execute()
 			->fetch_array()

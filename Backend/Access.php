@@ -23,11 +23,52 @@ class Backend_Access extends \app\Instantiatable
 			}
 			else # success
 			{
+				\app\Layer_HTTP::redirect
+					(
+						'\ibidem\backend', 
+						['slug' => 'user-manager'], 
+						['tab' => 'access']
+					);
+				
 				return null;
 			}
 		}
 		
 		return null;
+	}
+	
+	function action_users_delete()
+	{
+		if ( ! isset($_POST['selected']))
+		{
+			$_POST['selected'] = [];
+		}
+		
+		\app\Model_DB_User::mass_delete($_POST['selected']);
+		
+		\app\Layer_HTTP::redirect
+			(
+				'\ibidem\backend', 
+				['slug' => 'user-manager'], 
+				['tab' => 'access']
+			);
+	}
+	
+	function action_user_delete()
+	{
+		\app\Model_DB_User::mass_delete([$_POST['id']]);
+		
+		\app\Layer_HTTP::redirect
+			(
+				'\ibidem\backend', 
+				['slug' => 'user-manager'], 
+				['tab' => 'access']
+			);
+	}
+	
+	function action_user_edit()
+	{
+		
 	}
 	
 	function action_role_new()
@@ -44,11 +85,51 @@ class Backend_Access extends \app\Instantiatable
 			}
 			else # success
 			{
+				\app\Layer_HTTP::redirect
+					(
+						'\ibidem\backend', 
+						['slug' => 'user-roles'], 
+						['tab' => 'access']
+					);
+				
 				return null;
 			}
 		}
 		
 		return null;
+	}
+	
+	function action_role_delete()
+	{
+		\app\Model_DB_User::mass_delete_roles([$_POST['id']]);
+		\app\Layer_HTTP::redirect
+			(
+				'\ibidem\backend', 
+				['slug' => 'user-roles'], 
+				['tab' => 'access']
+			);
+	}
+	
+	function action_roles_delete()
+	{
+		if ( ! isset($_POST['selected']))
+		{
+			$_POST['selected'] = [];
+		}
+		
+		\app\Model_DB_User::mass_delete_roles($_POST['selected']);
+		
+		\app\Layer_HTTP::redirect
+			(
+				'\ibidem\backend', 
+				['slug' => 'user-roles'], 
+				['tab' => 'access']
+			);
+	}
+	
+	function backend($slug)
+	{
+		return \app\Relay::route('\ibidem\backend', ['slug' => $slug]);
 	}
 	
 	function users($page, $limit)

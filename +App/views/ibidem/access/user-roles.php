@@ -12,21 +12,69 @@
 
 <? if ( ! empty($roles)): ?>
 
-	<table>
-		<thead>
-			<tr>
-				<th>role</th>
-			</tr>
-		</thead>
-		<tbody>
-			<? foreach ($roles as $role): ?>
-				<tr>
-					<td><?= $role['title'] ?></td>
-				</tr>
-			<? endforeach; ?>
-		</tbody>
-	</table>
+	<?= $form = Form::instance()
+		->method(\ibidem\types\HTTP::POST)
+		->action($control->action('roles-delete'))
+		->field_template(':field') ?>
 
+	<?= $form->close() ?>
+
+		<table>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>role</th>
+					<th>options</th>
+				</tr>
+			</thead>
+			<tbody>
+				<? foreach ($roles as $role): ?>
+					<tr>
+						<td>
+							<?= $form->checkbox(null, 'selected[]')
+								->attribute('form', $form->form_id())
+								->value($role['id']) ?>
+						</td>
+						<td><?= $role['title'] ?></td>
+						<td>					
+							<?= $edit_form = \app\Form::instance() 
+								->method(\ibidem\types\HTTP::POST)
+								->action($control->action('role-edit'))
+								->field_template(':field') ?>
+							
+								<div>
+									<?= $edit_form->hidden('id')->value($role['id']) ?>
+									<?= $edit_form->submit('Edit') ?>
+								</div>
+							
+							<?= $edit_form->close() ?>
+							
+							<?= $delete_form = \app\Form::instance() 
+								->method(\ibidem\types\HTTP::POST)
+								->action($control->action('role-delete'))
+								->field_template(':field') ?>
+							
+								<div>
+									<?= $delete_form->hidden('id')->value($role['id']) ?>
+									<?= $delete_form->submit('Delete') ?>
+								</div>
+							
+							<?= $delete_form->close() ?>
+							
+						</td>
+					</tr>
+				<? endforeach; ?>
+			</tbody>
+		</table>
+
+		<div>
+			<button form="<?= $form->form_id() ?>">Delete Selected</button>
+		</div>
+
+	<?= $form->close() ?>
+	
+	<hr/>
+	
 	<?= $context->roles_pager()
 		->pagelimit($pagelimit)
 		->currentpage($page)
