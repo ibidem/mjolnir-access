@@ -787,5 +787,31 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			['COUNT(1)'];
 	}
 	
+	public static function user($id)
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT user.id id,
+					       assoc.role role,
+						   role.title roletitle,
+						   user.nickname nickname,
+						   user.email email,
+						   user.ipaddress ipaddress
+					  FROM `'.static::table().'` user
+					  JOIN `'.static::assoc_roles().'` assoc
+						ON user.id = assoc.user
+					  JOIN `'.static::roles_table().'` role
+						ON role.id = assoc.role
+					 WHERE user.id = :id
+						   
+				'
+			)
+			->set_int(':id', $id)
+			->execute()
+			->fetch_array();
+	}
+	
 } # class
 

@@ -127,11 +127,6 @@ class Backend_Access extends \app\Instantiatable
 			);
 	}
 	
-	function backend($slug)
-	{
-		return \app\Relay::route('\ibidem\backend', ['slug' => $slug]);
-	}
-	
 	function users($page, $limit)
 	{
 		return \app\Model_DB_User::users($page, $limit);
