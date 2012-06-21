@@ -39,7 +39,7 @@
 						<td>					
 							<?= $edit_form = \app\Form::instance() 
 								->method(\ibidem\types\HTTP::POST)
-								->action($control->action('role-edit'))
+								->action($control->backend('role-edit'))
 								->field_template(':field') ?>
 							
 								<div>
@@ -87,7 +87,7 @@
 <hr/>
 
 <section role="application">
-	<h3>Create Role</h3>
+	<h3>New Role</h3>
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST)
 		->field_template('<dt>:name</dt><dd>:field</dd>')

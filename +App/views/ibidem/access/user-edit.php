@@ -1,17 +1,18 @@
-<? namespace app; ?>
+<? namespace app; 
+	/* @var $context \app\Backend_Access */
+?>
 
 <? $id = $_POST['id'] ?>
-<? $user = \app\Model_DB_User::user($id) ?>
+<? $user = \array_merge($context->user($id), $_POST) ?>
 
 <section role="application">
 	<h2>Edit User #<?= $id ?></h2>
 
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST) 
-		->action($control->action('update'))
+		->errors($errors['\ibidem\access\backend\user-update'])
+		->action($control->action('user-update'))
 		->field_template('<dt>:name</dt> <dd>:field</dd>') ?>
-
-		<? $form->hidden('id')->value($user) ?>
 	
 		<dl>
 			<?= $form->text('Nickname', 'nickname')->value($user['nickname']) ?>
@@ -23,6 +24,7 @@
 	
 		<div>
 			<hr/>
+			<?= $form->hidden('id')->value($id) ?>
 			<button tabindex="<?= Form::tabindex() ?>">Update</button>
 		</div>
 

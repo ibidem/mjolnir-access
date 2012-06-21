@@ -10,26 +10,19 @@
 class Model_DB_User extends \app\Model_SQL_Factory
 {
 	protected static $table = 'users';
-	protected static $roles_table = 'roles';
 	protected static $user_role_table = 'user_role';
-	
+		
 	/**
-	 * @return string 
-	 */
-	public static function roles_table()
-	{
-		$database_config = \app\CFS::config('ibidem/database');
-		return $database_config['table_prefix'].static::$roles_table;
-	}
-	
-	/**
-	 * @return string 
+	 * @return string table name
 	 */
 	public static function assoc_roles()
 	{
 		$database_config = \app\CFS::config('ibidem/database');
 		return $database_config['table_prefix'].static::$user_role_table;
 	}
+	
+	// -------------------------------------------------------------------------
+	// Model_Factory interface
 	
 	/**
 	 * @param array fields
@@ -126,141 +119,6 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
-	 * Validator helper.
-	 * 
-	 * @return boolean
-	 */
-	public static function unique_role($role)
-	{
-		$first_row = \app\SQL::prepare
-			(
-				__METHOD__, 
-				'
-					SELECT COUNT(1)
-					  FROM '.static::roles_table().'
-					 WHERE title = :role
-				', 
-				'mysql'
-			)
-			->bind(':role', $role)
-			->execute()
-			->fetch_array();
-		
-		$count = $first_row['COUNT(1)'];
-		
-		if (\intval($count) != 0)
-		{
-			return false;
-		}
-		
-		// test passed
-		return true;
-	}
-	
-	/**
-	 * 
-	 * @param array (title)
-	 * @return \app\Validator
-	 */
-	static function validator_role(array $fields)
-	{
-		$user_config = \app\CFS::config('model/UserRole');
-		
-		return \app\Validator::instance($user_config['errors'], $fields)
-			->rule('title', 'not_empty')
-			->rule('title', '\app\Model_DB_User::unique_role');
-	}
-	
-	/**
-	 * @param array (title)
-	 * @throws \ibidem\access\Exception
-	 */
-	static function assemble_role(array $fields)
-	{
-		\app\SQL::begin(); # begin transaction
-		try
-		{
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						INSERT INTO `'.static::roles_table().'`
-							(
-								title
-							)
-						VALUES
-							(
-								:title 
-							)
-					',
-					'mysql'
-				)
-				->set(':title', \htmlspecialchars($fields['title']))
-				->execute();
-			
-			static::$last_inserted_id = \app\SQL::last_inserted_id();
-			
-			\app\SQL::commit();
-		} 
-		catch (\Exception $exception)
-		{
-			\app\SQL::rollback();
-			throw $exception;
-		}
-	}
-	
-	static function build_role(array $fields)
-	{
-		$validator = static::validator_role($fields);
-		
-		if ($validator === null || $validator->validate() === null)
-		{
-			static::assemble_role($fields);
-			
-			// invalidate caches
-			static::cache_reset($fields);
-		}
-		else # did not pass validation
-		{
-			return $validator;
-		}
-		
-		return null;
-	}
-	
-	/**
-	 * Validator helper.
-	 * 
-	 * @return boolean
-	 */
-	public static function unique_nickname($nickname)
-	{
-		$first_row = \app\SQL::prepare
-			(
-				__METHOD__, 
-				'
-					SELECT COUNT(1)
-					  FROM '.static::table().'
-					 WHERE nickname = :nickname
-				', 
-				'mysql'
-			)
-			->bind(':nickname', $nickname)
-			->execute()
-			->fetch_array();
-		
-		$count = $first_row['COUNT(1)'];
-		
-		if (\intval($count) != 0)
-		{
-			return false;
-		}
-		
-		// test passed
-		return true;
-	}
-	
-	/**
 	 * @param string user id 
 	 * @param array config
 	 */
@@ -283,189 +141,175 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			->bind_int(':role', $config['signup']['role'])
 			->execute();
 	}
-	
+
+
 	/**
-	 * @param string password (plaintext)
-	 * @param string salt
-	 * @return array (salt, verifier)
-	 */
-	protected static function generate_password($password_text, $salt = null)
-	{
-		$password = array();
-		
-		// load configuration
-		$security = \app\CFS::config('ibidem/security');
-		
-		// generate password salt and hash
-		if ($salt === null)
-		{
-			$password['salt'] = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
-		}
-		else # salt provided
-		{
-			$password['salt'] = $salt;
-		}
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password_text, $security['keys']['apikey'], false);
-		$password['verifier'] = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $password['salt'], false);
-		
-		return $password;
-	}
-	
-	/**
-	 * @param type $id
-	 * @param array $fields 
+	 * @param int id
+	 * @param array fields 
 	 * @return \app\Validator
 	 */
 	public static function update_validator($id, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
-		return \app\Validator::instance($user_config['errors'], $fields);
+		return \app\Validator::instance($user_config['errors'], $fields)
+			->rule('nickname', '\app\Model_DB_User::unique_new_nickname', $id);
 	}
 	
 	/**
 	 * @param int id
 	 * @param array fields 
+	 * @return \app\Validator|null
 	 */
-	public static function update($id, array $fields)
+	public static function update_assemble($id, array $fields)
 	{
-		$validator = static::update_validator($id, $fields);
-		
-		if ($validator->validate() === null)
+		\app\SQL::begin();
+		try
 		{
-			\app\SQL::begin();
-			try
+			// get current nickname
+			$current_info = \app\SQL::prepare
+				(
+					__METHOD__.':check_nickname',
+					'
+						SELECT *
+						  FROM `'.static::table().'` user
+						 WHERE user.id = :id
+					',
+					'mysql'
+				)
+				->bind_int(':id', $id)
+				->execute()
+				->fetch_array();
+
+			if ($current_info['nickname'] != $fields['nickname'])
 			{
-				// get current nickname
-				$current_info = \app\SQL::prepare
-					(
-						__METHOD__.':check_nickname',
-						'
-							SELECT *
-							  FROM `'.static::table().'` user
-							 WHERE user.id = :id
-						',
-						'mysql'
-					)
-					->bind_int(':id', $id)
-					->execute()
-					->fetch_array();
-				
-				if ($current_info['nickname'] != $fields['nickname'])
+				// check if available
+				if ( ! static::unique_nickname($fields['nickname']))
 				{
-					// check if available
-					if ( ! static::unique_nickname($fields['nickname']))
-					{
-						$fields['nickname'] = $current_info['nickname'];
-					}
+					$fields['nickname'] = $current_info['nickname'];
 				}
-				
-				// update role
-				\app\SQL::prepare
-					(
-						__METHOD__.':update_role',
-						'
-							UPDATE `'.static::assoc_roles().'`
-							   SET role = :role
-							 WHERE user = :user
-						',
-						'mysql'
-					)
-					->set_int(':user', $id)
-					->set_int(':role', $fields['role'])
-					->execute();
-				
-				\app\SQL::prepare
-					(
-						__METHOD__,
-						'
-							UPDATE `'.static::table().'`
-							   SET nickname = :nickname,
-							       given_name = :given_name,
-							       family_name = :family_name,
-							       email = :email
-							 WHERE id = :id
-						',
-						'mysql'
-					)
-					->set(':nickname', $fields['nickname'])
-					->set(':given_name', $fields['given_name'])
-					->set(':family_name', $fields['family_name'])
-					->set(':email', $fields['email'])
-					->bind_int(':id', $id)
-					->execute();
-				
-				\app\SQL::commit();
 			}
-			catch (\Exception $e)
-			{
-				\app\SQL::rollback();
-				throw $e;
-			}
-			
-			return null;
+
+			// update role
+			\app\SQL::prepare
+				(
+					__METHOD__.':update_role',
+					'
+						UPDATE `'.static::assoc_roles().'`
+						   SET role = :role
+						 WHERE user = :user
+					',
+					'mysql'
+				)
+				->set_int(':user', $id)
+				->set_int(':role', $fields['role'])
+				->execute();
+
+			\app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						UPDATE `'.static::table().'`
+						   SET nickname = :nickname,
+							   email = :email
+						 WHERE id = :id
+					',
+					'mysql'
+				)
+				->set(':nickname', $fields['nickname'])
+				->set(':email', $fields['email'])
+				->bind_int(':id', $id)
+				->execute();
+
+			\app\SQL::commit();
 		}
-		else # invalid
+		catch (\Exception $e)
 		{
-			return $validator;
+			\app\SQL::rollback();
+			throw $e;
 		}
 	}
 	
 	/**
-	 * Confirm password matches user.
-	 * 
-	 * @param string password
-	 * @param int user
-	 * @return boolean 
+	 * @param int page
+	 * @param int limit
+	 * @param int offset
+	 * @param string order key
+	 * @param string order
+	 * @return array (id, role, roletitle, nickname, email, ipaddress)
 	 */
-	public static function matching_password($password, $user)
+	public static function entries($page, $limit, $offset = 0, $sort = 'id', $order = 'ASC')
 	{
-		// get user data
-		$user_info = \app\SQL::prepare
+		return \app\SQL::prepare
 			(
 				__METHOD__,
 				'
-					SELECT users.passwordsalt salt,
-					       users.passwordverifier verifier
-					  FROM `'.\app\Model_DB_User::table().'` users
-					 WHERE users.id = :user
-					 LIMIT 1
+					SELECT  user.id id,
+					        user.nickname nickname, 
+					        user.email email,
+					        role.id role,
+					        role.title roletitle,
+					        user.ipaddress ipaddress
+					  FROM `'.\app\Model_DB_User::table().'` AS user,
+					       `'.\app\Model_DB_Role::table().'` AS role,
+					       `'.\app\Model_DB_User::assoc_roles().'` AS assoc_roles
+					 WHERE assoc_roles.role = role.id 
+					   AND assoc_roles.user = user.id 
+					 ORDER BY :sort '.$order.'
+					 LIMIT :limit OFFSET :offset
 				',
 				'mysql'
 			)
-			->set_int(':user', $user)
+			->page($page, $limit, $offset)
+			->set(':sort', $sort)
+			->execute()
+			->fetch_all();
+	}
+	
+	/**
+	 * 
+	 * @param type $id
+	 * @return array (id, role, roletitle, nickname, email, ipaddress)
+	 */
+	public static function entry($id)
+	{
+		return \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT user.id id,
+					       assoc.role role,
+						   role.title roletitle,
+						   user.nickname nickname,
+						   user.email email,
+						   user.ipaddress ipaddress
+					  FROM `'.static::table().'` user
+					  JOIN `'.static::assoc_roles().'` assoc
+						ON user.id = assoc.user
+					  JOIN `'.\app\Model_DB_Role::table().'` role
+						ON role.id = assoc.role
+					 WHERE user.id = :id
+						   
+				'
+			)
+			->set_int(':id', $id)
 			->execute()
 			->fetch_array();
-		
-		// compute verifier for given password
-		$test = static::generate_password($password, $user_info['salt']);
-		
-		if ($test['verifier'] == $user_info['verifier'])
-		{
-			return true;
-		}
-		else # does not match
-		{
-			return false;
-		}
 	}
+	
+	// -------------------------------------------------------------------------
+	// Extended methods
 	
 	/**
 	 * @param array fields
 	 * @return \app\Validator|null
 	 */
-	public static function validator_change_passwords(array $fields)
+	public static function validator_change_passwords($user, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
 		
 		return \app\Validator::instance($user_config['errors'], $fields)
-			->rule('new_password', 'not_empty')
-			->rule('verifier', 'equal_to', $fields['new_password'])
-			->rule
-				(
-					'password', 
-					'\app\Model_DB_User::matching_password', 
-					\app\A12n::instance()->user()
-				);
+			->rule('password', 'not_empty')
+			->rule('verifier', 'equal_to', $fields['password']);
 	}
 	
 	/**
@@ -473,14 +317,14 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	 * @param int user
 	 * @return \app\Validator|null 
 	 */
-	public static function change_password(array $fields, $user)
+	public static function change_password($user, array $fields)
 	{
-		$validator = static::validator_change_passwords($fields);
+		$validator = static::validator_change_passwords($user, $fields);
 		
 		if ($validator->validate() === null)
-		{
+		{		
 			// compute password
-			$password = static::generate_password($fields['new_password']);
+			$password = static::generate_password($fields['password']);
 			
 			\app\SQL::prepare
 				(
@@ -567,7 +411,6 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					SELECT *
 					FROM '.static::table().'
 					WHERE nickname = :nickname
-					  AND deleted = FALSE
 					LIMIT 1
 				',
 				'mysql'
@@ -607,210 +450,137 @@ class Model_DB_User extends \app\Model_SQL_Factory
 		
 		// all tests passed
 		return $user['id'];
-	}	
-		
-	/**
-	 * @param int id
-	 * @return string
-	 */
-	public static function user_role($user)
-	{
-		$result = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT roles.title role
-					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
-						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc
-					 WHERE roles.id = assoc.role
-					   AND assoc.user = :user
-				',
-				'mysql'
-			)
-			->bind_int(':user', $user)
-			->execute()
-			->fetch_array();
-		
-		return $result['role'];
 	}
 	
-	/**
-	 * @param int page
-	 * @param int limit
-	 * @return array (id, nickname, email, role)
-	 */
-	public static function users($page = 1, $limit = 10)
-	{
-		return \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT  user.id id,
-					        user.nickname nickname, 
-					        user.email email,
-					        role.title role,
-							user.ipaddress ipaddress
-					  FROM `'.\app\Model_DB_User::table().'` AS user,
-						   `'.\app\Model_DB_User::roles_table().'` AS role,
-						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc_roles
-					 WHERE assoc_roles.role = role.id 
-					   AND assoc_roles.user = user.id 
-					   AND user.deleted = FALSE
-					 ORDER BY user.id ASC
-				',
-				'mysql'
-			)
-			->execute()
-			->fetch_all();
-	}
+
+	
+	// -------------------------------------------------------------------------
+	// Validator Helpers
 	
 	/**
-	 * @param int id
-	 * @return string
+	 * @return boolean
 	 */
-	public static function user_role_id($user)
+	public static function unique_nickname($nickname)
 	{
-		$result = \app\SQL::prepare
+		$count = \app\SQL::prepare
 			(
-				__METHOD__,
+				__METHOD__, 
 				'
-					SELECT roles.id role_id
-					  FROM `'.\app\Model_DB_User::roles_table().'` AS roles,
-						   `'.\app\Model_DB_User::assoc_roles().'` AS assoc
-					 WHERE roles.id = assoc.role
-					   AND assoc.user = :user
-				',
+					SELECT COUNT(1)
+					  FROM '.static::table().'
+					 WHERE nickname = :nickname
+				', 
 				'mysql'
 			)
-			->bind_int(':user', $user)
+			->bind(':nickname', $nickname)
 			->execute()
-			->fetch_array();
+			->fetch_array()
+			['COUNT(1)'];
 		
-		return $result['role_id'];
-	}
-	
-	/**
-	 * @return array (id, title)
-	 */
-	public static function user_roles()
-	{
-		return \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT role.id id,
-					       role.title title
-					  FROM `'.static::roles_table().'` role
-				',
-				'mysql'
-			)
-			->execute()
-			->fetch_all();
-	}
-	
-	/**
-	 * @param array user id's 
-	 */
-	public static function mass_delete(array $user_ids)
-	{
-		$user = null;
-		$statement = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					UPDATE `'.static::table().'` user
-					   SET user.deleted = TRUE
-					 WHERE user.id = :user
-				',
-				'mysql'
-			)
-			->bind_int(':user', $user);
-		
-		foreach ($user_ids as $id)
+		if (\intval($count) != 0)
 		{
-			$user = $id;
-			$statement->execute();
+			return false;
 		}
-	}
-	
-	public static function mass_delete_roles(array $role_ids)
-	{
-		$role = null;
-		$statement = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					DELETE FROM `'.static::roles_table().'`
-					 WHERE id = :role
-				',
-				'mysql'
-			)
-			->bind_int(':role', $role);
 		
-		foreach ($role_ids as $id)
-		{
-			$role = $id;
-			$statement->execute();
-		}
+		// test passed
+		return true;
 	}
 	
-	public static function count()
+	/**
+	 * @param string nickname
+	 * @param int user
+	 * @return bool 
+	 */
+	public static function unique_new_nickname($nickname, $user)
 	{
-		return \app\SQL::prepare
+		$count = \app\SQL::prepare
 			(
 				__METHOD__,
 				'
 					SELECT COUNT(1)
 					  FROM `'.static::table().'` user
-					 WHERE user.deleted = FALSE
+					 WHERE user.id != :user 
+					   AND user.nickname = :nickname
+					 LIMIT 1
 				',
 				'mysql'
 			)
+			->set(':nickname', $nickname)
+			->set_int(':user', $user)
 			->execute()
 			->fetch_array()
 			['COUNT(1)'];
+		
+		return ((int) $count) == 0;
 	}
 	
-	public static function roles_count()
+	/**
+	 * Confirm password matches user.
+	 * 
+	 * @param string password
+	 * @param int user
+	 * @return boolean 
+	 */
+	public static function matching_password($password, $user)
 	{
-		return \app\SQL::prepare
+		// get user data
+		$user_info = \app\SQL::prepare
 			(
 				__METHOD__,
 				'
-					SELECT COUNT(1)
-					  FROM `'.static::roles_table().'` role
+					SELECT users.passwordsalt salt,
+					       users.passwordverifier verifier
+					  FROM `'.\app\Model_DB_User::table().'` users
+					 WHERE users.id = :user
+					 LIMIT 1
 				',
 				'mysql'
 			)
-			->execute()
-			->fetch_array()
-			['COUNT(1)'];
-	}
-	
-	public static function user($id)
-	{
-		return \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT user.id id,
-					       assoc.role role,
-						   role.title roletitle,
-						   user.nickname nickname,
-						   user.email email,
-						   user.ipaddress ipaddress
-					  FROM `'.static::table().'` user
-					  JOIN `'.static::assoc_roles().'` assoc
-						ON user.id = assoc.user
-					  JOIN `'.static::roles_table().'` role
-						ON role.id = assoc.role
-					 WHERE user.id = :id
-						   
-				'
-			)
-			->set_int(':id', $id)
+			->set_int(':user', $user)
 			->execute()
 			->fetch_array();
+		
+		// compute verifier for given password
+		$test = static::generate_password($password, $user_info['salt']);
+		
+		if ($test['verifier'] == $user_info['verifier'])
+		{
+			return true;
+		}
+		else # does not match
+		{
+			return false;
+		}
+	}
+
+	// -------------------------------------------------------------------------
+	// Helpers
+	
+	/**
+	 * @param string password (plaintext)
+	 * @param string salt
+	 * @return array (salt, verifier)
+	 */
+	protected static function generate_password($password_text, $salt = null)
+	{
+		$password = array();
+		
+		// load configuration
+		$security = \app\CFS::config('ibidem/security');
+		
+		// generate password salt and hash
+		if ($salt === null)
+		{
+			$password['salt'] = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
+		}
+		else # salt provided
+		{
+			$password['salt'] = $salt;
+		}
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password_text, $security['keys']['apikey'], false);
+		$password['verifier'] = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $password['salt'], false);
+		
+		return $password;
 	}
 	
 } # class

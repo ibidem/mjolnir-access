@@ -40,7 +40,7 @@
 					</td>
 					<td><?= $user['nickname'] ?></td>
 					<td><?= $user['email'] ?></td>
-					<td><?= $user['role'] ?></td>
+					<td><?= $user['roletitle'] ?></td>
 					<td><?= $user['ipaddress'] ?></td>
 					<td>
 
@@ -81,7 +81,6 @@
 	<hr/>
 
 	<?= $context->users_pager()
-		->url_base('?')
 		->pagelimit($pagelimit)
 		->currentpage($page)
 		->render() ?>
@@ -93,11 +92,12 @@
 <hr/>
 
 <section role="application">
-	<h3>Create User</h3>
+	<h3>New User</h3>
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST)
 		->field_template('<dt>:name</dt><dd>:field</dd>')
 		->errors($errors['\ibidem\access\backend\user-new'])
+		->auto_complte($_POST)
 		->action($control->action('user-new')) ?>
 
 		<dl>

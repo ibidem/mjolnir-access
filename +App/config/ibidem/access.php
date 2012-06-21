@@ -20,7 +20,8 @@
 									[
 										'user-manager', 
 										'user-edit',
-										'user-roles'
+										'role-manager',
+										'role-edit'
 									]
 								)
 					),

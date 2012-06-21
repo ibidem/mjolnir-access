@@ -20,7 +20,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				array
 				(
 					'user' => array(\app\Model_DB_User::table(), 'CASCADE', 'CASCADE'),
-					'role' => array(\app\Model_DB_User::roles_table(), 'CASCADE', 'CASCADE'),
+					'role' => array(\app\Model_DB_Role::table(), 'CASCADE', 'CASCADE'),
 				)
 			);
 	}
@@ -42,7 +42,6 @@ class Migration_User extends \app\Migration_Template_MySQL
 					`passwordsalt` :secure_hash,
 					`passworddate` :datetime_required,
 					`datetime`     :timestamp,
-					`deleted`      :boolean DEFAULT FALSE,
 					
 					PRIMARY KEY (`id`)
 				"
@@ -50,7 +49,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_DB_User::roles_table(), 
+				\app\Model_DB_Role::table(), 
 				"
 					`id`    :key_primary,
 					`title` :title NOT NULL,
@@ -81,7 +80,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				(
 					__METHOD__,
 					'
-						INSERT INTO `'.\app\Model_DB_User::roles_table().'`
+						INSERT INTO `'.\app\Model_DB_Role::table().'`
 							(id, title) VALUES (:id, :title)
 					',
 					'mysql'
@@ -112,7 +111,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				array
 				(
 					\app\Model_DB_User::table(), 
-					\app\Model_DB_User::roles_table(), 
+					\app\Model_DB_Role::table(), 
 					\app\Model_DB_User::assoc_roles()
 				)
 			);
