@@ -9,7 +9,14 @@
  */
 class Model_DB_User extends \app\Model_SQL_Factory
 {
+	/**
+	 * @var string 
+	 */
 	protected static $table = 'users';
+	
+	/**
+	 * @var string 
+	 */
 	protected static $user_role_table = 'user_role';
 		
 	/**
@@ -19,6 +26,14 @@ class Model_DB_User extends \app\Model_SQL_Factory
 	{
 		$database_config = \app\CFS::config('ibidem/database');
 		return $database_config['table_prefix'].static::$user_role_table;
+	}
+	
+	/**
+	 * @return string table
+	 */
+	public static function roles_table()
+	{
+		return \app\Model_DB_Role::table();
 	}
 	
 	// -------------------------------------------------------------------------
@@ -99,7 +114,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					(
 						__METHOD__.':assign_role',
 						'
-							UPDATE `'.\app\Model_DB_User::assoc_roles().'`
+							UPDATE `'.static::assoc_roles().'`
 							SET role = :role
 							WHERE user = '.$user.'
 						',
@@ -249,9 +264,9 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					        role.id role,
 					        role.title roletitle,
 					        user.ipaddress ipaddress
-					  FROM `'.\app\Model_DB_User::table().'` AS user,
-					       `'.\app\Model_DB_Role::table().'` AS role,
-					       `'.\app\Model_DB_User::assoc_roles().'` AS assoc_roles
+					  FROM `'.static::table().'` AS user,
+					       `'.static::roles_table().'` AS role,
+					       `'.static::assoc_roles().'` AS assoc_roles
 					 WHERE assoc_roles.role = role.id 
 					   AND assoc_roles.user = user.id 
 					 ORDER BY :sort '.$order.'
@@ -285,7 +300,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 					  FROM `'.static::table().'` user
 					  JOIN `'.static::assoc_roles().'` assoc
 						ON user.id = assoc.user
-					  JOIN `'.\app\Model_DB_Role::table().'` role
+					  JOIN `'.static::roles_table().'` role
 						ON role.id = assoc.role
 					 WHERE user.id = :id
 						   
@@ -530,7 +545,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				'
 					SELECT users.passwordsalt salt,
 					       users.passwordverifier verifier
-					  FROM `'.\app\Model_DB_User::table().'` users
+					  FROM `'.static::table().'` users
 					 WHERE users.id = :user
 					 LIMIT 1
 				',

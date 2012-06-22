@@ -33,7 +33,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		$this->createtable
 			(
 				\app\Model_DB_User::table(), 
-				"
+				'
 					`id`           :key_primary,
 					`nickname`     :username,
 					`email`        :email,
@@ -44,30 +44,30 @@ class Migration_User extends \app\Migration_Template_MySQL
 					`datetime`     :timestamp,
 					
 					PRIMARY KEY (`id`)
-				"
+				'
 			);
 		
 		$this->createtable
 			(
 				\app\Model_DB_Role::table(), 
-				"
+				'
 					`id`    :key_primary,
 					`title` :title NOT NULL,
 					
 					PRIMARY KEY (`id`)
-				"
+				'
 			);
 		
 		$this->createtable
 			(
 				\app\Model_DB_User::assoc_roles(),
-				"
+				'
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
 					
 					KEY `user` (`user`,`role`),
 					KEY `role` (`role`)
-				"
+				'
 			);
 		
 		$access_config = \app\CFS::config('ibidem/access');
