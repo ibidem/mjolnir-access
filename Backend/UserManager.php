@@ -26,8 +26,7 @@ class Backend_UserManager extends \app\Instantiatable
 				\app\Layer_HTTP::redirect
 					(
 						'\ibidem\backend', 
-						['slug' => 'user-manager'], 
-						['tab' => 'access']
+						['slug' => 'user-manager']
 					);
 				
 				return null;
@@ -49,8 +48,7 @@ class Backend_UserManager extends \app\Instantiatable
 		\app\Layer_HTTP::redirect
 			(
 				'\ibidem\backend', 
-				['slug' => 'user-manager'], 
-				['tab' => 'access']
+				['slug' => 'user-manager']
 			);
 	}
 	
@@ -61,8 +59,7 @@ class Backend_UserManager extends \app\Instantiatable
 		\app\Layer_HTTP::redirect
 			(
 				'\ibidem\backend', 
-				['slug' => 'user-manager'], 
-				['tab' => 'access']
+				['slug' => 'user-manager']
 			);
 	}
 	

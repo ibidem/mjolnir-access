@@ -26,8 +26,7 @@ class Backend_RoleManager extends \app\Instantiatable
 				\app\Layer_HTTP::redirect
 					(
 						'\ibidem\backend', 
-						['slug' => 'user-roles'], 
-						['tab' => 'access']
+						['slug' => 'role-manager']
 					);
 				
 				return null;
@@ -60,8 +59,7 @@ class Backend_RoleManager extends \app\Instantiatable
 		\app\Layer_HTTP::redirect
 			(
 				'\ibidem\backend', 
-				['slug' => 'user-roles'], 
-				['tab' => 'access']
+				['slug' => 'role-manager']
 			);
 	}
 	
@@ -77,8 +75,7 @@ class Backend_RoleManager extends \app\Instantiatable
 		\app\Layer_HTTP::redirect
 			(
 				'\ibidem\backend', 
-				['slug' => 'user-roles'], 
-				['tab' => 'access']
+				['slug' => 'role-manager']
 			);
 	}
 	
