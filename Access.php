@@ -108,10 +108,10 @@ final class Access
 	 * @param string attribute associated to the relay
 	 * @return boolean
 	 */
-	public static function can($relay, array $context = null, $attribute = null)
+	public static function can($relay, array $context = null, $attribute = null, $user_role = null)
 	{
 		// get role of current user
-		$user_role = \app\A12n::instance()->role();
+		$user_role = $user_role !== null ? $user_role : \app\A12n::instance()->role();
 		
 		// initial status
 		$status = false; # unauthorized
