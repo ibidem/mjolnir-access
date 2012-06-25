@@ -48,7 +48,7 @@ class Model_DB_Role extends \app\Model_SQL_Factory
 				(
 					__METHOD__,
 					'
-						INSERT INTO `'.static::roles_table().'`
+						INSERT INTO `'.static::table().'`
 							(
 								title
 							)
@@ -162,7 +162,7 @@ class Model_DB_Role extends \app\Model_SQL_Factory
 				__METHOD__, 
 				'
 					SELECT COUNT(1)
-					  FROM '.static::roles_table().'
+					  FROM '.static::table().'
 					 WHERE title = :role
 				', 
 				'mysql'

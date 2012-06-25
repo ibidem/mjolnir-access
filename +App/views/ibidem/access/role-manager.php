@@ -6,7 +6,7 @@
 	$pagelimit = 10;
 ?>
 
-<h2>User Roles</h2>
+<h1>User Roles</h1>
 
 <? $roles = $context->roles($page, $pagelimit) ?>
 
@@ -19,14 +19,16 @@
 
 	<?= $form->close() ?>
 
-		<table>
-			<thead>
-				<tr>
-					<th>#</th>
-					<th>role</th>
-					<th>options</th>
-				</tr>
-			</thead>
+		<table class="table table-striped">
+			<? foreach (['thead', 'tfoot'] as $tag): ?>
+				<<?= $tag ?>>
+					<tr>
+						<th>&nbsp;</th>
+						<th>role</th>
+						<th>&nbsp;</th>
+					</tr>
+				</<?= $tag ?>>
+			<? endforeach; ?>
 			<tbody>
 				<? foreach ($roles as $role): ?>
 					<tr>
@@ -40,24 +42,26 @@
 							<?= $edit_form = \app\Form::instance() 
 								->method(\ibidem\types\HTTP::POST)
 								->action($control->backend('role-edit'))
-								->field_template(':field') ?>
+								->field_template(':field')
+								->classes(['form-inline', 'pull-left']) ?>
 							
-								<div>
+								<fieldset>
 									<?= $edit_form->hidden('id')->value($role['id']) ?>
-									<?= $edit_form->submit('Edit') ?>
-								</div>
+									<?= $edit_form->submit('Edit')->classes(['btn', 'btn-mini', 'btn-warning']) ?>
+								</fieldset>
 							
 							<?= $edit_form->close() ?>
 							
 							<?= $delete_form = \app\Form::instance() 
 								->method(\ibidem\types\HTTP::POST)
 								->action($control->action('role-delete'))
-								->field_template(':field') ?>
+								->field_template(':field') 
+								->classes(['form-inline', 'pull-left']) ?>
 							
-								<div>
+								<fieldset>
 									<?= $delete_form->hidden('id')->value($role['id']) ?>
-									<?= $delete_form->submit('Delete') ?>
-								</div>
+									<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
+								</fieldset>
 							
 							<?= $delete_form->close() ?>
 							
@@ -67,41 +71,54 @@
 			</tbody>
 		</table>
 
-		<div>
-			<button form="<?= $form->form_id() ?>">Delete Selected</button>
-		</div>
-
 	<?= $form->close() ?>
 	
-	<hr/>
-	
-	<?= $context->roles_pager()
-		->pagelimit($pagelimit)
-		->currentpage($page)
-		->render() ?>
+	<div class="row">
+		
+		<div class="span2">
+			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
+		</div>
+		
+		<div class="span8">
+			<div class="pull-right">
+				<?= $context->roles_pager()
+					->pagelimit($pagelimit)
+					->currentpage($page)
+					->standard('twitter')
+					->render() ?>
+			</div>
+		</div>
+
+	</div>
 
 <? else: # no users in system ?>
-	<p class="empty"><em>There are currently no roles defined.</em></p>
+	<br/>
+	<p class="alert alert-info">There are currently <strong>no roles</strong> defined.</p>
 <? endif; ?>
 
 <hr/>
 
 <section role="application">
-	<h3>New Role</h3>
+	<h2>New Role</h2>
+	<br/>
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST)
-		->field_template('<dt>:name</dt><dd>:field</dd>')
+		->field_template
+			(
+				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
+			)
 		->errors($errors['\ibidem\access\backend\role-new'])
-		->action($control->action('role-new')) ?>
+		->action($control->action('role-new'))
+		->classes(['form-horizontal']) ?>
 
-		<dl>
+		<fieldset>
 			<?= $form->text('Title', 'title')->autocomplete(false) ?>
-		</dl>
+			<div class="form-actions">
+				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Create Role</button>
+			</div>
+		</fieldset>
 	
-		<div>
-			<hr/>
-			<button tabindex="<?= Form::tabindex() ?>">Create</button>
-		</div>
+		
 
 	<?= $form->close() ?>
 </section>

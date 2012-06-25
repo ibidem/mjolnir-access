@@ -6,23 +6,30 @@
 <? $role = \array_merge($context->role($id), $_POST) ?>
 
 <section role="application">
-	<h2>Edit User #<?= $id ?></h2>
-
+	
+	<h1>Edit Role #<?= $id ?></h1>
+	<br/>
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST) 
 		->errors($errors['\ibidem\access\backend\role-update'])
 		->action($control->action('role-update'))
-		->field_template('<dt>:name</dt> <dd>:field</dd>') ?>
+		->field_template
+			(
+				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
+			)
+		->classes(['form-horizontal']) ?>
 	
-		<dl>
-			<?= $form->text('Title', 'title')->value($role['title']) ?>
-		</dl>
-	
-		<div>
-			<hr/>
+		<fieldset>
 			<?= $form->hidden('id')->value($id) ?>
-			<button tabindex="<?= Form::tabindex() ?>">Update</button>
-		</div>
-
+			<?= $form->text('Title', 'title')->value($role['title']) ?>
+			<div class="form-actions">
+				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
+				<a class="btn btn-small" href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'role-manager']) ?>">
+					Cancel
+				</a>
+			</div>
+		</fieldset>
+	
 	<?= $form->close() ?>
+	
 </section>
