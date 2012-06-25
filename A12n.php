@@ -8,7 +8,6 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class A12n extends \app\Instantiatable
-	implements \ibidem\types\Auth
 {
 	/**
 	 * @var int
