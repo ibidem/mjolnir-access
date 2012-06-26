@@ -19,19 +19,17 @@
 
 	<?= $form->close() ?>
 
-	<table class="table table-striped">
-		<? foreach (['thead', 'tfoot'] as $tag): ?>
-			<<?= $tag ?>>
-				<tr>
-					<th>&nbsp;</th>
-					<th>nickname</th>
-					<th>role</th>
-					<th>email</th>
-					<th>ipaddress</th>
-					<th>&nbsp;</th>
-				</tr>
-			</<?= $tag ?>>
-		<? endforeach; ?>
+	<table class="table table-striped marginless">
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th>nickname</th>
+				<th>role</th>
+				<th>email</th>
+				<th>ipaddress</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
 		<tbody>
 			<? foreach ($users as $user): ?>
 				<tr>
@@ -74,18 +72,16 @@
 
 	<div class="row">
 		
-		<div class="span2">
-			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
-		</div>
-		
-		<div class="span8">
-			<div class="pull-right">
+		<div class="span9">
+			<br/>
+			<div class="pull-right marginless-pagination">
 				<?= $context->users_pager()
 					->pagelimit($pagelimit)
 					->currentpage($page)
 					->standard('twitter')
 					->render() ?>
 			</div>
+			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
 		</div>
 
 	</div>
@@ -96,7 +92,7 @@
 <? endif; ?>
 
 <hr/>
-
+	
 <section role="application">
 	
 	<h2>New User</h2>
