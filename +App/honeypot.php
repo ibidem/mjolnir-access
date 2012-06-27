@@ -1,13 +1,15 @@
 <?php namespace app;
 
-// This is a IDE honeypot. :)
+// This is an IDE honeypot. It tells IDEs the class hirarchy, but otherwise has
+// no effect on your application. :)
 
-// HowTo: minion honeypot -n "ibidem\\access"
+// HowTo: minion honeypot -n 'ibidem\access'
 
 class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \ibidem\access\Access {}
-class Backend_Access extends \ibidem\access\Backend_Access { /** @return \ibidem\access\Backend_Access */ static function instance() { return parent::instance(); } }
+class Backend_Role extends \ibidem\access\Backend_Role { /** @return \ibidem\access\Backend_Role */ static function instance() { return parent::instance(); } }
 class Backend_RoleManager extends \ibidem\access\Backend_RoleManager { /** @return \ibidem\access\Backend_RoleManager */ static function instance() { return parent::instance(); } }
+class Backend_User extends \ibidem\access\Backend_User { /** @return \ibidem\access\Backend_User */ static function instance() { return parent::instance(); } }
 class Backend_UserManager extends \ibidem\access\Backend_UserManager { /** @return \ibidem\access\Backend_UserManager */ static function instance() { return parent::instance(); } }
 class Controller_A12n extends \ibidem\access\Controller_A12n { /** @return \ibidem\access\Controller_A12n */ static function instance() { return parent::instance(); } }
 class Layer_Access extends \ibidem\access\Layer_Access { /** @return \ibidem\access\Layer_Access */ static function instance() { return parent::instance(); } }

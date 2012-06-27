@@ -4,32 +4,32 @@
 	
 		'Access' => array
 			(
-				'user-manager' => array
+				'user-index' => array
 					(
 						'icon' => 'user',
 						'title' => 'User Manager',
-						'context' => '\app\Backend_UserManager',
-						'view' => 'ibidem/access/user-manager'
+						'context' => '\app\Backend_User',
+						'view' => 'ibidem/access/user-index'
 					),
 				'user-edit' => array
 					(
 						'hidden' => true,
 						'title' => 'Edit User',
-						'context' => '\app\Backend_UserManager',
+						'context' => '\app\Backend_User',
 						'view' => 'ibidem/access/user-edit'
 					),
-				'role-manager' => array
+				'role-index' => array
 					(
 						'icon' => 'hand-right',
 						'title' => 'User Roles',
-						'context' => '\app\Backend_RoleManager',
-						'view' => 'ibidem/access/role-manager'
+						'context' => '\app\Backend_Role',
+						'view' => 'ibidem/access/role-index'
 					),
 				'role-edit' => array
 					(
 						'hidden' => true,
 						'title' => 'Edit Role',
-						'context' => '\app\Backend_RoleManager',
+						'context' => '\app\Backend_Role',
 						'view' => 'ibidem/access/role-edit'
 					),
 			),

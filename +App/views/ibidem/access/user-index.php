@@ -8,13 +8,13 @@
 
 <h1>User List</h1>
 
-<? $users = $context->users($page, $pagelimit) ?>
+<? $users = $context->entries($page, $pagelimit) ?>
 
 <? if ( ! empty($users)): ?>
 
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST)
-		->action($control->action('users-delete'))
+		->action($control->action('delete'))
 		->field_template(':field') ?>
 
 	<?= $form->close() ?>
@@ -56,7 +56,7 @@
 						
 						<?= $delete_form = \app\Form::instance() 
 							->method(\ibidem\types\HTTP::POST)
-							->action($control->action('user-delete'))
+							->action($control->action('erase'))
 							->field_template(':field')
 							->classes(['form-inline', 'pull-left']) ?>
 
@@ -75,7 +75,7 @@
 		<div class="span9">
 			<br/>
 			<div class="pull-right marginless-pagination">
-				<?= $context->users_pager()
+				<?= $context->pager()
 					->pagelimit($pagelimit)
 					->currentpage($page)
 					->standard('twitter')
@@ -103,9 +103,9 @@
 			(
 				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
 			)
-		->errors($errors['\ibidem\access\backend\user-new'])
+		->errors($errors['user-new'])
 		->auto_complte($_POST)
-		->action($control->action('user-new'))
+		->action($control->action('new'))
 		->classes(['form-horizontal']) ?>
 
 		<fieldset>
@@ -113,7 +113,7 @@
 			<?= $form->text('Email', 'email')->autocomplete(false) ?>
 			<?= $form->password('Password', 'password')->autocomplete(false) ?>
 			<?= $form->password('Password (verify)', 'verifier')->autocomplete(false) ?>
-			<?= $form->select('Role', 'role')->values($context->user_roles(), 'id', 'title') ?>
+			<?= $form->select('Role', 'role')->values($context->roles(), 'id', 'title') ?>
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Create User</button>
 			</div>

@@ -8,27 +8,25 @@
 
 <h1>User Roles</h1>
 
-<? $roles = $context->roles($page, $pagelimit) ?>
+<? $roles = $context->entries($page, $pagelimit) ?>
 
 <? if ( ! empty($roles)): ?>
 
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST)
-		->action($control->action('roles-delete'))
+		->action($control->action('delete'))
 		->field_template(':field') ?>
 
 	<?= $form->close() ?>
 
 	<table class="table table-striped marginless">
-		<? foreach (['thead'] as $tag): ?>
-			<<?= $tag ?>>
-				<tr>
-					<th>&nbsp;</th>
-					<th>role</th>
-					<th>&nbsp;</th>
-				</tr>
-			</<?= $tag ?>>
-		<? endforeach; ?>
+		<thead>
+			<tr>
+				<th>&nbsp;</th>
+				<th>role</th>
+				<th>&nbsp;</th>
+			</tr>
+		</thead>
 		<tbody>
 			<? foreach ($roles as $role): ?>
 				<tr>
@@ -54,7 +52,7 @@
 
 						<?= $delete_form = \app\Form::instance() 
 							->method(\ibidem\types\HTTP::POST)
-							->action($control->action('role-delete'))
+							->action($control->action('erase'))
 							->field_template(':field') 
 							->classes(['form-inline', 'pull-left']) ?>
 
@@ -76,7 +74,7 @@
 		<div class="span9">
 			<br/>
 			<div class="pull-right marginless-pagination">
-				<?= $context->roles_pager()
+				<?= $context->pager()
 					->pagelimit($pagelimit)
 					->currentpage($page)
 					->standard('twitter')
@@ -103,8 +101,8 @@
 			(
 				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
 			)
-		->errors($errors['\ibidem\access\backend\role-new'])
-		->action($control->action('role-new'))
+		->errors($errors['role-new'])
+		->action($control->action('new'))
 		->classes(['form-horizontal']) ?>
 
 		<fieldset>

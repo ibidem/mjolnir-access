@@ -18,9 +18,9 @@
 							->attributes
 								(
 									[
-										'user-manager', 
+										'user-index', 
 										'user-edit',
-										'role-manager',
+										'role-index',
 										'role-edit'
 									]
 								)

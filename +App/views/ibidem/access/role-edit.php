@@ -3,7 +3,7 @@
 ?>
 
 <? $id = $_POST['id'] ?>
-<? $role = \array_merge($context->role($id), $_POST) ?>
+<? $role = \array_merge($context->entry($id), $_POST) ?>
 
 <section role="application">
 	
@@ -11,8 +11,8 @@
 	<br/>
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST) 
-		->errors($errors['\ibidem\access\backend\role-update'])
-		->action($control->action('role-update'))
+		->errors($errors['role-update'])
+		->action($control->action('update'))
 		->field_template
 			(
 				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
@@ -24,7 +24,8 @@
 			<?= $form->text('Title', 'title')->value($role['title']) ?>
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
-				<a class="btn btn-small" href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'role-manager']) ?>">
+				<a class="btn btn-small" 
+				   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'role-index']) ?>">
 					Cancel
 				</a>
 			</div>

@@ -3,7 +3,7 @@
 ?>
 
 <? $id = $_POST['id'] ?>
-<? $user = \array_merge($context->user($id), $_POST) ?>
+<? $user = \array_merge($context->entry($id), $_POST) ?>
 
 <section role="application">
 	
@@ -13,8 +13,8 @@
 	
 	<?= $form = Form::instance()
 		->method(\ibidem\types\HTTP::POST) 
-		->errors($errors['\ibidem\access\backend\user-update'])
-		->action($control->action('user-update'))
+		->errors($errors['user-update'])
+		->action($control->action('update'))
 		->field_template
 			(
 				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
@@ -25,12 +25,16 @@
 			<?= $form->hidden('id')->value($id) ?>
 			<?= $form->text('Nickname', 'nickname')->value($user['nickname']) ?>
 			<?= $form->text('Email', 'email')->value($user['email']) ?>
-			<?= $form->select('Role', 'role')->values($context->user_roles(), 'id', 'title')->value($user['role']) ?>
+			<?= $form->select('Role', 'role')->values($context->roles(), 'id', 'title')->value($user['role']) ?>
 			<?= $form->password('Password', 'password')->autocomplete(false) ?>
 			<?= $form->password('Password (verify)', 'verifier')->autocomplete(false) ?>
 			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
-				<a class="btn btn-small" href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'user-manager']) ?>">
+				<button class="btn btn-primary" 
+						tabindex="<?= Form::tabindex() ?>">
+					Update
+				</button>
+				<a class="btn btn-small" 
+				   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'user-index']) ?>">
 					Cancel
 				</a>
 			</div>
