@@ -1,7 +1,9 @@
-<? namespace app; 
-	/* @var $context \app\Backend_Access */
+<? 
+	/* @var $context \app\Backend_Role */
 	/* @var $control \app\Controller_Backend */
-	 
+
+	namespace app; 
+
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 	$pagelimit = 10;
 ?>
