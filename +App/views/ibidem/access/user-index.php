@@ -37,8 +37,8 @@
 				<tr>
 					<td>
 						<?= $form->checkbox(null, 'selected[]')
-								->attribute('form', $form->form_id())
-								->value($user['id']) ?>
+							->attribute('form', $form->form_id())
+							->value($user['id']) ?>
 					</td>
 					<td><?= $user['nickname'] ?></td>
 					<td><em><?= $user['roletitle'] ?></em></td>
