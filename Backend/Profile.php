@@ -20,33 +20,6 @@ class Backend_Profile extends \app\Backend_Collection
 			);
 	}
 	
-	function update_profile()
-	{
-		$id = $_POST['id'];
-		
-		$validator = \app\Model_Profile::update($id, $_POST);
-		
-		$errors = [];
-		if ($validator !== null)
-		{
-			$errors = $validator->validate();
-		}
-		
-		if (empty($errors))
-		{
-			\app\Layer_HTTP::redirect
-				(
-					'\ibidem\backend', 
-					['slug' => $this->index]
-				);
-		}
-		else # got errors
-		{
-			$key = \strtolower($this->model).'-update';
-			$errors = [$key => $errors];
-			
-			return $errors;
-		}
-	}
+	
 	
 } # class
