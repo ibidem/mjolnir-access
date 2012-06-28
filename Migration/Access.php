@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Migration_User extends \app\Migration_Template_MySQL
+class Migration_Access extends \app\Migration_Template_MySQL
 {
 	/**
 	 * Perform post migration binding operations between tables. 
@@ -16,11 +16,21 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->constraints
 			(
-				\app\Model_DB_User::assoc_roles(),
+				\app\Model_User::assoc_roles(),
 				array
 				(
-					'user' => array(\app\Model_DB_User::table(), 'CASCADE', 'CASCADE'),
-					'role' => array(\app\Model_DB_Role::table(), 'CASCADE', 'CASCADE'),
+					'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
+					'role' => array(\app\Model_Role::table(), 'CASCADE', 'CASCADE'),
+				)
+			);
+		
+		$this->constraints
+			(
+				\app\Model_Profile::assoc_user(),
+				array
+				(
+					'field' => array(\app\Model_Profile::table(), 'CASCADE', 'CASCADE'),
+					'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
 				)
 			);
 	}
@@ -32,7 +42,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->createtable
 			(
-				\app\Model_DB_User::table(), 
+				\app\Model_User::table(), 
 				'
 					`id`           :key_primary,
 					`nickname`     :username,
@@ -41,7 +51,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 					`passwordverifier` :secure_hash,
 					`passwordsalt` :secure_hash,
 					`passworddate` :datetime_required,
-					`datetime`     :timestamp,
+					`timestamp`    :timestamp,
 					
 					PRIMARY KEY (`id`)
 				'
@@ -49,7 +59,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_DB_Role::table(), 
+				\app\Model_Role::table(), 
 				'
 					`id`    :key_primary,
 					`title` :title NOT NULL,
@@ -60,7 +70,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 		
 		$this->createtable
 			(
-				\app\Model_DB_User::assoc_roles(),
+				\app\Model_User::assoc_roles(),
 				'
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
@@ -70,6 +80,34 @@ class Migration_User extends \app\Migration_Template_MySQL
 				'
 			);
 		
+		$this->createtable
+			(
+				\app\Model_Profile::table(), 
+				'
+					`id`       :key_primary,
+					`idx`      :counter DEFAULT 10,
+					`title`    :title NOT NULL,
+					`type`     :title NOT NULL,
+					`required` :boolean DEFAULT 0,
+					
+					PRIMARY KEY (`id`)
+				'
+			);
+		
+		$this->createtable
+			(
+				\app\Model_Profile::assoc_user(), 
+				'
+					`user`  :key_foreign NOT NULL,
+					`field` :key_foreign NOT NULL,
+					`value` :block,
+					
+					KEY `user` (`user`,`field`),
+					KEY `role` (`field`)
+				'
+			);
+				
+		// inject roles
 		$access_config = \app\CFS::config('ibidem/access');
 		$roles = $access_config['roles'];
 		if ( ! empty($roles))
@@ -80,7 +118,7 @@ class Migration_User extends \app\Migration_Template_MySQL
 				(
 					__METHOD__,
 					'
-						INSERT INTO `'.\app\Model_DB_Role::table().'`
+						INSERT INTO `'.\app\Model_Role::table().'`
 							(id, title) VALUES (:id, :title)
 					',
 					'mysql'
@@ -108,12 +146,13 @@ class Migration_User extends \app\Migration_Template_MySQL
 	{
 		$this->droptables
 			(
-				array
-				(
-					\app\Model_DB_User::table(), 
-					\app\Model_DB_Role::table(), 
-					\app\Model_DB_User::assoc_roles()
-				)
+				[
+					\app\Model_User::table(), 
+					\app\Model_Role::table(), 
+					\app\Model_User::assoc_roles(),
+					\app\Model_Profile::table(),
+					\app\Model_Profile::assoc_user(),
+				]
 			);
 	}
 

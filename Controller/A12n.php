@@ -46,14 +46,14 @@ class Controller_A12n extends \app\Controller_HTTP
 	 */
 	public function action_signin()
 	{
-		$user = \app\Model_DB_User::signin_check($_POST);
+		$user = \app\Model_User::signin_check($_POST);
 		
 		if (\app\Layer_HTTP::request_method() === \ibidem\types\HTTP::POST)
 		{
 			if ($user !== null)
 			{
 				// logged in
-				\app\A12n::signin($user, \app\Model_DB_User::user_role($user));
+				\app\A12n::signin($user, \app\Model_User::user_role($user));
 				
 				// redirect
 				$base_config = \app\CFS::config('ibidem/base');

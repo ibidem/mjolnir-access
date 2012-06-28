@@ -3,10 +3,10 @@
 	/* @var $control \app\Controller_Backend */
 
 	namespace app;
+	
+	$id = $_REQUEST['id'];
+	$user = \array_merge($context->entry($id), $_POST);
 ?>
-
-<? $id = $_POST['id'] ?>
-<? $user = \array_merge($context->entry($id), $_POST) ?>
 
 <section role="application">
 	

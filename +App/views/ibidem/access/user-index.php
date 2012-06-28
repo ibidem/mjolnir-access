@@ -8,7 +8,7 @@
 	$pagelimit = 10;
 ?>
 
-<h1>User List</h1>
+<h1>Users</h1>
 
 <? $users = $context->entries($page, $pagelimit) ?>
 
@@ -44,28 +44,28 @@
 					<td><em><?= $user['roletitle'] ?></em></td>
 					<td><?= $user['email'] ?></td>
 					<td><?= $user['ipaddress'] ?></td>
-					<td>
-						<?= $edit_form = \app\Form::instance() 
-							->method(\ibidem\types\HTTP::POST)
-							->action($control->backend('user-edit'))
-							->field_template(':field')
-							->classes(['form-inline', 'pull-left']) ?>
-
-							<?= $edit_form->hidden('id')->value($user['id']) ?>
-							<?= $edit_form->submit('Edit')->classes(['btn', 'btn-mini', 'btn-warning']) ?>
-
-						<?= $edit_form->close() ?>
+					<td class="table-controls">
+						
+						<a href="<?= $control->backend('user-profile') ?>?id=<?= $user['id'] ?>"
+						   class="btn btn-mini">
+							View Profile
+						</a>
+						
+						<a href="<?= $control->backend('user-edit') ?>?id=<?= $user['id'] ?>"
+						   class="btn btn-mini btn-warning">
+							Edit
+						</a>
 						
 						<?= $delete_form = \app\Form::instance() 
 							->method(\ibidem\types\HTTP::POST)
 							->action($control->action('erase'))
-							->field_template(':field')
-							->classes(['form-inline', 'pull-left']) ?>
+							->field_template(':field') ?>
 
 							<?= $delete_form->hidden('id')->value($user['id']) ?>
 							<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
 
 						<?= $delete_form->close() ?>
+						
 					</td>
 				</tr>
 			<? endforeach; ?>

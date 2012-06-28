@@ -20,8 +20,12 @@
 									[
 										'user-index', 
 										'user-edit',
-										'role-index',
-										'role-edit'
+										'user-edit-profile',
+										'user-role-index',
+										'user-role-edit',
+										'user-profile-index',
+										'user-profile-edit',
+										'user-profile',
 									]
 								)
 					),

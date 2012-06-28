@@ -7,31 +7,24 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Backend_User extends \app\Backend_Collection
+class Backend_Profile extends \app\Backend_Collection
 {
-	protected $model = 'User';
-	protected $index = 'user-index';
-	
-	function roles()
+	protected $model = 'Profile';
+	protected $index = 'user-profile-index';
+
+	function fieldtypes()
 	{
-		return \app\Model_Role::entries(null, null);
+		return \app\Collection::mirror
+			(
+				\array_keys(\app\CFS::config('ibidem/profile-fieldtypes'))
+			);
 	}
 	
-	function profile_info($id)
-	{
-		return \app\Model_Profile::profile_info($id);
-	}
-	
-	function profile_fields()
-	{
-		return \app\Model_Profile::entries(null, null);
-	}
-	
-	function action_update_profile()
+	function update_profile()
 	{
 		$id = $_POST['id'];
 		
-		$validator = \app\Model_Profile::update_profile($id, $_POST);
+		$validator = \app\Model_Profile::update($id, $_POST);
 		
 		$errors = [];
 		if ($validator !== null)

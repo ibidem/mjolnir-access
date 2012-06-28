@@ -96,7 +96,7 @@ class A12n extends \app\Instantiatable
 						__METHOD__,
 						'
 							SELECT * 
-							  FROM `'.\app\Model_DB_User::table().'`
+							  FROM `'.\app\Model_User::table().'`
 							 WHERE id = :id
 						',
 						'mysql'

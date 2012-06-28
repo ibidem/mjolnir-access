@@ -1,6 +1,6 @@
 <?php return array
 	(
-		'table_prefix' => 'px_',
+		'table_prefix' => 'ib_',
 		'databases' => array
 			(
 				'default' => array

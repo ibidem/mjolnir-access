@@ -10,6 +10,6 @@
 class Backend_Role extends \app\Backend_Collection
 {
 	protected $model = 'Role';
-	protected $index = 'role-index';
+	protected $index = 'user-role-index';
 
 } # class

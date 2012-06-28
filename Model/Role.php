@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_DB_Role extends \app\Model_SQL_Factory
+class Model_Role extends \app\Model_SQL_Factory
 {
 	protected static $table = 'roles';
 	
@@ -16,7 +16,7 @@ class Model_DB_Role extends \app\Model_SQL_Factory
 	 */
 	static function assoc_users()
 	{
-		return \app\Model_DB_User::assoc_roles();
+		return \app\Model_User::assoc_roles();
 	}
 	
 	// -------------------------------------------------------------------------
