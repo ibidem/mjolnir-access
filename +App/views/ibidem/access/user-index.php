@@ -24,7 +24,7 @@
 	<table class="table table-striped marginless">
 		<thead>
 			<tr>
-				<th>&nbsp;</th>
+				<th class="micro-col">&nbsp;</th>
 				<th>nickname</th>
 				<th>role</th>
 				<th>email</th>

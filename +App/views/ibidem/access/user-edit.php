@@ -1,5 +1,5 @@
 <?  
-	/* @var $context \app\Backend_Role */
+	/* @var $context \app\Backend_User */
 	/* @var $control \app\Controller_Backend */
 
 	namespace app;
