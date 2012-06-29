@@ -110,10 +110,12 @@ class Model_Profile extends \app\Model_SQL_Factory
 					SELECT field.id id,
 					       field.idx idx,
 					       field.title title,
-						   field.type type,
-						   field.required required
+					       field.type type,
+					       field.required required
 					  FROM `'.static::table().'` field
+				     ORDER BY field.idx ASC
 					 LIMIT :limit OFFSET :offset
+					 
 				',
 				'mysql'
 			)
@@ -131,8 +133,8 @@ class Model_Profile extends \app\Model_SQL_Factory
 					SELECT field.id id,
 					       field.idx idx,
 					       field.title title,
-						   field.type type,
-						   field.required required
+					       field.type type,
+					       field.required required
 					  FROM `'.static::table().'` field
 					 WHERE field.id = :id
 				',
@@ -161,6 +163,7 @@ class Model_Profile extends \app\Model_SQL_Factory
 					  JOIN `'.static::assoc_user().'` profile
 						ON profile.field = field.id
 					 WHERE profile.user = :user
+					 ORDER BY field.idx ASC
 				'
 			)
 			->set_int(':user', $id)
@@ -170,12 +173,83 @@ class Model_Profile extends \app\Model_SQL_Factory
 	
 	static function update_profile_validator($id, array $fields)
 	{
-		return \app\Validator::instance([], $fields);
+		$validator = \app\Validator::instance([], $fields);
+		
+		$profile_fields = \app\Model_Profile::entries(null, null);
+		foreach ($profile_fields as $field)
+		{
+			if ($field['required'])
+			{
+				$validator->rule('field-'.$field['id'], 'not_empty');
+			}
+		}
+		
+		return $validator;
 	}
 	
 	static function update_profile_assemble($id, array $fields)
 	{
-		// @todo
+		\app\SQL::begin();
+		try
+		{
+			// retrieve profile fields; we need them for the field type mapping
+			$profile_fields = \app\Model_Profile::entries(null, null);
+			$map = [];
+			foreach ($profile_fields as $field)
+			{
+				$map[(int) $field['id']] = $field;
+			}
+			
+			// remove all current fields
+			\app\SQL::prepare
+				(
+					__METHOD__.':cleanup',
+					'
+						DELETE FROM `'.static::assoc_user().'`
+						 WHERE user = :id
+					',
+					'mysql'
+				)
+				->set_int(':id', $id)
+				->execute();
+			
+			// load fieldtypes
+			$field_types = \app\CFS::config('ibidem/profile-fieldtypes');
+			
+			// go though all fields
+			foreach ($fields as $field => $value)
+			{				
+				// retrieve the ones we're interested in
+				if (\preg_match('#^field-[0-9]+$#', $field))
+				{
+					// retrieve value
+					$key = (int) \preg_replace('#^field-#', '', $field);
+					// update
+					\app\SQL::prepare
+						(
+							__METHOD__,
+							'
+								INSERT INTO `'.static::assoc_user().'`
+								   SET user = :user,
+								       field = :field,
+									   value = :value
+							',
+							'mysql'
+						)
+						->set_int(':user', $id)
+						->set_int(':field', $key)
+						->set(':value', $field_types[$map[$key]['type']]['store']($value))
+						->execute();
+				}
+			}
+			
+			\app\SQL::commit();
+		}
+		catch (\Exception $e)
+		{
+			\app\SQL::rollback();
+			throw $e;
+		}
 	}
 	
 	static function update_profile($id, array $fields)

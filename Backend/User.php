@@ -44,15 +44,13 @@ class Backend_User extends \app\Backend_Collection
 			\app\Layer_HTTP::redirect
 				(
 					'\ibidem\backend', 
-					['slug' => $this->index]
+					['slug' => 'user-profile'],
+					['id' => $id]
 				);
 		}
 		else # got errors
-		{
-			$key = \strtolower($this->model).'-update';
-			$errors = [$key => $errors];
-			
-			return $errors;
+		{			
+			return ['user-update-profile' => $errors];
 		}
 	}
 	

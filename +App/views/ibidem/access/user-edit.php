@@ -15,14 +15,9 @@
 	<br/>
 	
 	<?= $form = Form::instance()
-		->method(\ibidem\types\HTTP::POST) 
+		->standard('twitter.general')
 		->errors($errors['user-update'])
-		->action($control->action('update'))
-		->field_template
-			(
-				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
-			)
-		->classes(['form-horizontal']) ?>
+		->action($control->action('update')) ?>
 	
 		<fieldset>
 			<?= $form->hidden('id')->value($id) ?>
@@ -38,7 +33,7 @@
 				</button>
 				<a class="btn btn-small" 
 				   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'user-index']) ?>">
-					Cancel
+					Back to User Index
 				</a>
 			</div>
 		</fieldset>

@@ -26,6 +26,7 @@
 										'user-profile-index',
 										'user-profile-edit',
 										'user-profile',
+										'user-access-settings',
 									]
 								)
 					),

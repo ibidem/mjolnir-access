@@ -65,6 +65,13 @@
 						'context' => '\app\Backend_Role',
 						'view' => 'ibidem/access/role-edit'
 					),
+				'user-access-settings' => array
+					(
+						'icon' => 'edit',
+						'title' => 'Settings',
+						'context' => '\app\Backend_Settings',
+						'view' => 'ibidem/access/settings'
+					),
 			),
 			
 	);

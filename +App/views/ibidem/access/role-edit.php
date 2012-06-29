@@ -13,14 +13,9 @@
 	<h1>Edit Role #<?= $id ?></h1>
 	<br/>
 	<?= $form = Form::instance()
-		->method(\ibidem\types\HTTP::POST) 
+		->standard('twitter.general')
 		->errors($errors['role-update'])
-		->action($control->action('update'))
-		->field_template
-			(
-				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
-			)
-		->classes(['form-horizontal']) ?>
+		->action($control->action('update')) ?>
 	
 		<fieldset>
 			<?= $form->hidden('id')->value($id) ?>

@@ -10,12 +10,11 @@
 				'render' => function ($value) 
 					{
 						return $value;
-					}
-			),
-					
-		'textarea' => array
-			(
-				// @todo
+					},
+				'store' => function ($value)
+					{
+						return $value;
+					},
 			),
 
 	);

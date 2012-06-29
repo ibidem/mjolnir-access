@@ -8,6 +8,7 @@
 class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \ibidem\access\Access {}
 class Backend_Profile extends \ibidem\access\Backend_Profile { /** @return \ibidem\access\Backend_Profile */ static function instance() { return parent::instance(); } }
+class Backend_Registration extends \ibidem\access\Backend_Registration { /** @return \ibidem\access\Backend_Registration */ static function instance() { return parent::instance(); } }
 class Backend_Role extends \ibidem\access\Backend_Role { /** @return \ibidem\access\Backend_Role */ static function instance() { return parent::instance(); } }
 class Backend_User extends \ibidem\access\Backend_User { /** @return \ibidem\access\Backend_User */ static function instance() { return parent::instance(); } }
 class Controller_A12n extends \ibidem\access\Controller_A12n { /** @return \ibidem\access\Controller_A12n */ static function instance() { return parent::instance(); } }

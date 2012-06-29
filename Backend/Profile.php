@@ -20,6 +20,4 @@ class Backend_Profile extends \app\Backend_Collection
 			);
 	}
 	
-	
-	
 } # class

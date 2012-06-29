@@ -22,18 +22,13 @@
 	<br/>
 	<p><small>User: <strong><?= $user['nickname'] ?></strong></small></p>
 	<?= $form = Form::instance()
-		->method(\ibidem\types\HTTP::POST) 
+		->standard('twitter.general')
 		->errors($errors['user-update-profile'])
-		->action($control->action('update-profile'))
-		->field_template
-			(
-				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
-			)
-		->classes(['form-horizontal']) ?>
+		->action($control->action('update-profile')) ?>
 	
 		<fieldset>
 			
-			<?= $form->hidden('id', $user['id']) ?>
+			<?= $form->hidden('id')->value($user['id']) ?>
 			
 			<? $field_types = \app\CFS::config('ibidem/profile-fieldtypes') ?>
 			<? foreach ($context->profile_fields() as $field): ?>
@@ -44,7 +39,7 @@
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
 				<a class="btn btn-small" 
-				   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'user-index']) ?>">
+				   href="<?= $control->backend('user-profile') ?>?id=<?= $user['id'] ?>">
 					Cancel
 				</a>
 			</div>

@@ -57,9 +57,8 @@
 						</a>
 						
 						<?= $delete_form = \app\Form::instance() 
-							->method(\ibidem\types\HTTP::POST)
-							->action($control->action('erase'))
-							->field_template(':field') ?>
+							->standard('twitter.table-controls')
+							->action($control->action('erase')) ?>
 
 							<?= $delete_form->hidden('id')->value($user['id']) ?>
 							<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
@@ -100,15 +99,10 @@
 	<h2>New User</h2>
 	<br>
 	<?= $form = Form::instance()
-		->method(\ibidem\types\HTTP::POST)
-		->field_template
-			(
-				'<div class="control-group"><span class="control-label">:name</span><div class="controls">:field</div></div>'
-			)
+		->standard('twitter.general')
 		->errors($errors['user-new'])
 		->auto_complte($_POST)
-		->action($control->action('new'))
-		->classes(['form-horizontal']) ?>
+		->action($control->action('new')) ?>
 
 		<fieldset>
 			<?= $form->text('Nickname', 'nickname')->autocomplete(false) ?>
