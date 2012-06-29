@@ -4,17 +4,18 @@
 
 	namespace app;
 	
-	$boolean_fields = array
+	$signin_providers = \app\CFS::config('ibidem/a12n')['signin'];
+	
+	$providers = \app\Collection::gather($signin_providers, 'register');
+	
+	$access_fields = array
 		(
 			'\ibidem\access\signup\public', 
 			'\ibidem\access\signup\capcha',
-			'\ibidem\access\signin\facebook',
-			'\ibidem\access\signin\twitter',
-			'\ibidem\access\signin\google',
-			'\ibidem\access\signin\yahoo',
 		);
 	
-	$fields = \app\Register::pull($boolean_fields);
+	$access_fields = \app\Register::pull($access_fields);
+	$providers = \app\Register::pull($providers);
 	
 	$switch_format = ['Enabled' => 'on', 'Disabled' => 'off'];
 ?>
@@ -32,33 +33,28 @@
 		<fieldset>
 			<legend>Sign Up</legend>
 			<?= $form->select('Public Registration', '\ibidem\access\signup\public', $switch_format)
-				->value($fields['\ibidem\access\signup\public']) ?> 
+				->value($access_fields['\ibidem\access\signup\public']) ?> 
 			
 			<?= $form->select('Capcha', '\ibidem\access\signup\capcha', $switch_format)
-				->value($fields['\ibidem\access\signup\capcha']) ?> 
+				->value($access_fields['\ibidem\access\signup\capcha']) ?> 
 		</fieldset>
 	
-		<fieldset>
-			<legend>Sign In</legend>
-			<?= $form->select('Facebook', '\ibidem\access\signin\facebook', $switch_format)
-				->value($fields['\ibidem\access\signin\facebook']) ?>
-			
-			<?= $form->select('Twitter', '\ibidem\access\signin\twitter', $switch_format)
-				->value($fields['\ibidem\access\signin\twitter']) ?>
-			
-			<?= $form->select('Google', '\ibidem\access\signin\google', $switch_format)
-				->value($fields['\ibidem\access\signin\google']) ?>
-			
-			<?= $form->select('Yahoo', '\ibidem\access\signin\yahoo', $switch_format)
-				->value($fields['\ibidem\access\signin\yahoo']) ?>
-		</fieldset>
+		<? if ( ! empty($signin_providers)): ?>
+			<fieldset>
+				<legend>Sign In</legend>
+
+				<? foreach ($signin_providers as $provider): ?>
+
+					<?= $form->select($provider['title'], $provider['register'], $switch_format)
+						->value($providers[$provider['register']]) ?>
+
+				<? endforeach; ?>
+
+			</fieldset>
+		<? endif; ?>
 	
 		<div class="form-actions">
 			<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
-			<a class="btn btn-small" 
-			   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'role-index']) ?>">
-				Cancel
-			</a>
 		</div>
 	
 	<?= $form->close() ?>

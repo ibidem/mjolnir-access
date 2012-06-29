@@ -53,7 +53,7 @@
 					),
 				'user-role-index' => array
 					(
-						'icon' => 'hand-right',
+						'icon' => 'key',
 						'title' => 'User Roles',
 						'context' => '\app\Backend_Role',
 						'view' => 'ibidem/access/backend/role-index'
