@@ -18,12 +18,15 @@ class Context_Access extends \app\Instantiatable
 		$enabled_providers = [];
 		foreach ($providers as $provider)
 		{
-			$switch = \app\Register::pull([$provider['register']]);
-			if ($switch == 'on')
+			$key = $provider['register'];
+			$switch = \app\Register::pull([$key]);
+			if ($switch[$key] == 'on')
 			{
 				$enabled_providers[] = $provider;
 			}
 		}
+		
+		return $enabled_providers;
 	}
 
 } # class

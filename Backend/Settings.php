@@ -22,9 +22,14 @@ class Backend_Settings extends \app\Instantiatable
 		
 		$fields = \array_merge($providers, $access_fields); 
 		
-		$filtered = \app\Collection::filter($_POST, function ($key, $value) use ($fields) {
-			return \in_array($key, $fields);
-		});
+		$filtered = \app\Collection::filter
+			(
+				$_POST, # collection
+				function ($key, $value) use ($fields) 
+					{
+						return \in_array($key, $fields);
+					}
+			);
 		
 		foreach ($filtered as $register => $value)
 		{

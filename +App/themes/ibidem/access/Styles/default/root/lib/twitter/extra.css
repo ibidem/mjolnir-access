@@ -93,3 +93,8 @@ button.btn.btn-large [class*=" icon-"]:before {
   vertical-align: top;
   margin: 0;
 }
+
+/* line 95, ../../../src/lib/twitter/extra.scss */
+.nowrap {
+  white-space: nowrap;
+}
