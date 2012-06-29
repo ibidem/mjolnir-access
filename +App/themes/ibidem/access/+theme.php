@@ -6,17 +6,17 @@
 		// mapping targets to files
 		'targets' => array
 			(
-				'access/stats' => array
+				'stats' => array
 					(
 						'common/base', 'stats'
 					),
 			
-				'access/signin' => array
+				'signin' => array
 					(
 						'common/base', 'signin'
 					),
 			
-				'access/signup' => array
+				'signup' => array
 					(
 						'common/base', 'signup'
 					),

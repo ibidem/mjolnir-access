@@ -9,15 +9,15 @@
 		// common files
 		'common' => array
 			(
-				'lib/boilerplate', 'unsorted'
+				'unsorted',
 			),
 	
 		// mapping targets to files
 		'targets' => array
 			(
-				'access/signin' => array
+				'signin' => array
 					(
-						'signin'
+						
 					),
 			),
 	);

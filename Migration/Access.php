@@ -135,6 +135,13 @@ class Migration_Access extends \app\Migration_Template_MySQL
 			}
 		}
 		
+		// inject openid providers
+		$providers = \app\CFS::config('ibidem/a12n')['signin'];
+		foreach ($providers as $provider)
+		{
+			\app\Register::inject($provider['register'], 'off');
+		}
+		
 		// return a callback to binding
 		return $this->bind_callback();
 	}

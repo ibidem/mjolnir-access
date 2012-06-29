@@ -9,7 +9,7 @@
 						'icon' => 'reorder',
 						'title' => 'Profile Fields',
 						'context' => '\app\Backend_Profile',
-						'view' => 'ibidem/access/profile-index'
+						'view' => 'ibidem/access/backend/profile-index'
 					),
 			
 				'user-profile-edit' => array
@@ -17,7 +17,7 @@
 						'hidden' => true,
 						'title' => 'Edit Fields',
 						'context' => '\app\Backend_Profile',
-						'view' => 'ibidem/access/profile-edit'
+						'view' => 'ibidem/access/backend/profile-edit'
 					),
 			),
 	
@@ -28,49 +28,49 @@
 						'icon' => 'user',
 						'title' => 'User Manager',
 						'context' => '\app\Backend_User',
-						'view' => 'ibidem/access/user-index'
+						'view' => 'ibidem/access/backend/user-index'
 					),
 				'user-edit' => array
 					(
 						'hidden' => true,
 						'title' => 'Edit User',
 						'context' => '\app\Backend_User',
-						'view' => 'ibidem/access/user-edit'
+						'view' => 'ibidem/access/backend/user-edit'
 					),
 				'user-edit-profile' => array
 					(
 						'hidden' => true,
 						'title' => 'Edit User Profile',
 						'context' => '\app\Backend_User',
-						'view' => 'ibidem/access/user-edit-profile'
+						'view' => 'ibidem/access/backend/user-edit-profile'
 					),
 				'user-profile' => array
 					(
 						'hidden' => true,
 						'title' => 'View Profile',
 						'context' => '\app\Backend_User',
-						'view' => 'ibidem/access/user-profile'
+						'view' => 'ibidem/access/backend/user-profile'
 					),
 				'user-role-index' => array
 					(
 						'icon' => 'hand-right',
 						'title' => 'User Roles',
 						'context' => '\app\Backend_Role',
-						'view' => 'ibidem/access/role-index'
+						'view' => 'ibidem/access/backend/role-index'
 					),
 				'user-role-edit' => array
 					(
 						'hidden' => true,
 						'title' => 'Edit Role',
 						'context' => '\app\Backend_Role',
-						'view' => 'ibidem/access/role-edit'
+						'view' => 'ibidem/access/backend/role-edit'
 					),
 				'user-access-settings' => array
 					(
 						'icon' => 'edit',
 						'title' => 'Settings',
 						'context' => '\app\Backend_Settings',
-						'view' => 'ibidem/access/settings'
+						'view' => 'ibidem/access/backend/settings'
 					),
 			),
 			

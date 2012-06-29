@@ -11,7 +11,7 @@
 		'common' => array
 			(
 				'lib/plugins/jquery-1.7.2',
-				'lib/DCI-1.0',
+				'lib/twitter/bootstrap'
 			),
 
 		// mapping targets to files
@@ -19,7 +19,15 @@
 			(
 				'signin' => array
 					(
-						
+						// empty; loads common
+					),
+				'singup' => array
+					(
+						// empty; loads common
+					),
+				'stats' => array
+					(
+						// empty; loads common
 					),
 			),
 	);

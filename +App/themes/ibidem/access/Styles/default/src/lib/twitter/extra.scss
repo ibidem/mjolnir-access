@@ -1,0 +1,93 @@
+.table .form-inline {
+	margin-bottom: 0;
+}
+
+.table .form-inline.pull-left + .form-inline.pull-left {
+	margin-left: 5px;
+}
+
+/** 
+ * Align icons in buttons properly.
+ */
+
+button.btn [class^="icon-"]:before, 
+button.btn [class*=" icon-"]:before {
+	position: relative;
+    top: 0.15em;
+}
+
+button.btn.btn-mini [class^="icon-"]:before, 
+button.btn.btn-mini [class*=" icon-"]:before {
+	position: relative;
+    top: 0.2em;
+}
+
+button.btn.btn-small [class^="icon-"]:before, 
+button.btn.btn-small [class*=" icon-"]:before {
+	position: relative;
+    top: 0.3em;
+}
+
+button.btn.btn-large [class^="icon-"]:before, 
+button.btn.btn-large [class*=" icon-"]:before {
+	position: relative;
+    top: 0.12em;
+	left: -0.15em;
+}
+
+/**
+ * Nav icons need to be black; except navbar ones.
+ */
+
+.nav [class^="icon-"]:before,
+.nav [class*=" icon-"]:before {
+	color: black;
+}
+
+.nav .active [class^="icon-"]:before,
+.nav .active [class*=" icon-"]:before {
+	color: white;
+}
+
+.navbar .nav [class^="icon-"]:before,
+.navbar .nav [class*=" icon-"]:before {
+	color: inherit;
+}
+
+// make table column take as little space as possible
+.micro-col {
+	width: 1%;
+}
+
+// strips margins off of an element
+.marginless {
+	margin: 0;
+}
+
+// strips margins out of pagination; since we rarely have direct class control
+// over it this class is meant to be placed on the immediate parent container
+.marginless-pagination > .pagination {
+	margin: 0;
+}
+
+// a container for table buttons and links
+// causes them to work togheter properly when inline
+.table-controls {
+	
+	// make table cell occupy exact size
+	vertical-align: top;
+	white-space: nowrap;
+	width: 1%;
+
+	& > a {
+		vertical-align: top;
+		margin: 0 .2em 0 0;
+	}
+
+	& > form {
+		display: inline-block;
+		vertical-align: top;
+		margin: 0;
+	}
+
+}

@@ -17,6 +17,6 @@
 				'action'  => 'action_index',
 				'target'  => null, # theme targeting
 				'control' => '\ibidem\access\Controller_A12n',
-				'context' => '\ibidem\access\Model_User',
+				'context' => '\ibidem\access\Context_Access',
 			),
 	);

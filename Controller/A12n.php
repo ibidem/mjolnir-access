@@ -8,7 +8,7 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Controller_A12n extends \app\Controller_HTTP
-{
+{	
 	public function action_index()
 	{
 		$relay = $this->layer->get_relay();
@@ -20,7 +20,7 @@ class Controller_A12n extends \app\Controller_HTTP
 					\app\ThemeView::instance()
 						->theme('ibidem/access')
 						->style('default')
-						->target('access/signin')
+						->target('signin')
 						->layer($this->layer)
 						->context($relay['context']::instance())
 						->control($relay['control']::instance())
@@ -80,7 +80,7 @@ class Controller_A12n extends \app\Controller_HTTP
 					$view = \app\ThemeView::instance()
 						->theme('ibidem/access')
 						->style('default')
-						->target('access/signin')
+						->target('signin')
 						->errors($errors)
 						->layer($this->layer)
 						->context($relay['context']::instance())
