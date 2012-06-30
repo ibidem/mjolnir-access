@@ -6,8 +6,9 @@
 
 <? if ( ! empty($providers)): ?>
 	<ul class="nav nav-pills nav-stacked">
-		<li><a href="#"><i class="icon-facebook"></i> Facebook</a></li>
-		<li><a href="#"><i class="icon-twitter"></i> Twitter</a></li>
+		<? foreach ($providers as $provider): ?>
+		<li><a href="<?= \app\Relay::route('\ibidem\access\openid')->url(['openid' => $provider['slug']]) ?>"><i class="icon-<?= $provider['icon'] ?>"></i> <?= $provider['title'] ?></a></li>
+		<? endforeach; ?>
 	</ul>
 <? else: # no providers ?>
 	&nbsp;

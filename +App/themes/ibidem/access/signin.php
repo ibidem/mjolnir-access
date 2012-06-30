@@ -22,15 +22,7 @@
 
 			</div>
 
-			<? if (\app\Access::can('\ibidem\access\a12n', ['action' => 'signup'])): ?>
-				<p>
-					<span class="label label-info"><?= Lang::tr('Help') ?></span>
-					<small><?= Lang::msg('ibidem.access.signin.not_yet_a_member') ?></small>
-					<a class="nowrap" href="<?= \app\Relay::route('\ibidem\access\a12n')->url(['action' => 'signup']) ?>">
-						<?= Lang::msg('ibiden.access.sign_up_now') ?> 
-					</a>
-				</p>
-			<? endif; ?>
+			
 			
 		</section>
 
@@ -42,6 +34,21 @@
 				->render() ?>
 			
 		</section>
+		
+		
+		<? if (\app\Access::can('\ibidem\access\a12n', ['action' => 'signup'])): ?>
+			<section class="span3">
+				<p>
+					<span class="label label-info"><?= Lang::tr('Help') ?></span>
+					<small>
+						<?= Lang::msg('ibidem.access.signin.not_yet_a_member') ?>
+						<a class="nowrap" href="<?= \app\Relay::route('\ibidem\access\a12n')->url(['action' => 'signup']) ?>">
+							<?= Lang::msg('ibiden.access.sign_up_now') ?> 
+						</a>
+					</small>
+				</p>
+			</section>
+		<? endif; ?>
 	</div>
 
 	
