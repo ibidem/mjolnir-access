@@ -15,4 +15,3 @@ $mvc_stack = function ($relay, $target)
 	};
 	
 \app\Relay::process('\ibidem\access\a12n', $mvc_stack);
-\app\Relay::process('\ibidem\access\openid', $mvc_stack);

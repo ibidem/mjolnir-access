@@ -29,7 +29,7 @@
 		<section class="span3">
 			
 			<?= \app\View::instance()
-				->file('ibidem/access/openid')
+				->file('ibidem/access/auth')
 				->variable('context', $context)
 				->render() ?>
 			

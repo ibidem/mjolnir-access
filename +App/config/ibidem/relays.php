@@ -6,10 +6,9 @@
 					->standard
 						(
 							'access(/<action>)', 
-							array
-							(
+							[
 								'action' => '(signin|signout|signup)'
-							)
+							]
 						),
 				'enabled' => false,
 			// MVC
@@ -20,21 +19,20 @@
 				'context' => '\ibidem\access\Context_Access',
 			),
 	
-		'\ibidem\access\openid' => array
+		'\ibidem\access\channel' => array
 			(
 				'route' => \app\Route_Pattern::instance()
 					->standard
 						(
-							'access/openid(/<openid>)', 
-							array
-							(
-								'openid' => '[a-z9-0-]+'
-							)
+							'access/provider(/<provider>)', 
+							[
+								'action' => '[a-zA-Z0-9]+'
+							]
 						),
 				'enabled' => false,
 			// MVC
 				'controller' => '\ibidem\access\Controller_A12n',
-				'action'  => 'action_openid',
+				'action'  => 'action_index',
 				'target'  => null, # theme targeting
 				'control' => '\ibidem\access\Controller_A12n',
 				'context' => '\ibidem\access\Context_Access',
