@@ -4,11 +4,21 @@
 			(
 				'facebook' => array
 					(
-						'apikey' => '',
+						'apikey' => null,
+					
 						'slug' => 'facebook',
 						'icon' => 'facebook',
 						'title' => 'Facebook',
 						'register' => '\ibidem\access\openid\facebook',
+					
+						'validator' => function ($config) {
+							if ($config['apikey'] === null)
+							{
+								return false;
+							}
+							
+							return null;
+						}
 					),
 				'twitter' => array
 					(

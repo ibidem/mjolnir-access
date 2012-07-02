@@ -18,4 +18,5 @@ class Migration_Access extends \ibidem\access\Migration_Access { /** @return \ib
 class Model_Profile extends \ibidem\access\Model_Profile {}
 class Model_Role extends \ibidem\access\Model_Role {}
 class Model_User extends \ibidem\access\Model_User {}
+class OAuth extends \ibidem\access\OAuth { /** @return \ibidem\access\OAuth */ static function instance() { return parent::instance(); } }
 class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ static function instance() { return parent::instance(); } }

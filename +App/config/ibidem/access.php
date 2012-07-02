@@ -5,7 +5,13 @@
 				\app\A12n::guest() => array
 					(
 						\app\Protocol::instance()
-							->relays(['\ibidem\access\a12n'])
+							->relays
+								(
+									[
+										'\ibidem\access\a12n',
+										'\ibidem\access\channel',
+									]
+								)
 							->all_parameters(),
 					),
 			

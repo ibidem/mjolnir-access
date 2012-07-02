@@ -13,5 +13,6 @@ $mvc_stack = function ($relay, $target)
 					->relay_config($relay)
 			);
 	};
-	
+
+\app\Relay::process('\ibidem\access\channel', $mvc_stack);
 \app\Relay::process('\ibidem\access\a12n', $mvc_stack);

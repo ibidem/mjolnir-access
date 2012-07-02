@@ -115,5 +115,10 @@ class Controller_A12n extends \app\Controller_HTTP
 		\app\A12n::signout();
 		\app\Layer_HTTP::redirect('\ibidem\access\a12n', array('action' => 'signin'));
 	}
+	
+	public function action_channel()
+	{
+		\var_dump($_REQUEST);
+	}
 
 } # class
