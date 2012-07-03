@@ -22,7 +22,7 @@ class Model_User extends \app\Model_SQL_Factory
 	/**
 	 * @return string table name
 	 */
-	public static function assoc_roles()
+	static function assoc_roles()
 	{
 		$database_config = \app\CFS::config('ibidem/database');
 		return $database_config['table_prefix'].static::$user_role_table;
@@ -31,7 +31,7 @@ class Model_User extends \app\Model_SQL_Factory
 	/**
 	 * @return string table
 	 */
-	public static function roles_table()
+	static function roles_table()
 	{
 		return \app\Model_Role::table();
 	}
@@ -43,7 +43,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param array fields
 	 * @return Validator 
 	 */
-	public static function validator(array $fields) 
+	static function validator(array $fields) 
 	{
 		$user_config = \app\CFS::config('model/User');
 		
@@ -61,7 +61,7 @@ class Model_User extends \app\Model_SQL_Factory
 	/**
 	 * @param array (nickname, email, password, verifier) 
 	 */
-	public static function assemble(array $fields) 
+	static function assemble(array $fields) 
 	{
 		$password = static::generate_password($fields['password']);
 
@@ -115,8 +115,8 @@ class Model_User extends \app\Model_SQL_Factory
 						__METHOD__.':assign_role',
 						'
 							UPDATE `'.static::assoc_roles().'`
-							SET role = :role
-							WHERE user = '.$user.'
+							   SET role = :role
+							 WHERE user = '.$user.'
 						',
 						'mysql'
 					)
@@ -137,7 +137,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param string user id 
 	 * @param array config
 	 */
-	public static function dependencies($id, array $config = null)
+	static function dependencies($id, array $config = null)
 	{
 		parent::dependencies($id, $config);
 
@@ -163,7 +163,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param array fields 
 	 * @return \app\Validator
 	 */
-	public static function update_validator($id, array $fields)
+	static function update_validator($id, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
 		return \app\Validator::instance($user_config['errors'], $fields)
@@ -175,7 +175,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param array fields 
 	 * @return \app\Validator|null
 	 */
-	public static function update_assemble($id, array $fields)
+	static function update_assemble($id, array $fields)
 	{
 		\app\SQL::begin();
 		try
@@ -252,19 +252,19 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param string order
 	 * @return array (id, role, roletitle, nickname, email, ipaddress)
 	 */
-	public static function entries($page, $limit, $offset = 0, $sort = 'id', $order = 'ASC')
+	static function entries($page, $limit, $offset = 0, $sort = 'id', $order = 'ASC')
 	{
 		return \app\SQL::prepare
 			(
 				__METHOD__,
 				'
-					SELECT  user.id id,
-					        user.nickname nickname, 
-					        user.email email,
-					        role.id role,
-					        role.title roletitle,
-							user.timestamp timestamp,
-					        user.ipaddress ipaddress
+					SELECT user.id id,
+					       user.nickname nickname, 
+					       user.email email,
+					       role.id role,
+					       role.title roletitle,
+						   user.timestamp timestamp,
+					       user.ipaddress ipaddress
 					  FROM `'.static::table().'` AS user,
 					       `'.static::roles_table().'` AS role,
 					       `'.static::assoc_roles().'` AS assoc_roles
@@ -286,7 +286,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param type $id
 	 * @return array (id, role, roletitle, nickname, email, ipaddress)
 	 */
-	public static function entry($id)
+	static function entry($id)
 	{
 		$entry = \app\SQL::prepare
 			(
@@ -321,10 +321,107 @@ class Model_User extends \app\Model_SQL_Factory
 	// Extended
 	
 	/**
+	 * @param array (identification, email, provider)
+	 * @return \app\Validator
+	 */
+	static function inferred_validator(array $fields)
+	{
+		return \app\Validator::instance([], $fields)
+			->rule('identification', 'not_empty')
+			->rule('email', 'not_empty')
+			->rule('role', 'not_empty')
+			->rule('provider', 'not_empty');
+	}
+	
+	/**
+	 * @param array (identification, email, provider)
+	 * @throws \ibidem\access\Exception
+	 */
+	static function inferred_assemble(array $fields)
+	{
+		$identification = \str_replace('@', '[at]', $fields['identification']);
+		
+		\app\SQL::begin();
+		try
+		{
+			$ipaddress = \app\Layer_HTTP::detect_ip();
+			
+			\app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						INSERT INTO `'.static::table().'`
+							(
+								nickname, 
+								email,
+								ipaddress, 
+								provider
+							)
+						VALUES
+							(
+								:nickname, 
+								:email,
+								:ipaddress, 
+								:provider
+							)
+					'
+				)
+				->set(':nickname', $identification)
+				->set(':email', $fields['email'])
+				->set(':ipaddress', $ipaddress)
+				->execute();
+			
+			// assign role if set
+			if (isset($fields['role']))
+			{
+				\app\SQL::prepare
+					(
+						__METHOD__.':assign_role',
+						'
+							UPDATE `'.static::assoc_roles().'`
+							   SET role = :role
+							 WHERE user = '.$user.'
+						',
+						'mysql'
+					)
+					->set_int(':role', $fields['role'])
+					->execute();
+			}
+			
+			\app\SQL::commit();
+		}
+		catch (\Exception $e)
+		{
+			\app\SQL::rollback();
+			throw $e;
+		}
+				
+	}
+	
+	/**
+	 * @param array (identification, email, provider)
+	 * @return \app\Validator|null
+	 */
+	static function inferred_signup(array $fields)
+	{
+		$validator = static::validator_change_passwords($user, $fields);
+		
+		if ($validator->validate() === null)
+		{					
+			static::inferred_assemble($fields);
+			return null;
+		}
+		else # invalid
+		{
+			return $validator;
+		}
+	}
+	
+	/**
 	 * @param array fields
 	 * @return \app\Validator|null
 	 */
-	public static function validator_change_passwords($user, array $fields)
+	static function validator_change_passwords($user, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
 		
@@ -338,7 +435,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param int user
 	 * @return \app\Validator|null 
 	 */
-	public static function change_password($user, array $fields)
+	static function change_password($user, array $fields)
 	{
 		$validator = static::validator_change_passwords($user, $fields);
 		
@@ -374,7 +471,7 @@ class Model_User extends \app\Model_SQL_Factory
 	/**
 	 * @param array fields 
 	 */
-	public static function recompute_password(array $fields)
+	static function recompute_password(array $fields)
 	{
 		// load configuration
 		$security = \app\CFS::config('ibidem/security');
@@ -393,6 +490,7 @@ class Model_User extends \app\Model_SQL_Factory
 					   SET passworddate = :passworddate
 					   SET ipaddress = :ipaddress
 					 WHERE nickname = :nickname
+					   AND provider IS NULL
 				',
 				'mysql'
 			)
@@ -405,10 +503,10 @@ class Model_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
-	 * @param array fields
+	 * @param array (identity, password)
 	 * @return boolean 
 	 */
-	public static function signin_check(array $fields = null)
+	static function signin_check(array $fields = null)
 	{
 		// got fields?
 		if ( ! $fields)
@@ -417,7 +515,7 @@ class Model_User extends \app\Model_SQL_Factory
 		}
 		
 		// got required fields
-		if ( ! isset($fields['nickname']) || ! isset($fields['password']))
+		if ( ! isset($fields['identity']) || ! isset($fields['password']))
 		{
 			return null;
 		}
@@ -425,21 +523,43 @@ class Model_User extends \app\Model_SQL_Factory
 		// load configuration
 		$security = \app\CFS::config('ibidem/security');
 		
-		$user = \app\SQL::prepare
-			(
-				'ibidem/access:signin_check',
-				'
-					SELECT *
-					FROM '.static::table().'
-					WHERE nickname = :nickname
-					LIMIT 1
-				',
-				'mysql'
-			)
-			->bind(':nickname', $fields['nickname'])
-			->execute()
-			->fetch_array();
-
+		if (\strpos($fields['identity'], '@') === false)
+		{
+			$user = \app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						SELECT *
+						  FROM '.static::table().'
+						 WHERE nickname = :nickname
+						   AND provider IS NULL
+						 LIMIT 1
+					',
+					'mysql'
+				)
+				->bind(':nickname', $fields['identity'])
+				->execute()
+				->fetch_array();
+		}
+		else # email
+		{
+			$user = \app\SQL::prepare
+				(
+					__METHOD__.':email_signin_check',
+					'
+						SELECT *
+						  FROM '.static::table().'
+						 WHERE email = :email
+						   AND provider IS NULL
+						 LIMIT 1
+					',
+					'mysql'
+				)
+				->bind(':email', $fields['identity'])
+				->execute()
+				->fetch_array();
+		}
+		
 		if ( ! $user)
 		{
 			return null;
@@ -455,6 +575,7 @@ class Model_User extends \app\Model_SQL_Factory
 				$security['keys']['apikey'], 
 				false
 			);
+		
 		$passwordverifier = \hash_hmac
 			(
 				$security['hash']['algorythm'], 
@@ -473,15 +594,47 @@ class Model_User extends \app\Model_SQL_Factory
 		return $user['id'];
 	}
 	
+		
+	/**
+	 * @param int user_id
+	 * @return string|null
+	 */
+	static function role_for($user_id)
+	{
+		$roles = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT role.title role
+					  FROM `'.static::roles_table().'` role
+					  JOIN `'.static::assoc_roles().'` assoc
+						ON assoc.role = role.id
+					 WHERE assoc.user = :user
+					 LIMIT 1
+				',
+				'mysql'
+			)
+			->set_int(':user', $user_id)
+			->execute()
+			->fetch_all();
+		
+		if (empty($roles))
+		{
+			return null; # no role
+		}
+		else # found role
+		{
+			return $roles[0]['role'];
+		}
+	}
 
-	
 	// -------------------------------------------------------------------------
 	// Validator Helpers
 	
 	/**
 	 * @return boolean
 	 */
-	public static function unique_nickname($nickname)
+	static function unique_nickname($nickname)
 	{
 		$count = \app\SQL::prepare
 			(
@@ -512,7 +665,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param int user
 	 * @return bool 
 	 */
-	public static function unique_new_nickname($nickname, $user)
+	static function unique_new_nickname($nickname, $user)
 	{
 		$count = \app\SQL::prepare
 			(
@@ -542,7 +695,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param int user
 	 * @return boolean 
 	 */
-	public static function matching_password($password, $user)
+	static function matching_password($password, $user)
 	{
 		// get user data
 		$user_info = \app\SQL::prepare

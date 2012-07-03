@@ -25,7 +25,7 @@
 					(
 						// empty; loads common
 					),
-				'stats' => array
+				'lobby' => array
 					(
 						// empty; loads common
 					),

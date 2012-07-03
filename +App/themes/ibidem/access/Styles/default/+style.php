@@ -17,7 +17,17 @@
 			(
 				'signin' => array
 					(
-						
+						// empty
+					),
+			
+				'lobby' => array
+					(
+						// empty
+					),
+			
+				'signup' => array
+					(
+						// empty
 					),
 			),
 	);

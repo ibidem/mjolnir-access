@@ -120,27 +120,27 @@ final class Access
 		{
 			// attempt to authorize
 			$status = self::match_check(self::$whitelist[$user_role], $relay, $context, $attribute);
-
-			// failed authorization? check aliases for addition rules
-			if ( ! $status && isset(self::$aliaslist[$user_role]))
+		}
+		
+		// failed authorization? check aliases for addition rules
+		if ( ! $status && isset(self::$aliaslist[$user_role]))
+		{
+			foreach (self::$aliaslist[$user_role] as $alias)
 			{
-				foreach (self::$aliaslist[$user_role] as $alias)
+				if (isset(self::$whitelist[$alias]) && self::match_check(self::$whitelist[$alias], $relay, $context, $attribute))
 				{
-					if (isset(self::$whitelist[$alias]) && self::match_check(self::$whitelist[$alias], $relay, $context, $attribute))
-					{
-						$status = true; # authorized
-						break;
-					}
+					$status = true; # authorized
+					break;
 				}
-			}
-			
-			// authorized? confirm blacklist
-			if ($status && isset(self::$blacklist[$user_role]) && self::match_check(self::$blacklist[$user_role], $relay, $context, $attribute))
-			{
-				$status = false; # cancel authorization
 			}
 		}
 
+		// authorized? confirm blacklist
+		if ($status && isset(self::$blacklist[$user_role]) && self::match_check(self::$blacklist[$user_role], $relay, $context, $attribute))
+		{
+			$status = false; # cancel authorization
+		}
+		
 		return $status;
 	}
 

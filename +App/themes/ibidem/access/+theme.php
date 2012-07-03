@@ -6,9 +6,9 @@
 		// mapping targets to files
 		'targets' => array
 			(
-				'stats' => array
+				'lobby' => array
 					(
-						'common/base', 'stats'
+						'common/base', 'lobby'
 					),
 			
 				'signin' => array

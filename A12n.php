@@ -124,6 +124,19 @@ class A12n extends \app\Instantiatable
 	}
 	
 	/**
+	 * Retrieves the role name for the abstraction notion of "everybody"
+	 * 
+	 * ie. unauthentificated by us
+	 * 
+	 * @return string
+	 */
+	public static function oauth_guest()
+	{
+		// unique identifier
+		return '\ibidem\access\A12n::oauth_guest';
+	}
+	
+	/**
 	 * Sign out current user. 
 	 */
 	public static function signout()
@@ -139,6 +152,59 @@ class A12n extends \app\Instantiatable
 	{
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
+	}
+	
+	/**
+	 * @param 
+	 */
+	public static function inferred_signin($identification, $email, $provider)
+	{
+		// check if user exists
+		$user = \app\Model_User::for_email($email);
+		if ($user !== null)
+		{
+			\app\Session::set('user', $user);
+			\app\Session::set('role', \app\Model_User::role_for($user));
+		}
+		else
+		{
+			// does not exist; auto-register
+			try
+			{
+				$default_role = \app\CFS::config('model/User')['signup']['role'];
+				
+				\app\Model_User::inferred_signup
+					(
+						[
+							'nickname' => $identification,
+							'provider' => $provider,
+							'email' => $email,
+							'role' => $default_role,
+						]
+					);
+				
+				$user = \app\Model_User::last_inserted_id();
+				
+				\app\Session::set('user', $user);
+				\app\Session::set('role', \app\Model_User::role_for($user));
+				
+				$base_config = \app\CFS::config('ibidem/base');
+				if (isset($base_config['site:frontend']))
+				{
+					\app\Layer_HTTP::redirect($base_config['frontend'][0], $base_config['frontend'][1]);
+				}
+				else # no frontend
+				{
+					// redirect to access page
+					\app\Layer_HTTP::redirect(\app\Relay::route('\ibidem\access')->url());
+				}
+			}
+			catch (\Exception $e)
+			{
+				throw new \app\Exception_NotApplicable('Failed automated signup process.');
+			}
+		}
+		
 	}
 
 } # class

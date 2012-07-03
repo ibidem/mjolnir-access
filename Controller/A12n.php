@@ -8,13 +8,63 @@
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Controller_A12n extends \app\Controller_HTTP
-{	
-	public function action_index()
+{
+	function before()
+	{		
+		$this->layer->dispatch
+			(
+				\app\Event::instance()
+					->subject(\ibidem\types\Event::title)
+					->contents('Access')
+			);
+	}
+	
+	function action_index()
+	{
+		$relay = $this->layer->get_relay();
+		
+		if (\app\A12n::instance()->role() === \app\A12n::guest())
+		{
+			\app\Layer_HTTP::redirect
+				(
+					'\ibidem\access\a12n', 
+					['action' => 'signin']
+				);
+		}
+		
+		$this->layer->dispatch
+			(
+				\app\Event::instance()
+					->subject(\ibidem\types\Event::title)
+					->contents('Lobby · Access')
+			);
+
+		$this->body
+			(
+				\app\ThemeView::instance()
+					->theme('ibidem/access')
+					->style('default')
+					->target('lobby')
+					->layer($this->layer)
+					->context($relay['context']::instance())
+					->control($relay['control']::instance())
+					->render()
+			);
+	}
+	
+	function signin_view()
 	{
 		$relay = $this->layer->get_relay();
 		
 		if ($relay['target'] === null)
-		{
+		{	
+			$this->layer->dispatch
+				(
+					\app\Event::instance()
+						->subject(\ibidem\types\Event::title)
+						->contents('Sign In · Access')
+				);
+			
 			$this->body
 				(
 					\app\ThemeView::instance()
@@ -28,7 +78,7 @@ class Controller_A12n extends \app\Controller_HTTP
 				);
 		}
 		else # target provided
-		{
+		{			
 			$this->body
 				(
 					\app\ThemeView::instance()
@@ -44,27 +94,38 @@ class Controller_A12n extends \app\Controller_HTTP
 	/**
 	 * @throws \app\Exception_NotAllowed 
 	 */
-	public function action_signin()
+	function action_signin()
 	{
-		$user = \app\Model_User::signin_check($_POST);
+		if (\app\A12n::instance()->role() !== \app\A12n::guest())
+		{
+			\app\Layer_HTTP::redirect
+				(
+					'\ibidem\access\a12n', 
+					['action' => 'index']
+				);
+		}
 		
 		if (\app\Layer_HTTP::request_method() === \ibidem\types\HTTP::POST)
 		{
+			$user = \app\Model_User::signin_check($_POST);
+			
 			if ($user !== null)
 			{
 				// logged in
-				\app\A12n::signin($user, \app\Model_User::user_role($user));
+				\app\A12n::signin($user, \app\Model_User::role_for($user));
 				
 				// redirect
 				$base_config = \app\CFS::config('ibidem/base');
-				if (isset($base_config['frontend']))
+				if (isset($base_config['site:frontend']))
 				{
-					\app\Layer_HTTP::redirect($base_config['frontend'][0], $base_config['frontend'][1]);
+					\app\Layer_HTTP::redirect_to_url
+						(
+							'//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']
+						);
 				}
 
-				// no default frontend; we display the checkin page; which now 
-				// will show the user's credentials.
-				$this->action_index();
+				// no default frontend
+				\app\Layer_HTTP::redirect('\ibidem\access\a12n', ['action' => 'lobby']);
 			}
 			else # signin failed
 			{
@@ -72,53 +133,36 @@ class Controller_A12n extends \app\Controller_HTTP
 				
 				$errors = array
 					(
-						'ibidem\a12n\signin' => array('form' => array('Sign in failed. Please check your credentials or try a different password.'))
+						'ibidem\a12n\signin' => array
+							(
+								'form' => ['Sign in failed. Please check your credentials or try a different password.']
+							)
 					);
-				
-				if ($relay['target'] === null)
-				{
-					$view = \app\ThemeView::instance()
-						->theme('ibidem/access')
-						->style('default')
-						->target('signin')
-						->errors($errors)
-						->layer($this->layer)
-						->context($relay['context']::instance())
-						->control($relay['control']::instance());
-				}
-				else # target provided
-				{
-					$view = \app\ThemeView::instance()
-						->target($relay['target'])
-						->errors($errors)
-						->layer($this->layer)
-						->context($relay['context']::instance())
-						->control($relay['control']::instance());
-				}
-				
-				$this->body($view->render());
 			}
 		}
-		else if (\app\Layer_HTTP::request_method() === \ibidem\types\HTTP::GET)
-		{
-			$this->action_index();
-		}
-		else # not allowed 
-		{
-			throw new \app\Exception_NotAllowed
-				('Forbidden request method.');
-		}
+		
+		$this->signin_view();
 	}
 	
-	public function action_signout()
+	function action_signout()
 	{
 		\app\A12n::signout();
-		\app\Layer_HTTP::redirect('\ibidem\access\a12n', array('action' => 'signin'));
+		\app\Layer_HTTP::redirect('\ibidem\access\a12n', ['action' => 'signin']);
 	}
 	
-	public function action_channel()
+	function action_channel()
 	{
-		\var_dump($_REQUEST);
+		// load channel
+		$provider = $this->params->get('provider', null);
+		if ($provider === null)
+		{
+			throw new \app\Exception_NotApplicable('Provider not specified.');
+		}
+		
+		$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
+		$c = $channel_class::instance();
+		
+		$c->authorize();
 	}
 
 } # class

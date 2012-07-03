@@ -7,6 +7,7 @@
 
 class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \ibidem\access\Access {}
+class AccessChannel_Facebook extends \ibidem\access\AccessChannel_Facebook { /** @return \ibidem\access\AccessChannel_Facebook */ static function instance() { return parent::instance(); } }
 class Backend_Profile extends \ibidem\access\Backend_Profile { /** @return \ibidem\access\Backend_Profile */ static function instance() { return parent::instance(); } }
 class Backend_Role extends \ibidem\access\Backend_Role { /** @return \ibidem\access\Backend_Role */ static function instance() { return parent::instance(); } }
 class Backend_Settings extends \ibidem\access\Backend_Settings { /** @return \ibidem\access\Backend_Settings */ static function instance() { return parent::instance(); } }
@@ -18,5 +19,5 @@ class Migration_Access extends \ibidem\access\Migration_Access { /** @return \ib
 class Model_Profile extends \ibidem\access\Model_Profile {}
 class Model_Role extends \ibidem\access\Model_Role {}
 class Model_User extends \ibidem\access\Model_User {}
-class OAuth extends \ibidem\access\OAuth { /** @return \ibidem\access\OAuth */ static function instance() { return parent::instance(); } }
+class OAuth2 extends \ibidem\access\OAuth2 {}
 class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ static function instance() { return parent::instance(); } }

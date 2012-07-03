@@ -37,7 +37,7 @@ class Layer_Access extends \app\Layer
 	 */
 	public function exception(\Exception $exception, $no_throw = false, $origin = false)
 	{
-		if (\is_a($exception, '\\ibidem\\types\\Exception'))
+		if (\is_a($exception, '\ibidem\types\Exception'))
 		{
 			if ($exception->get_type() === \ibidem\types\Exception::NotAllowed)
 			{
@@ -60,7 +60,7 @@ class Layer_Access extends \app\Layer
 	public function execute()
 	{
 		try 
-		{
+		{			
 			// build context
 			$context = $this->relay['route']->get_context();
 			if (isset($this->relay['context']) && \is_array($this->relay['context']))
@@ -71,11 +71,12 @@ class Layer_Access extends \app\Layer
 			if ( ! \app\Access::can($this->target, $context))
 			{
 				$http_layer = \app\Layer::find('http');
-				if ($http_layer)
+				if ($http_layer && \app\Access::can('\ibidem\access\a12n', ['action' => 'signin']))
 				{
 					// redirect to the access route
 					$http_layer->redirect('\ibidem\access\a12n', array('action' => 'signin'));
 				}
+				
 				// else; or if the redirect fails 
 				throw new \app\Exception_NotAllowed
 					('Acceess denied.');

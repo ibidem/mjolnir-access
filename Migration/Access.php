@@ -17,21 +17,19 @@ class Migration_Access extends \app\Migration_Template_MySQL
 		$this->constraints
 			(
 				\app\Model_User::assoc_roles(),
-				array
-				(
+				[
 					'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
 					'role' => array(\app\Model_Role::table(), 'CASCADE', 'CASCADE'),
-				)
+				]
 			);
 		
 		$this->constraints
 			(
 				\app\Model_Profile::assoc_user(),
-				array
-				(
+				[
 					'field' => array(\app\Model_Profile::table(), 'CASCADE', 'CASCADE'),
 					'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
-				)
+				]
 			);
 	}
 	
@@ -48,9 +46,10 @@ class Migration_Access extends \app\Migration_Template_MySQL
 					`nickname`     :username,
 					`email`        :email,
 					`ipaddress`    :ipaddress,
-					`passwordverifier` :secure_hash,
-					`passwordsalt` :secure_hash,
-					`passworddate` :datetime_required,
+					`passwordverifier` :secure_hash DEFAULT NULL,
+					`passwordsalt` :secure_hash DEFAULT NULL,
+					`passworddate` :datetime_optional DEFAULT NULL,
+					`provider`     :titlename DEFAULT NULL,
 					`timestamp`    :timestamp,
 					
 					PRIMARY KEY (`id`)

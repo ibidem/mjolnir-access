@@ -73,13 +73,13 @@ class Model_Role extends \app\Model_SQL_Factory
 		}
 	}
 	
-	public static function update_validator($id, array $fields) 
+	static function update_validator($id, array $fields) 
 	{
 		return \app\Validator::instance([], $fields)
 			->rule('title', 'not_empty');
 	}
 
-	public static function update_assemble($id, array $fields)
+	static function update_assemble($id, array $fields)
 	{
 		\app\SQL::begin();
 		try
@@ -110,7 +110,7 @@ class Model_Role extends \app\Model_SQL_Factory
 	/**
 	 * @return array (id, title)
 	 */
-	public static function entries($page, $limit, $offset = 0)
+	static function entries($page, $limit, $offset = 0)
 	{
 		return \app\SQL::prepare
 			(
@@ -131,7 +131,7 @@ class Model_Role extends \app\Model_SQL_Factory
 	/**
 	 * @param array (id, title)
 	 */
-	public static function entry($id) 
+	static function entry($id) 
 	{
 		return \app\SQL::prepare
 			(
@@ -155,7 +155,7 @@ class Model_Role extends \app\Model_SQL_Factory
 	/**
 	 * @return boolean
 	 */
-	public static function unique($role)
+	static function unique($role)
 	{
 		$first_row = \app\SQL::prepare
 			(

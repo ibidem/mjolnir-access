@@ -26,7 +26,7 @@
 						(
 							'access(/<action>)', 
 							[
-								'action' => '(signin|signout|signup)'
+								'action' => '(signin|signout|signup|lobby)'
 							]
 						),
 				'enabled' => false,
