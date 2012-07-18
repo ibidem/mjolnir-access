@@ -149,20 +149,6 @@ class Controller_A12n extends \app\Controller_HTTP
 		\app\A12n::signout();
 		\app\Layer_HTTP::redirect('\ibidem\access\a12n', ['action' => 'signin']);
 	}
-	
-	function action_channel()
-	{
-		// load channel
-		$provider = $this->params->get('provider', null);
-		if ($provider === null)
-		{
-			throw new \app\Exception_NotApplicable('Provider not specified.');
-		}
-		
-		$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
-		$c = $channel_class::instance();
-		
-		$c->authorize();
-	}
+
 
 } # class

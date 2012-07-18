@@ -176,7 +176,7 @@ class A12n extends \app\Instantiatable
 				\app\Model_User::inferred_signup
 					(
 						[
-							'nickname' => $identification,
+							'identification' => $identification,
 							'provider' => $provider,
 							'email' => $email,
 							'role' => $default_role,
@@ -191,7 +191,7 @@ class A12n extends \app\Instantiatable
 				$base_config = \app\CFS::config('ibidem/base');
 				if (isset($base_config['site:frontend']))
 				{
-					\app\Layer_HTTP::redirect($base_config['frontend'][0], $base_config['frontend'][1]);
+					\app\Layer_HTTP::redirect_to_url('//'.$base_config['domain'].$base_config['path'].$base_config['frontend']);
 				}
 				else # no frontend
 				{
@@ -201,6 +201,7 @@ class A12n extends \app\Instantiatable
 			}
 			catch (\Exception $e)
 			{
+				throw $e;
 				throw new \app\Exception_NotApplicable('Failed automated signup process.');
 			}
 		}

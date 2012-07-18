@@ -10,6 +10,7 @@
 									[
 										'\ibidem\access\a12n',
 										'\ibidem\access\channel',
+										'\ibidem\access\endpoint',
 									]
 								)
 							->all_parameters(),

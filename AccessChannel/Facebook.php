@@ -42,7 +42,9 @@ class AccessChannel_Facebook extends \app\Instantiatable
 
 				$user = \json_decode(\file_get_contents($graph_url));
 
-				\app\A12n::inferred_signin($email, 'facebook');
+				\app\A12n::inferred_signin($user->username, $user->email, 'facebook');
+				
+				\app\Layer_HTTP::redirect('\ibidem\access\a12n');
 			}
 			else # error in `code` to `token` excahnge
 			{

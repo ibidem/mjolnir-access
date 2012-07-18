@@ -369,7 +369,12 @@ class Model_User extends \app\Model_SQL_Factory
 				->set(':nickname', $identification)
 				->set(':email', $fields['email'])
 				->set(':ipaddress', $ipaddress)
+				->set(':provider', $fields['provider'])
 				->execute();
+			
+			$user = \app\SQL::last_inserted_id();
+			
+			static::$last_inserted_id = $user;
 			
 			// assign role if set
 			if (isset($fields['role']))
@@ -378,13 +383,15 @@ class Model_User extends \app\Model_SQL_Factory
 					(
 						__METHOD__.':assign_role',
 						'
-							UPDATE `'.static::assoc_roles().'`
-							   SET role = :role
-							 WHERE user = '.$user.'
+							INSERT `'.static::assoc_roles().'`
+								(user, role)
+							VALUES 
+								(:user, :role)
 						',
 						'mysql'
 					)
 					->set_int(':role', $fields['role'])
+					->set_int(':user', $user)
 					->execute();
 			}
 			
@@ -404,7 +411,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 */
 	static function inferred_signup(array $fields)
 	{
-		$validator = static::validator_change_passwords($user, $fields);
+		$validator = static::inferred_validator($fields);
 		
 		if ($validator->validate() === null)
 		{					
@@ -625,6 +632,33 @@ class Model_User extends \app\Model_SQL_Factory
 		else # found role
 		{
 			return $roles[0]['role'];
+		}
+	}
+	
+	static function for_email($email)
+	{
+		$result = \app\SQL::prepare
+			(
+				__METHOD__,
+				'
+					SELECT id
+					  FROM `'.static::table().'`
+					 WHERE email = :email
+					 LIMIT 1
+				',
+				'mysql'
+			)
+			->set(':email', $email)
+			->execute()
+			->fetch_all();
+		
+		if ( ! empty($result))
+		{
+			return $result[0]['id'];
+		}
+		else # empty resultset
+		{
+			return null;
 		}
 	}
 

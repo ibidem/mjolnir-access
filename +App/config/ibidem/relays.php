@@ -7,15 +7,28 @@
 						(
 							'access/channel/<provider>', 
 							[
-								'provider' => '[a-zA-Z0-9]+'
+								'provider' => '[a-zA-Z0-9]+',
 							]
 						),
 				'enabled' => false,
 			// MVC
-				'controller' => '\ibidem\access\Controller_A12n',
+				'controller' => '\ibidem\access\Controller_Access',
 				'action'  => 'action_channel',
 				'target'  => null, # theme targeting
-				'control' => '\ibidem\access\Controller_A12n',
+				'control' => '\ibidem\access\Controller_Access',
+				'context' => '\ibidem\access\Context_Access',
+			),
+	
+		'\ibidem\access\endpoint' => array
+			(
+				'route' => \app\Route_Pattern::instance()
+					->standard('access/channel-endpoint', []),
+				'enabled' => false,
+			// MVC
+				'controller' => '\ibidem\access\Controller_Access',
+				'action'  => 'action_endpoint',
+				'target'  => null, # theme targeting
+				'control' => '\ibidem\access\Controller_Access',
 				'context' => '\ibidem\access\Context_Access',
 			),
 	
