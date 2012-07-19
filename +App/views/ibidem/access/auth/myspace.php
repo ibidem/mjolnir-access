@@ -1,7 +1,7 @@
 <?
 	namespace app;
 	
-	$provider_id = 'twitter';
+	$provider_id = 'myspace';
 	
 	$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_id];
 ?>

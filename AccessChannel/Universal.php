@@ -9,28 +9,25 @@ require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class AccessChannel_Twitter extends \app\Instantiatable
+class AccessChannel_Universal extends \app\Instantiatable
 {
-	function authorize()
+	function authorize($provider_name)
 	{
 		\app\Session::start(); # required by hybrid auth
 		
-		$provider = \app\CFS::config('ibidem/a12n')['signin']['twitter'];
-		$base_config = \app\CFS::config('ibidem/base');
+		$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_name];
 		
+		$provider_key = $provider['hybridauth.key'];
 		$config = array
 			(
 				'base_url' => 'http:'.\app\Relay::route('\ibidem\access\endpoint')->url(),
 				'providers' => array
 					(
-						'Twitter' => array 
+						$provider_key => array 
 							( 
 								'enabled' => true,
-								'keys' => array 
-									( 
-										'key' => $provider['ConsumerKey'], 
-										'secret' => $provider['ConsumerSecret'] 
-									) 
+								'keys' => $provider['keys'],
+								'scope' => $provider['scope'],
 							)
 					),
 				'debug_mode' => false,
@@ -40,24 +37,48 @@ class AccessChannel_Twitter extends \app\Instantiatable
 		try
 		{
 			// hybridauth EP
-			$hybridauth = new \Hybrid_Auth( $config );
+			$hybridauth = new \Hybrid_Auth($config);
 
-			// automatically try to login with Twitter
-			$twitter = $hybridauth->authenticate( "Twitter" );
+			// automatically try to login
+			$handler = $hybridauth->authenticate($provider_key);
 
-			// return TRUE or False <= generally will be used to check if the user is connected to twitter before getting user profile, posting stuffs, etc..
-			$is_user_logged_in = $twitter->isUserConnected();
+			// return TRUE or False
+			$is_user_logged_in = $handler->isUserConnected();
 
 			// get the user profile 
-			$user_profile = $twitter->getUserProfile();
-
-			// access user profile data
-			echo "Ohai there! U are connected with: <b>{$twitter->id}</b><br />";
-			echo "As: <b>{$user_profile->displayName}</b><br />";
-			echo "And your provider user identifier is: <b>{$user_profile->identifier}</b><br />";  
-
-			// or even inspect it
-			echo "<pre>" . print_r( $user_profile, true ) . "</pre><br />";
+			$user_profile = $handler->getUserProfile();			
+			
+			if (empty($user_profile->displayName) && empty($user_profile->email))
+			{
+				throw new \app\Exception_NotApplicable
+					('Inconsufficient information passed back from provider. Please try another.');
+			}
+			
+			if (empty($user_profile->displayName))
+			{
+				$display_name = \preg_replace('#@.*$#', '', $user_profile->email);
+			}
+			else # not empty
+			{
+				$display_name = $user_profile->displayName;
+			}
+			
+			if (empty($user_profile->email))
+			{
+				$email = $display_name.'@'.$provider_name;
+			}
+			else # not empty
+			{
+				$email = $user_profile->email;
+			}
+			
+			\app\A12n::inferred_signin($display_name, $email, $provider_name);
+				
+			\app\Layer_HTTP::redirect('\ibidem\access\a12n');
+		}
+		catch (\app\Exception_NotApplicable $e)
+		{
+			throw $e;
 		}
 		catch (\Exception $e)
 		{
@@ -72,10 +93,10 @@ class AccessChannel_Twitter extends \app\Instantiatable
 					   break;
 				case 6 : echo "User profile request failed. Most likely the user is not connected "
 						  . "to the provider and he should to authenticate again."; 
-					   $twitter->logout();
+					   $handler->logout();
 					   break;
 				case 7 : echo "User not connected to the provider."; 
-					   $twitter->logout();
+					   $handler->logout();
 					   break;
 				case 8 : echo "Provider does not support this feature."; break;
 			} 

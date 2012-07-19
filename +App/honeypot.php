@@ -8,6 +8,7 @@
 class A12n extends \ibidem\access\A12n { /** @return \ibidem\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \ibidem\access\Access {}
 class AccessChannel_Facebook extends \ibidem\access\AccessChannel_Facebook { /** @return \ibidem\access\AccessChannel_Facebook */ static function instance() { return parent::instance(); } }
+class AccessChannel_Google extends \ibidem\access\AccessChannel_Google { /** @return \ibidem\access\AccessChannel_Google */ static function instance() { return parent::instance(); } }
 class AccessChannel_Twitter extends \ibidem\access\AccessChannel_Twitter { /** @return \ibidem\access\AccessChannel_Twitter */ static function instance() { return parent::instance(); } }
 class Backend_Profile extends \ibidem\access\Backend_Profile { /** @return \ibidem\access\Backend_Profile */ static function instance() { return parent::instance(); } }
 class Backend_Role extends \ibidem\access\Backend_Role { /** @return \ibidem\access\Backend_Role */ static function instance() { return parent::instance(); } }

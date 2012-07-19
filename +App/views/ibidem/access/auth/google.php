@@ -1,9 +1,11 @@
 <?
 	namespace app;
 	
-	$provider = \app\CFS::config('ibidem/a12n')['signin']['google'];
+	$provider_id = 'google';
+	
+	$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_id];
 ?>
 
-<a rel="nofollow" href="#">
-	<i class="icon-signin"></i> <?= $provider['title'] ?>
+<a rel="nofollow" href="<?= \app\Relay::route('\ibidem\access\channel')->url(['provider' => 'universal', 'id' => $provider_id]) ?>">
+	<i class="icon-<?= $provider['icon'] ?>"></i> <?= $provider['title'] ?>
 </a>

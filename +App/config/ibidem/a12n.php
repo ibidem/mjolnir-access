@@ -1,4 +1,26 @@
-<?php return array
+<?php namespace app;
+
+$validator_keyed = function ($config) 
+	{
+		if ($config['key'] === null)
+		{
+			return 'App ID is missing.';
+		}
+
+		if ($config['secret'] === null)
+		{
+			return 'App Secret is missing.';
+		}
+
+		return null;
+	};
+	
+$validator_unkeyed = function ($config) 
+	{
+		return null;
+	};
+
+return array
 	(
 		'signin' => array
 			(
@@ -34,6 +56,10 @@
 						'icon' => 'twitter',
 						'title' => 'Twitter',
 						'register' => '\ibidem\access\channel\twitter',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Twitter',
+						'validator' => $validator_keyed,
 					),
 				
 				'google' => array
@@ -42,6 +68,10 @@
 						'icon' => 'signin',
 						'title' => 'Google',
 						'register' => '\ibidem\access\channel\google',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Google',
+						'validator' => $validator_keyed,
 					),
 				
 				'yahoo' => array
@@ -50,6 +80,95 @@
 						'icon' => 'signin',
 						'title' => 'Yahoo',
 						'register' => '\ibidem\access\channel\yahoo',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Yahoo',
+						'validator' => $validator_unkeyed,
 					),
+				
+				'aol' => array
+					(
+						'slug' => 'aol',
+						'title' => 'AOL',
+						'icon' => 'signin',
+						'register' => '\ibidem\access\channel\aol',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'AOL',
+						'validator' => $validator_unkeyed,
+					),
+							
+				'myspace' => array
+					(
+						'slug' => 'myspace',
+						'title' => 'MySpace',
+						'icon' => 'signin',
+						'register' => '\ibidem\access\channel\myspace',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'MySpace',
+						'validator' => $validator_keyed,
+					),
+							
+				'linkedin' => array
+					(
+						'slug' => 'linkedin',
+						'title' => 'LinkedIn',
+						'icon' => 'linkedin',
+						'register' => '\ibidem\access\channel\linkedin',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'LinkedIn',
+						'validator' => $validator_keyed,
+					),
+							
+				'foursquare' => array
+					(
+						'slug' => 'foursquare',
+						'title' => 'Foursquare',
+						'icon' => 'signin',
+						'register' => '\ibidem\access\channel\foursquare',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Foursquare',
+						'validator' => $validator_keyed,
+					),
+							
+				'live' => array
+					(
+						'slug' => 'live',
+						'title' => 'Live',
+						'icon' => 'signin',
+						'register' => '\ibidem\access\channel\live',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Live',
+						'validator' => $validator_keyed,
+					),
+							
+				'github' => array
+					(
+						'slug' => 'github',
+						'title' => 'Github',
+						'icon' => 'github',
+						'register' => '\ibidem\access\channel\github',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'Github',
+						'validator' => $validator_keyed,
+					),
+							
+				'lastfm' => array
+					(
+						'slug' => 'lastfm',
+						'title' => 'LastFM',
+						'icon' => 'signin',
+						'register' => '\ibidem\access\channel\lastfm',
+						'keys' => [],
+						'scope' => '',
+						'hybridauth.key' => 'LastFM',
+						'validator' => $validator_keyed,
+					),
+
 			),
 	);

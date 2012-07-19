@@ -10,5 +10,5 @@
 ?>
 
 <a rel="nofollow" href="https://www.facebook.com/dialog/oauth?client_id=<?= $appid ?>&amp;redirect_uri=<?= $protocol ?>:<?= $redirect ?>&amp;scope=email&amp;state=<?= $state ?>">
-	<i class="icon-facebook"></i> <?= $provider['title'] ?>
+	<i class="icon-<?= $provider['icon'] ?>"></i> <?= $provider['title'] ?>
 </a>

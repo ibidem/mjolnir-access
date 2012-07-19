@@ -5,9 +5,10 @@
 				'route' => \app\Route_Pattern::instance()
 					->standard
 						(
-							'access/channel/<provider>', 
+							'access/channel/<provider>(/<id>)', 
 							[
 								'provider' => '[a-zA-Z0-9]+',
+								'id' => '[a-zA-Z0-9]+',
 							]
 						),
 				'enabled' => false,

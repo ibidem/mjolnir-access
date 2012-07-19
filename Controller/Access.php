@@ -2,8 +2,8 @@
 
 \app\Session::start();
 
-require \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
-require \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
+require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
+require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
 
 /**
  * @package    ibidem
@@ -23,10 +23,40 @@ class Controller_Access extends \app\Controller_HTTP
 			throw new \app\Exception_NotApplicable('Provider not specified.');
 		}
 		
-		$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
-		$c = $channel_class::instance();
-		
-		$c->authorize();
+		if ($provider == 'universal')
+		{
+			$id = $this->params->get('id', null);
+			if ($id === null)
+			{
+				throw new \app\Exception_NotApplicable('Provider id not specified.');
+			}
+			
+			// this hard coded security test is intentional
+			$register = \app\CFS::config('ibidem/a12n')['signin'][$id]['register'];
+			if (\app\Register::pull([$register])[$register] !== 'on')
+			{
+				throw new \app\Exception_NotApplicable('Access Denied.');
+				\app\Log::message('sec error', 'Attempt to access unauthorized area.');
+			}
+			
+			$channel_class = '\app\AccessChannel_Universal';
+			$c = $channel_class::instance();
+			$c->authorize($id);
+		}
+		else # non-universal
+		{
+			// this hard coded security test is intentional
+			$register = \app\CFS::config('ibidem/a12n')['signin'][$provider]['register'];
+			if (\app\Register::pull([$register])[$register] !== 'on')
+			{
+				throw new \app\Exception_NotApplicable('Access Denied.');
+				\app\Log::message('sec error', 'Attempt to access unauthorized area.');
+			}
+			
+			$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
+			$c = $channel_class::instance();
+			$c->authorize();
+		}
 	}
 	
 	function action_endpoint()
