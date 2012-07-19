@@ -1,7 +1,7 @@
 <?
 	namespace app;
 	
-	$provider_id = 'aol';
+	$provider_id = 'github';
 	
 	$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_id];
 ?>
