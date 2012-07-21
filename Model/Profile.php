@@ -218,28 +218,31 @@ class Model_Profile extends \app\Model_SQL_Factory
 			
 			// go though all fields
 			foreach ($fields as $field => $value)
-			{				
-				// retrieve the ones we're interested in
-				if (\preg_match('#^field-[0-9]+$#', $field))
+			{
+				if ( ! empty($value))
 				{
-					// retrieve value
-					$key = (int) \preg_replace('#^field-#', '', $field);
-					// update
-					\app\SQL::prepare
-						(
-							__METHOD__,
-							'
-								INSERT INTO `'.static::assoc_user().'`
-								   SET user = :user,
-								       field = :field,
-									   value = :value
-							',
-							'mysql'
-						)
-						->set_int(':user', $id)
-						->set_int(':field', $key)
-						->set(':value', $field_types[$map[$key]['type']]['store']($value))
-						->execute();
+					// retrieve the ones we're interested in
+					if (\preg_match('#^field-[0-9]+$#', $field))
+					{
+						// retrieve value
+						$key = (int) \preg_replace('#^field-#', '', $field);
+						// update
+						\app\SQL::prepare
+							(
+								__METHOD__,
+								'
+									INSERT INTO `'.static::assoc_user().'`
+									   SET user = :user,
+										   field = :field,
+										   value = :value
+								',
+								'mysql'
+							)
+							->set_int(':user', $id)
+							->set_int(':field', $key)
+							->set(':value', $field_types[$map[$key]['type']]['store']($value))
+							->execute();
+					}
 				}
 			}
 			
