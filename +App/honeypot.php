@@ -13,3 +13,4 @@ class Model_DB_User extends \ibidem\access\Model_DB_User {}
 class Model_HTTP_User extends \ibidem\access\Model_HTTP_User { /** @return \ibidem\access\Model_HTTP_User */ static function instance($id = null) { return parent::instance($id); } }
 class Model_User extends \ibidem\access\Model_User { /** @return \ibidem\access\Model_User */ static function instance($id = null) { return parent::instance($id); } }
 class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ static function instance() { return parent::instance(); } }
+class Schematic_Default_Access_User extends \ibidem\access\Schematic_Default_Access_User { /** @return \ibidem\access\Schematic_Default_Access_User */ static function instance() { return parent::instance(); } }
