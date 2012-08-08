@@ -17,7 +17,7 @@
 				'title' => array
 					(
 						'not_empty' => 'Invalid value.',
-						'\app\Model_DB_User::unique_role' => 'Role already exists.',
+						':unique' => 'Role already exists.',
 					),
 			),
 	);

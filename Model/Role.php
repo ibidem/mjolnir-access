@@ -7,8 +7,12 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_Role extends \app\Model_SQL_Factory
+class Model_Role extends \app\Instantiatable
 {
+	use \app\Trait_Model_Factory;
+	use \app\Trait_Model_Master;
+	use \app\Trait_Model_Collection;
+	
 	protected static $table = 'roles';
 	
 	/**
@@ -20,166 +24,47 @@ class Model_Role extends \app\Model_SQL_Factory
 	}
 	
 	// -------------------------------------------------------------------------
-	// Model_Factory interface
+	// Factory interface
 	
 	/**
 	 * @param array (title)
 	 * @return \app\Validator
 	 */
-	static function validator(array $fields)
+	static function check(array $fields, $context = null)
 	{
 		$user_config = \app\CFS::config('model/UserRole');
 		
 		return \app\Validator::instance($user_config['errors'], $fields)
 			->rule('title', 'not_empty')
-			->rule('title', '\app\Model_DB_Role::unique');
+			->test('title', ':unique', ! static::exists($fields['title'], 'title', $context));
 	}
 	
 	/**
 	 * @param array (title)
 	 * @throws \ibidem\access\Exception
 	 */
-	static function assemble(array $fields)
+	static function process(array $fields)
 	{
-		\app\SQL::begin(); # begin transaction
-		try
-		{
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						INSERT INTO `'.static::table().'`
-							(
-								title
-							)
-						VALUES
-							(
-								:title 
-							)
-					',
-					'mysql'
-				)
-				->set(':title', \htmlspecialchars($fields['title']))
-				->execute();
-			
-			static::$last_inserted_id = \app\SQL::last_inserted_id();
-			
-			\app\SQL::commit();
-		} 
-		catch (\Exception $exception)
-		{
-			\app\SQL::rollback();
-			throw $exception;
-		}
+		static::inserter($fields, ['title'])->run();
+		static::$last_inserted_id = \app\SQL::last_inserted_id();
 	}
 	
-	static function update_validator($id, array $fields) 
+	/**
+	 * @return \app\Validator
+	 */
+	static function update_check($id, array $fields) 
 	{
 		return \app\Validator::instance([], $fields)
 			->rule('title', 'not_empty');
 	}
 
-	static function update_assemble($id, array $fields)
-	{
-		\app\SQL::begin();
-		try
-		{
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						UPDATE `'.static::table().'`
-						   SET title = :title
-						 WHERE id = :id
-					',
-					'mysql'
-				)
-				->set(':title', $fields['title'])
-				->bind_int(':id', $id)
-				->execute();
-
-			\app\SQL::commit();
-		}
-		catch (\Exception $e)
-		{
-			\app\SQL::rollback();
-			throw $e;
-		}
-	}	
-	
 	/**
-	 * @return array (id, title)
+	 * @param int role id
+	 * @param array fields
 	 */
-	static function entries($page, $limit, $offset = 0)
+	static function update_process($id, array $fields)
 	{
-		return \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT role.id id,
-					       role.title title
-					  FROM `'.static::table().'` role
-					 LIMIT :limit OFFSET :offset
-				',
-				'mysql'
-			)
-			->page($page, $limit, $offset)
-			->execute()
-			->fetch_all();
-	}
-	
-	/**
-	 * @param array (id, title)
-	 */
-	static function entry($id) 
-	{
-		return \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT role.id id,
-					       role.title title
-					  FROM `'.static::table().'` role
-					 WHERE role.id = :id
-				',
-				'mysql'
-			)
-			->set_int(':id', $id)
-			->execute()
-			->fetch_array();
-	}
-	
-	// -------------------------------------------------------------------------
-	// Validator Helpers	
-	
-	/**
-	 * @return boolean
-	 */
-	static function unique($role)
-	{
-		$first_row = \app\SQL::prepare
-			(
-				__METHOD__, 
-				'
-					SELECT COUNT(1)
-					  FROM '.static::table().'
-					 WHERE title = :role
-				', 
-				'mysql'
-			)
-			->bind(':role', $role)
-			->execute()
-			->fetch_array();
-		
-		$count = $first_row['COUNT(1)'];
-		
-		if (\intval($count) != 0)
-		{
-			return false;
-		}
-		
-		// test passed
-		return true;
+		static::updater($id, $fields, ['title']);
 	}
 
 } # class

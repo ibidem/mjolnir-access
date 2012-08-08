@@ -7,8 +7,12 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_User extends \app\Model_SQL_Factory
+class Model_User
 {
+	use \app\Trait_Model_Factory;
+	use \app\Trait_Model_Master;
+	use \app\Trait_Model_Collection;
+	
 	/**
 	 * @var string 
 	 */
@@ -37,100 +41,65 @@ class Model_User extends \app\Model_SQL_Factory
 	}
 	
 	// -------------------------------------------------------------------------
-	// Model_Factory interface
+	// factory interface
 	
 	/**
 	 * @param array fields
 	 * @return Validator 
 	 */
-	static function validator(array $fields) 
+	static function check(array $fields, $context = null) 
 	{
 		$user_config = \app\CFS::config('model/User');
-		
 		return \app\Validator::instance($user_config['errors'], $fields)
-			->rule('nickname', 'not_empty')
+			->ruleset('not_empty', ['nickname', 'email', 'password', 'role'])
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
-			->rule('nickname', '\app\Model_User::unique_nickname')
-			->rule('email', 'not_empty')
-			->rule('password', 'not_empty')
 			->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
 			->rule('verifier', 'equal_to', $fields['password'])
-			->rule('role', 'not_empty');
+			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 	}
 	
 	/**
 	 * @param array (nickname, email, password, verifier) 
 	 */
-	static function assemble(array $fields) 
+	static function process(array $fields)
 	{
 		$password = static::generate_password($fields['password']);
-
-		\app\SQL::begin(); # begin transaction
-		try
+		
+		$filtered_fields = array
+			(
+				'nickname' => \htmlspecialchars($fields['nickname']),
+				'email' => \htmlspecialchars($fields['email']),
+				'ipaddress' => \app\Layer_HTTP::detect_ip(),
+				'passwordverifier' => $password['verifier'],
+				'passwordsalt' => $password['salt'],
+				'passworddate' => \date('Y-m-d H:i:s'),
+			);
+		
+		static::inserter
+			(
+				$filtered_fields, 
+				[
+					'nickname', 
+					'email', 
+					'ipaddress', 
+					'passwordverifier',
+					'passwordsalt',
+					'passworddate',
+				]
+			)
+			->run();
+		
+		// resolve dependencies
+		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
+		static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
+		
+		// assign role if set
+		if (isset($fields['role']))
 		{
-			$ipaddress = \app\Layer_HTTP::detect_ip();
-
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						INSERT INTO `'.static::table().'`
-							(
-								nickname, 
-								email,
-								ipaddress, 
-								passwordverifier, 
-								passworddate, 
-								passwordsalt
-							)
-						VALUES
-							(
-								:nickname, 
-								:email,
-								:ipaddress, 
-								:passwordverifier, 
-								:passworddate, 
-								:passwordsalt
-							)
-					',
-					'mysql'
-				)
-				->set(':nickname', \htmlspecialchars($fields['nickname']))
-				->set(':email', \htmlspecialchars($fields['email']))
-				->set(':ipaddress', $ipaddress)
-				->set(':passwordverifier', $password['verifier'])
-				->set(':passworddate', \date('c'))
-				->set(':passwordsalt', $password['salt'])
-				->execute();
-			
-			$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
-
-			static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
-			
-			// assign role if set
-			if (isset($fields['role']))
-			{
-				\app\SQL::prepare
-					(
-						__METHOD__.':assign_role',
-						'
-							UPDATE `'.static::assoc_roles().'`
-							   SET role = :role
-							 WHERE user = '.$user.'
-						',
-						'mysql'
-					)
-					->set_int(':role', $fields['role'])
-					->execute();
-			}
-			
-			\app\SQL::commit();
-		} 
-		catch (\Exception $exception)
-		{
-			\app\SQL::rollback();
-			throw $exception;
+			static::assign_role($user, $fields['role']);
 		}
+		
+		// cache already reset by inserter
 	}
 	
 	/**
@@ -139,9 +108,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 */
 	static function dependencies($id, array $config = null)
 	{
-		parent::dependencies($id, $config);
-
-		\app\SQL::prepare
+		static::statement
 			(
 				__METHOD__,
 				'
@@ -157,127 +124,50 @@ class Model_User extends \app\Model_SQL_Factory
 			->execute();
 	}
 
-
 	/**
 	 * @param int id
-	 * @param array fields 
-	 * @return \app\Validator
+	 * @param array fields
 	 */
-	static function update_validator($id, array $fields)
+	static function update_process($id, array $fields)
 	{
-		$user_config = \app\CFS::config('model/User');
-		return \app\Validator::instance($user_config['errors'], $fields)
-			->rule('nickname', '\app\Model_User::unique_new_nickname', $id);
+		// update role
+		static::assign_role($id, $fields['role']);
+		static::updater($id, $fields, ['nickname', 'email'])->run();
 	}
 	
-	/**
-	 * @param int id
-	 * @param array fields 
-	 * @return \app\Validator|null
-	 */
-	static function update_assemble($id, array $fields)
-	{
-		\app\SQL::begin();
-		try
-		{
-			// get current nickname
-			$current_info = \app\SQL::prepare
-				(
-					__METHOD__.':check_nickname',
-					'
-						SELECT *
-						  FROM `'.static::table().'` user
-						 WHERE user.id = :id
-					',
-					'mysql'
-				)
-				->bind_int(':id', $id)
-				->execute()
-				->fetch_array();
-
-			if ($current_info['nickname'] != $fields['nickname'])
-			{
-				// check if available
-				if ( ! static::unique_nickname($fields['nickname']))
-				{
-					$fields['nickname'] = $current_info['nickname'];
-				}
-			}
-
-			// update role
-			\app\SQL::prepare
-				(
-					__METHOD__.':update_role',
-					'
-						UPDATE `'.static::assoc_roles().'`
-						   SET role = :role
-						 WHERE user = :user
-					',
-					'mysql'
-				)
-				->set_int(':user', $id)
-				->set_int(':role', $fields['role'])
-				->execute();
-
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						UPDATE `'.static::table().'`
-						   SET nickname = :nickname,
-							   email = :email
-						 WHERE id = :id
-					',
-					'mysql'
-				)
-				->set(':nickname', $fields['nickname'])
-				->set(':email', $fields['email'])
-				->bind_int(':id', $id)
-				->execute();
-
-			\app\SQL::commit();
-		}
-		catch (\Exception $e)
-		{
-			\app\SQL::rollback();
-			throw $e;
-		}
-	}
+	// ------------------------------------------------------------------------
+	// Collection interface
 	
 	/**
 	 * @param int page
 	 * @param int limit
 	 * @param int offset
-	 * @param string order key
-	 * @param string order
-	 * @return array (id, role, roletitle, nickname, email, ipaddress)
+	 * @param array order
+	 * @return array
 	 */
-	static function entries($page, $limit, $offset = 0, $sort = 'id', $order = 'ASC')
+	static function entries($page, $limit, $offset = 0, $order = [])
 	{
-		return \app\SQL::prepare
+		return static::stash
 			(
 				__METHOD__,
 				'
-					SELECT user.id id,
-					       user.nickname nickname, 
-					       user.email email,
+					SELECT user.id,
+					       user.nickname, 
+					       user.email,
+						   user.timestamp,
+					       user.ipaddress,
 					       role.id role,
-					       role.title roletitle,
-						   user.timestamp timestamp,
-					       user.ipaddress ipaddress
-					  FROM `'.static::table().'` AS user,
-					       `'.static::roles_table().'` AS role,
-					       `'.static::assoc_roles().'` AS assoc_roles
+					       role.title roletitle
+					  FROM :table user,
+					       `'.static::roles_table().'` role,
+					       `'.static::assoc_roles().'` assoc_roles
 					 WHERE assoc_roles.role = role.id 
 					   AND assoc_roles.user = user.id 
-					 ORDER BY :sort '.$order.'
-					 LIMIT :limit OFFSET :offset
-				',
-				'mysql'
+				'
 			)
+			->key(__FUNCTION__)
 			->page($page, $limit, $offset)
-			->set(':sort', $sort)
-			->execute()
+			->order($order)
 			->fetch_all();
 	}
 	
@@ -288,121 +178,95 @@ class Model_User extends \app\Model_SQL_Factory
 	 */
 	static function entry($id)
 	{
-		$entry = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT user.id id,
-					       assoc.role role,
-						   role.title roletitle,
-						   user.nickname nickname,
-						   user.email email,
-						   user.timestamp timestamp,
-						   user.ipaddress ipaddress
-					  FROM `'.static::table().'` user
-					  JOIN `'.static::assoc_roles().'` assoc
-						ON user.id = assoc.user
-					  JOIN `'.static::roles_table().'` role
-						ON role.id = assoc.role
-					 WHERE user.id = :id
-						   
-				'
-			)
-			->set_int(':id', $id)
-			->execute()
-			->fetch_array();
+		$stashkey = __METHOD__.'_ID'.$id;
+		$entry = \app\Stash::get($stashkey, null);
 		
-		$entry['timestamp'] = new \DateTime($entry['timestamp']);
-		
+		if ( ! $entry)
+		{
+			$entry = static::statement
+				(
+					__METHOD__,
+					'
+						SELECT user.id,
+							   user.nickname,
+							   user.email,
+							   user.timestamp,
+							   user.ipaddress,
+							   assoc.role role,
+							   role.title roletitle
+						  FROM :table user
+						  JOIN `'.static::assoc_roles().'` assoc
+							ON user.id = assoc.user
+						  JOIN `'.static::roles_table().'` role
+							ON role.id = assoc.role
+						 WHERE user.id = :id
+					',
+					'mysql'
+				)
+				->set_int(':id', $id)
+				->execute()
+				->fetch_array();
+
+			$entry['timestamp'] = new \DateTime($entry['timestamp']);
+			
+			\app\Stash::store($stashkey, $entry, ['change']);
+		}
+			
 		return $entry;
 	}
 	
 	// -------------------------------------------------------------------------
 	// Extended
 	
-	/**
-	 * @param array (identification, email, provider)
-	 * @return \app\Validator
+	/*
+	 * @param int user id
+	 * @param int role
 	 */
-	static function inferred_validator(array $fields)
+	static function assign_role($id, $role)
 	{
-		return \app\Validator::instance([], $fields)
-			->rule('identification', 'not_empty')
-			->rule('email', 'not_empty')
-			->rule('role', 'not_empty')
-			->rule('provider', 'not_empty');
+		static::statement
+			(
+				__METHOD__,
+				'
+					INSERT `'.static::assoc_roles().'`
+						(user, role)
+					VALUES 
+						(:user, :role)
+				',
+				'mysql'
+			)
+			->set_int(':role', $role)
+			->set_int(':user', $id)
+			->execute();
+		
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
 	
 	/**
 	 * @param array (identification, email, provider)
-	 * @throws \ibidem\access\Exception
+	 * @return \app\Validator
 	 */
-	static function inferred_assemble(array $fields)
+	static function inferred_signup_check(array $fields)
 	{
-		$identification = \str_replace('@', '[at]', $fields['identification']);
+		return \app\Validator::instance([], $fields)
+			->ruleset('not_empty', ['identification', 'email', 'role', 'provider']);
+	}
+	
+	static function inferred_signup_process(array $fields)
+	{
+		$fields['ipaddress'] = \app\Layer_HTTP::detect_ip();
+		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
 		
-		\app\SQL::begin();
-		try
-		{
-			$ipaddress = \app\Layer_HTTP::detect_ip();
-			
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						INSERT INTO `'.static::table().'`
-							(
-								nickname, 
-								email,
-								ipaddress, 
-								provider
-							)
-						VALUES
-							(
-								:nickname, 
-								:email,
-								:ipaddress, 
-								:provider
-							)
-					'
-				)
-				->set(':nickname', $identification)
-				->set(':email', $fields['email'])
-				->set(':ipaddress', $ipaddress)
-				->set(':provider', $fields['provider'])
-				->execute();
-			
-			$user = \app\SQL::last_inserted_id();
-			
-			static::$last_inserted_id = $user;
-			
-			// assign role if set
-			if (isset($fields['role']))
-			{
-				\app\SQL::prepare
-					(
-						__METHOD__.':assign_role',
-						'
-							INSERT `'.static::assoc_roles().'`
-								(user, role)
-							VALUES 
-								(:user, :role)
-						',
-						'mysql'
-					)
-					->set_int(':role', $fields['role'])
-					->set_int(':user', $user)
-					->execute();
-			}
-			
-			\app\SQL::commit();
+		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider']);
+		
+		$user = static::$last_inserter_id = \app\SQL::last_inserted_id();
+		
+		// assign role if set
+		if (isset($fields['role']))
+		{	
+			static::assign_role($user, $fields['role']);
 		}
-		catch (\Exception $e)
-		{
-			\app\SQL::rollback();
-			throw $e;
-		}
-				
+		
 	}
 	
 	/**
@@ -411,16 +275,28 @@ class Model_User extends \app\Model_SQL_Factory
 	 */
 	static function inferred_signup(array $fields)
 	{
-		$validator = static::inferred_validator($fields);
+		$errors = static::inferred_signup_check($fields)->errors();
 		
-		if ($validator->validate() === null)
-		{					
-			static::inferred_assemble($fields);
+		if (empty($errors))
+		{
+			\app\SQL::begin();
+			try
+			{
+				static::inferred_signup_process($fields);
+				
+				\app\SQL::commit();
+			}
+			catch (\Exception $e)
+			{
+				\app\SQL::rollback();
+				throw $e;
+			}
+			
 			return null;
 		}
 		else # invalid
 		{
-			return $validator;
+			return $errors;
 		}
 	}
 	
@@ -428,7 +304,7 @@ class Model_User extends \app\Model_SQL_Factory
 	 * @param array fields
 	 * @return \app\Validator|null
 	 */
-	static function validator_change_passwords($user, array $fields)
+	static function change_passwords_check($user, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
 		
@@ -438,34 +314,35 @@ class Model_User extends \app\Model_SQL_Factory
 	}
 	
 	/**
-	 * @param array fields
-	 * @param int user
 	 * @return \app\Validator|null 
 	 */
 	static function change_password($user, array $fields)
 	{
-		$validator = static::validator_change_passwords($user, $fields);
+		$errors = static::change_passwords_check($user, $fields)->errors();
 		
-		if ($validator->validate() === null)
-		{		
-			// compute password
-			$password = static::generate_password($fields['password']);
-			
-			\app\SQL::prepare
-				(
-					__METHOD__,
-					'
-						UPDATE `'.static::table().'` users
-						   SET users.passwordverifier = :verifier,
-						       users.passwordsalt = :salt
-						 WHERE users.id = :id
-					',
-					'mysql'
-				)
-				->set(':verifier', $password['verifier'])
-				->set(':salt', $password['salt'])
-				->set(':id', $user)
-				->execute();
+		if (empty($errors))
+		{
+			\app\SQL::begin();
+			try
+			{
+				// compute password
+				$password = static::generate_password($fields['password']);
+				
+				$new_fields = array
+					(
+						'passwordverifier' => $password['verifier'],
+						'passwordsalt' => $password['salt'],
+					);
+				
+				static::updater($user, $new_fields, ['passwordverifier', 'passwordsalt'])->run();
+				
+				\app\SQL::commit();
+			}
+			catch (\Exception $e)
+			{
+				\app\SQL::rollback();
+				throw $e;
+			}
 			
 			return null;
 		}
@@ -487,11 +364,11 @@ class Model_User extends \app\Model_SQL_Factory
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
 		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
 		// update
-		\app\SQL::prepare
+		static::statement
 			(
 				__METHOD__,
 				'
-					UPDATE '.static::table().'
+					UPDATE :table
 					   SET passwordverifier = :passwordverifier
 					   SET passwordsalt = :passwordsalt
 					   SET passworddate = :passworddate
@@ -503,9 +380,9 @@ class Model_User extends \app\Model_SQL_Factory
 			)
 			->bind(':passwordverifier', $passwordverifier)
 			->bind(':passwordsalt', $passwordsalt)
-			->bind(':passworddate', \time())
+			->set(':passworddate', \date('Y-m-d H:i:s'))
 			->bind(':nickname', $fields['nickname'])
-			->bind(':ipaddress', $fields['nickname'])
+			->bind(':ipaddress', \app\Layer_HTTP::detect_ip())
 			->execute();
 	}
 	
@@ -532,12 +409,12 @@ class Model_User extends \app\Model_SQL_Factory
 		
 		if (\strpos($fields['identity'], '@') === false)
 		{
-			$user = \app\SQL::prepare
+			$user = static::statement
 				(
 					__METHOD__,
 					'
 						SELECT *
-						  FROM '.static::table().'
+						  FROM :table
 						 WHERE nickname = :nickname
 						   AND provider IS NULL
 						 LIMIT 1
@@ -550,12 +427,12 @@ class Model_User extends \app\Model_SQL_Factory
 		}
 		else # email
 		{
-			$user = \app\SQL::prepare
+			$user = static::statement
 				(
 					__METHOD__.':email_signin_check',
 					'
 						SELECT *
-						  FROM '.static::table().'
+						  FROM :table
 						 WHERE email = :email
 						   AND provider IS NULL
 						 LIMIT 1
@@ -604,26 +481,34 @@ class Model_User extends \app\Model_SQL_Factory
 		
 	/**
 	 * @param int user_id
-	 * @return string|null
+	 * @return string or null
 	 */
 	static function role_for($user_id)
 	{
-		$roles = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT role.title role
-					  FROM `'.static::roles_table().'` role
-					  JOIN `'.static::assoc_roles().'` assoc
-						ON assoc.role = role.id
-					 WHERE assoc.user = :user
-					 LIMIT 1
-				',
-				'mysql'
-			)
-			->set_int(':user', $user_id)
-			->execute()
-			->fetch_all();
+		$cachekey = __METHOD__.'_ID'.$user_id;
+		$roles = \app\Stash::get($cachekey, null);
+		
+		if ($roles === null)
+		{
+			$roles = static::statement
+				(
+					__METHOD__,
+					'
+						SELECT role.title role
+						  FROM `'.static::roles_table().'` role
+						  JOIN `'.static::assoc_roles().'` assoc
+							ON assoc.role = role.id
+						 WHERE assoc.user = :user
+						 LIMIT 1
+					',
+					'mysql'
+				)
+				->set_int(':user', $user_id)
+				->execute()
+				->fetch_all();
+			
+			\app\Stash::store($cachekey, $roles, \app\Stash::tags('User', ['change']));
+		}
 		
 		if (empty($roles))
 		{
@@ -635,22 +520,39 @@ class Model_User extends \app\Model_SQL_Factory
 		}
 	}
 	
+	/**
+	 * @param string email
+	 * @return int id
+	 */
 	static function for_email($email)
 	{
-		$result = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT id
-					  FROM `'.static::table().'`
-					 WHERE email = :email
-					 LIMIT 1
-				',
-				'mysql'
-			)
-			->set(':email', $email)
-			->execute()
-			->fetch_all();
+		$cachekey = __METHOD__.'_'.\sha1($email);
+		$result = \app\Stash::get($cachekey, null);
+		
+		if ($result === null)
+		{
+			$result = \app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						SELECT id
+						  FROM `'.static::table().'`
+						 WHERE email = :email
+						 LIMIT 1
+					',
+					'mysql'
+				)
+				->set(':email', $email)
+				->execute()
+				->fetch_all();
+			
+			\app\Stash::store
+				(
+					$cachekey, 
+					$roles, 
+					\app\Stash::tags('User', ['change'])
+				);
+		}
 		
 		if ( ! empty($result))
 		{
@@ -666,63 +568,6 @@ class Model_User extends \app\Model_SQL_Factory
 	// Validator Helpers
 	
 	/**
-	 * @return boolean
-	 */
-	static function unique_nickname($nickname)
-	{
-		$count = \app\SQL::prepare
-			(
-				__METHOD__, 
-				'
-					SELECT COUNT(1)
-					  FROM '.static::table().'
-					 WHERE nickname = :nickname
-				', 
-				'mysql'
-			)
-			->bind(':nickname', $nickname)
-			->execute()
-			->fetch_array()
-			['COUNT(1)'];
-		
-		if (\intval($count) != 0)
-		{
-			return false;
-		}
-		
-		// test passed
-		return true;
-	}
-	
-	/**
-	 * @param string nickname
-	 * @param int user
-	 * @return bool 
-	 */
-	static function unique_new_nickname($nickname, $user)
-	{
-		$count = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT COUNT(1)
-					  FROM `'.static::table().'` user
-					 WHERE user.id != :user 
-					   AND user.nickname = :nickname
-					 LIMIT 1
-				',
-				'mysql'
-			)
-			->set(':nickname', $nickname)
-			->set_int(':user', $user)
-			->execute()
-			->fetch_array()
-			['COUNT(1)'];
-		
-		return ((int) $count) == 0;
-	}
-	
-	/**
 	 * Confirm password matches user.
 	 * 
 	 * @param string password
@@ -731,22 +576,35 @@ class Model_User extends \app\Model_SQL_Factory
 	 */
 	static function matching_password($password, $user)
 	{
-		// get user data
-		$user_info = \app\SQL::prepare
-			(
-				__METHOD__,
-				'
-					SELECT users.passwordsalt salt,
-					       users.passwordverifier verifier
-					  FROM `'.static::table().'` users
-					 WHERE users.id = :user
-					 LIMIT 1
-				',
-				'mysql'
-			)
-			->set_int(':user', $user)
-			->execute()
-			->fetch_array();
+		$cachekey = __METHOD__.'__userinfo_'.$user;
+		$user_info = \app\Stash::get($cachekey, null);
+		
+		if ($user_info === null)
+		{
+			// get user data
+			$user_info = \app\SQL::prepare
+				(
+					__METHOD__,
+					'
+						SELECT users.passwordsalt salt,
+							   users.passwordverifier verifier
+						  FROM `'.static::table().'` users
+						 WHERE users.id = :user
+						 LIMIT 1
+					',
+					'mysql'
+				)
+				->set_int(':user', $user)
+				->execute()
+				->fetch_array();
+			
+			\app\Stash::store
+				(
+					$cachekey, 
+					$user_info, 
+					\app\Stash::tags('User', ['change'])
+				);
+		}
 		
 		// compute verifier for given password
 		$test = static::generate_password($password, $user_info['salt']);
@@ -767,7 +625,7 @@ class Model_User extends \app\Model_SQL_Factory
 	/**
 	 * @param string password (plaintext)
 	 * @param string salt
-	 * @return array (salt, verifier)
+	 * @return array [salt, verifier]
 	 */
 	protected static function generate_password($password_text, $salt = null)
 	{

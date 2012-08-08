@@ -41,8 +41,7 @@
 				'nickname' => array
 					(
 						'not_empty' => 'You must type in a nickname.',
-						'\app\Model_DB_User::unique_nickname' => 'User with same name already exists.',
-						'\app\Model_DB_User::unique_new_nickname' => 'User with same name already exists.',
+						':unique' => 'User with same name already exists.',
 					),
 				'password' => array
 					(
