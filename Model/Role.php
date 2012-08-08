@@ -48,15 +48,6 @@ class Model_Role extends \app\Instantiatable
 		static::inserter($fields, ['title'])->run();
 		static::$last_inserted_id = \app\SQL::last_inserted_id();
 	}
-	
-	/**
-	 * @return \app\Validator
-	 */
-	static function update_check($id, array $fields) 
-	{
-		return \app\Validator::instance([], $fields)
-			->rule('title', 'not_empty');
-	}
 
 	/**
 	 * @param int role id
