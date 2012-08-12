@@ -21,6 +21,7 @@
 	
 		<fieldset>
 			<?= $form->hidden('id')->value($id) ?>
+			<?= $form->hidden('type')->value($field['type']) ?>
 
 			<?= $form->text('Field Name', 'title')->value($field['title'])->autocomplete(false) ?>
 			<?= $form->text('Order Index', 'idx')->value($field['idx'])->autocomplete(false) ?>

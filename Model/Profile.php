@@ -13,8 +13,20 @@ class Model_Profile
 	use \app\Trait_Model_Master;
 	use \app\Trait_Model_Collection;
 	
+	/**
+	 * @var string table
+	 */
 	protected static $table = 'profilefields';
+	
+	/**
+	 * @var string table 
+	 */
 	protected static $table_user_field = 'user_field';
+	
+	/**
+	 * @var array
+	 */
+	protected static $field_format = [];
 	
 	/**
 	 * @return string
@@ -42,7 +54,7 @@ class Model_Profile
 	 */
 	static function process(array $fields) 
 	{
-		static::insertor($fields, ['title', 'idx', 'type', 'required'])->run();
+		static::inserter($fields, ['title', 'idx', 'type'], ['required'])->run();
 		static::$last_inserted_id = \app\SQL::last_inserted_id();
 	}
 	
@@ -51,47 +63,12 @@ class Model_Profile
 	 */
 	static function update_process($id, array $fields)
 	{
-		static::updater($id, $fields, ['title', 'idx', 'required'])->run();
+		static::updater($id, $fields, ['title', 'idx'], ['required'])->run();
+		static::clear_entry_cache($id);
 	}
 	
 	// -------------------------------------------------------------------------
-	// Extended
-	
-	/**
-	 * @return array profile fields
-	 */
-	static function profile_info($id)
-	{
-		$cachekey = \get_called_class().'__profile_info_ID'.$id;
-		$result = \app\Stash::get($cachekey, null);
-		
-		if ($result !== null)
-		{
-			$result = static::statement
-				(
-					__METHOD__,
-					'
-						SELECT field.id id,
-							   field.title title,
-							   profile.value value,
-							   field.type type
-						  FROM :table field
-						  LEFT OUTER
-						  JOIN `'.static::assoc_user().'` profile
-							ON profile.field = field.id
-						 WHERE profile.user = :user
-						 ORDER BY field.idx ASC
-					'
-				)
-				->set_int(':user', $id)
-				->execute()
-				->fetch_all();
-			
-			\app\Stash::set($cachekey, $result);
-		}
-		
-		return $result;
-	}
+	// Update profile
 	
 	/**
 	 * @return \app\Validation
@@ -184,15 +161,6 @@ class Model_Profile
 	}
 	
 	/**
-	 * Clear cache for specific id.
-	 */
-	protected static function profile_info_clearcache($id)
-	{
-		$cachekey = \get_called_class().'__profile_info_ID'.$id;
-		\app\Stash::delete($cachekey);
-	}
-	
-	/**
 	 * @return array or null
 	 */
 	static function update_profile($id, array $fields)
@@ -221,5 +189,53 @@ class Model_Profile
 			return $errors;
 		}
 	}
+	
+	/**
+	 * Clear cache for specific id.
+	 */
+	protected static function profile_info_clearcache($id)
+	{
+		$cachekey = \get_called_class().'__profile_info_ID'.$id;
+		\app\Stash::delete($cachekey);
+	}
 
+	// -------------------------------------------------------------------------
+	// Extended
+	
+	/**
+	 * @return array profile fields
+	 */
+	static function profile_info($id)
+	{
+		$cachekey = \get_called_class().'__profile_info_ID'.$id;
+		$result = \app\Stash::get($cachekey, null);
+		
+		if ($result !== null)
+		{
+			$result = static::statement
+				(
+					__METHOD__,
+					'
+						SELECT field.id,
+							   field.title,
+							   field.type
+							   profile.value value,
+						  FROM :table field
+						  LEFT OUTER
+						  JOIN `'.static::assoc_user().'` profile
+							ON profile.field = field.id
+						 WHERE profile.user = :user
+						 ORDER BY field.idx ASC
+					'
+				)
+				->set_int(':user', $id)
+				->execute()
+				->fetch_all(static::$field_format);
+			
+			\app\Stash::set($cachekey, $result);
+		}
+		
+		return $result;
+	}
+	
 } # class

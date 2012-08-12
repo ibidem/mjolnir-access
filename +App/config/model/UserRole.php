@@ -12,12 +12,4 @@
 						'size' => 30,
 					),
 			),
-		'errors' => array
-			(
-				'title' => array
-					(
-						'not_empty' => 'Invalid value.',
-						':unique' => 'Role already exists.',
-					),
-			),
 	);

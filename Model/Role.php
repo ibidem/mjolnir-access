@@ -12,50 +12,32 @@ class Model_Role
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Master;
 	use \app\Trait_Model_Collection;
+	use \app\Trait_Model_Automaton;
 	
+	/**
+	 * @var array
+	 */
 	protected static $table = 'roles';
-	
-	/**
-	 * @return string table name
-	 */
-	static function assoc_users()
-	{
-		return \app\Model_User::assoc_roles();
-	}
-	
-	// -------------------------------------------------------------------------
-	// Factory interface
-	
-	/**
-	 * @param array (title)
-	 * @return \app\Validator
-	 */
-	static function check(array $fields, $context = null)
-	{
-		$user_config = \app\CFS::config('model/UserRole');
 		
-		return \app\Validator::instance($user_config['errors'], $fields)
-			->rule('title', 'not_empty')
-			->test('title', ':unique', ! static::exists($fields['title'], 'title', $context));
-	}
+	/**
+	 * @var array
+	 */
+	protected static $field_format = [];
 	
 	/**
-	 * @param array (title)
-	 * @throws \ibidem\access\Exception
+	 * @var array
 	 */
-	static function process(array $fields)
-	{
-		static::inserter($fields, ['title'])->run();
-		static::$last_inserted_id = \app\SQL::last_inserted_id();
-	}
-
-	/**
-	 * @param int role id
-	 * @param array fields
-	 */
-	static function update_process($id, array $fields)
-	{
-		static::updater($id, $fields, ['title']);
-	}
+	protected static $automaton = array
+		(
+			'fields' => [ 'title' ],
+			'unique' => [ 'title' ],
+			'errors' => array
+				(
+					'title' => array
+						(
+							':unique' => 'Role already exists.'
+						),
+				),
+		);
 
 } # class

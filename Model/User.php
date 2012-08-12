@@ -19,6 +19,11 @@ class Model_User
 	protected static $table = 'users';
 	
 	/**
+	 * @var array
+	 */
+	protected static $field_format = [];
+	
+	/**
 	 * @var string 
 	 */
 	protected static $user_role_table = 'user_role';
@@ -133,6 +138,7 @@ class Model_User
 		// update role
 		static::assign_role($id, $fields['role']);
 		static::updater($id, $fields, ['nickname', 'email'])->run();
+		static::clear_entry_cache($id);
 	}
 	
 	// ------------------------------------------------------------------------
@@ -177,7 +183,7 @@ class Model_User
 	 */
 	static function entry($id)
 	{
-		$stashkey = __CLASS__.'_ID'.$id;
+		$stashkey = \get_called_class().'_ID'.$id;
 		$entry = \app\Stash::get($stashkey, null);
 		
 		if ( ! $entry)
