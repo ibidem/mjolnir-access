@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_Profile extends \app\Model_SQL_Factory
+class Model_Profile
 {
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Master;
@@ -43,6 +43,7 @@ class Model_Profile extends \app\Model_SQL_Factory
 	static function process(array $fields) 
 	{
 		static::insertor($fields, ['title', 'idx', 'type', 'required'])->run();
+		static::$last_inserted_id = \app\SQL::last_inserted_id();
 	}
 	
 	/**
@@ -66,7 +67,7 @@ class Model_Profile extends \app\Model_SQL_Factory
 		
 		if ($result !== null)
 		{
-			$result = \app\SQL::prepare
+			$result = static::statement
 				(
 					__METHOD__,
 					'
@@ -74,7 +75,7 @@ class Model_Profile extends \app\Model_SQL_Factory
 							   field.title title,
 							   profile.value value,
 							   field.type type
-						  FROM `'.static::table().'` field
+						  FROM :table field
 						  LEFT OUTER
 						  JOIN `'.static::assoc_user().'` profile
 							ON profile.field = field.id
@@ -191,6 +192,9 @@ class Model_Profile extends \app\Model_SQL_Factory
 		\app\Stash::delete($cachekey);
 	}
 	
+	/**
+	 * @return array or null
+	 */
 	static function update_profile($id, array $fields)
 	{
 		$errors = static::update_profile_check($id, $fields)->errors();

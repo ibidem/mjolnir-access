@@ -172,13 +172,12 @@ class Model_User
 	}
 	
 	/**
-	 * 
-	 * @param type $id
+	 * @param int id
 	 * @return array (id, role, roletitle, nickname, email, ipaddress)
 	 */
 	static function entry($id)
 	{
-		$stashkey = __METHOD__.'_ID'.$id;
+		$stashkey = __CLASS__.'_ID'.$id;
 		$entry = \app\Stash::get($stashkey, null);
 		
 		if ( ! $entry)
@@ -209,7 +208,7 @@ class Model_User
 
 			$entry['timestamp'] = new \DateTime($entry['timestamp']);
 			
-			\app\Stash::store($stashkey, $entry, ['change']);
+			\app\Stash::set($stashkey, $entry);
 		}
 			
 		return $entry;
@@ -218,7 +217,7 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// Extended
 	
-	/*
+	/**
 	 * @param int user id
 	 * @param int role
 	 */
@@ -348,7 +347,7 @@ class Model_User
 		}
 		else # invalid
 		{
-			return $validator;
+			return $errors;
 		}
 	}
 	
@@ -531,12 +530,12 @@ class Model_User
 		
 		if ($result === null)
 		{
-			$result = \app\SQL::prepare
+			$result = static::statement
 				(
 					__METHOD__,
 					'
 						SELECT id
-						  FROM `'.static::table().'`
+						  FROM :table
 						 WHERE email = :email
 						 LIMIT 1
 					',
@@ -582,13 +581,13 @@ class Model_User
 		if ($user_info === null)
 		{
 			// get user data
-			$user_info = \app\SQL::prepare
+			$user_info = static::statement
 				(
 					__METHOD__,
 					'
 						SELECT users.passwordsalt salt,
 							   users.passwordverifier verifier
-						  FROM `'.static::table().'` users
+						  FROM :table users
 						 WHERE users.id = :user
 						 LIMIT 1
 					',
@@ -629,7 +628,7 @@ class Model_User
 	 */
 	protected static function generate_password($password_text, $salt = null)
 	{
-		$password = array();
+		$password = [];
 		
 		// load configuration
 		$security = \app\CFS::config('ibidem/security');
