@@ -28,18 +28,22 @@
 		</dl>
 	</section>
 	
-	<section>
-		<h2>Profile Information</h2>
-		<dl class="dl-horizontal">
-			<? $profile_config = \app\CFS::config('ibidem/profile-fieldtypes') ?>
-			<? foreach ($context->profile_info($id) as $field): ?>
-			
-				<dt><?= $field['title'] ?></td>
-					<dd><?= $profile_config[$field['type']]['render']($field['value']) ?></dd>
-					
-			<? endforeach; ?>
-		</dl>
-	</section>
+	<? $profile_info = $context->profile_info($id) ?>
+	
+	<? if ($profile_info !== null): ?>
+		<section>
+			<h2>Profile Information</h2>
+			<dl class="dl-horizontal">
+				<? $profile_config = \app\CFS::config('ibidem/profile-fieldtypes') ?>
+				<? foreach ($profile_info as $field): ?>
+
+					<dt><?= $field['title'] ?></td>
+						<dd><?= $profile_config[$field['type']]['render']($field['value']) ?></dd>
+
+				<? endforeach; ?>
+			</dl>
+		</section>
+	<? endif; ?>
 	
 </section>
 
