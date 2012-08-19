@@ -15,7 +15,7 @@ class Hybrid_Error
 	/**
 	* store error in session
 	*/
-	public static function setError( $message, $code = NULL, $trace = NULL, $previous = NULL )
+	static function setError( $message, $code = NULL, $trace = NULL, $previous = NULL )
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Error::setError( $message )" );
 
@@ -29,7 +29,7 @@ class Hybrid_Error
 	/**
 	* clear the last error
 	*/
-	public static function clearError()
+	static function clearError()
 	{ 
 		Hybrid_Logger::info( "Enter Hybrid_Error::clearError()" );
 
@@ -45,7 +45,7 @@ class Hybrid_Error
 	* 
 	* @return boolean True if there is an error.
 	*/
-	public static function hasError()
+	static function hasError()
 	{ 
 		return (bool) Hybrid_Auth::storage()->get( "hauth_session.error.status" );
 	}
@@ -53,7 +53,7 @@ class Hybrid_Error
 	/**
 	* return error message 
 	*/
-	public static function getErrorMessage()
+	static function getErrorMessage()
 	{ 
 		return Hybrid_Auth::storage()->get( "hauth_session.error.message" );
 	}
@@ -61,7 +61,7 @@ class Hybrid_Error
 	/**
 	* return error code  
 	*/
-	public static function getErrorCode()
+	static function getErrorCode()
 	{ 
 		return Hybrid_Auth::storage()->get( "hauth_session.error.code" );
 	}
@@ -69,7 +69,7 @@ class Hybrid_Error
 	/**
 	* return string detailled error backtrace as string.
 	*/
-	public static function getErrorTrace()
+	static function getErrorTrace()
 	{ 
 		return Hybrid_Auth::storage()->get( "hauth_session.error.trace" );
 	}
@@ -77,7 +77,7 @@ class Hybrid_Error
 	/**
 	* @return string detailled error backtrace as string.
 	*/
-	public static function getErrorPrevious()
+	static function getErrorPrevious()
 	{ 
 		return Hybrid_Auth::storage()->get( "hauth_session.error.previous" );
 	}

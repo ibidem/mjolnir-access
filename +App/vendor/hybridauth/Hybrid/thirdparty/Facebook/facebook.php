@@ -32,7 +32,7 @@ class Facebook extends BaseFacebook
    * @param Array $config the application configuration.
    * @see BaseFacebook::__construct in facebook.php
    */
-  public function __construct($config) {
+  function __construct($config) {
     if (!session_id()) {
       session_start();
     }

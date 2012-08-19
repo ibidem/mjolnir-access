@@ -19,7 +19,7 @@ class Hybrid_Endpoint {
 	*
 	* $request - The current request parameters. Leave as NULL to default to use $_REQUEST.
 	*/
-	public static function process( $request = NULL )
+	static function process( $request = NULL )
 	{
 		// Setup request variable
 		Hybrid_Endpoint::$request = $request;
@@ -69,7 +69,7 @@ class Hybrid_Endpoint {
 	/**
 	* Process Windows Live channel request
 	*/
-	public static function processWindowsLiveChannel()
+	static function processWindowsLiveChannel()
 	{
 		$output = file_get_contents( dirname(__FILE__) . "/resources/windows_live_channel.html" ); 
 		print $output;
@@ -79,7 +79,7 @@ class Hybrid_Endpoint {
 	/**
 	* Process OpenID policy request
 	*/
-	public static function processOpenidPolicy()
+	static function processOpenidPolicy()
 	{
 		$output = file_get_contents( dirname(__FILE__) . "/resources/openid_policy.html" ); 
 		print $output;
@@ -89,7 +89,7 @@ class Hybrid_Endpoint {
 	/**
 	* Process OpenID XRDS request
 	*/
-	public static function processOpenidXRDS()
+	static function processOpenidXRDS()
 	{
 		header("Content-Type: application/xrds+xml");
 
@@ -109,7 +109,7 @@ class Hybrid_Endpoint {
 	/**
 	* Process OpenID realm request
 	*/
-	public static function processOpenidRealm()
+	static function processOpenidRealm()
 	{
 		$output = str_replace
 		(
@@ -124,7 +124,7 @@ class Hybrid_Endpoint {
 	/**
 	* define:endpoint step 3.
 	*/
-	public static function processAuthStart()
+	static function processAuthStart()
 	{
 		Hybrid_Endpoint::authInit();
 
@@ -167,7 +167,7 @@ class Hybrid_Endpoint {
 	/**
 	* define:endpoint step 3.1 and 3.2
 	*/
-	public static function processAuthDone()
+	static function processAuthDone()
 	{
 		Hybrid_Endpoint::authInit();
 
@@ -202,7 +202,7 @@ class Hybrid_Endpoint {
 		die();
 	}
 
-	public static function authInit()
+	static function authInit()
 	{
 		if ( ! Hybrid_Endpoint::$initDone) {
 			Hybrid_Endpoint::$initDone = TRUE;

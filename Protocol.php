@@ -47,7 +47,7 @@ class Protocol extends \app\Instantiatable
 	 * @param string relay
 	 * @return \ibidem\access\Protocol_Rule $this
 	 */
-	public function relays(array $relays)
+	function relays(array $relays)
 	{
 		$this->relays = $relays;
 		return $this;
@@ -57,7 +57,7 @@ class Protocol extends \app\Instantiatable
 	 * @param array attributes
 	 * @return \ibidem\access\Protocol_Rule $this
 	 */
-	public function attributes(array $attributes)
+	function attributes(array $attributes)
 	{
 		$this->attributes = $attributes;
 		return $this;
@@ -68,7 +68,7 @@ class Protocol extends \app\Instantiatable
 	 * 
 	 * @return \ibidem\access\Protocol 
 	 */
-	public function only_others()
+	function only_others()
 	{
 		$this->self = false;
 		return $this;
@@ -79,7 +79,7 @@ class Protocol extends \app\Instantiatable
 	 * 
 	 * @return \ibidem\access\Protocol $this
 	 */
-	public function only_owner()
+	function only_owner()
 	{
 		$this->self = true;
 		return $this;
@@ -90,7 +90,7 @@ class Protocol extends \app\Instantiatable
 	 * 
 	 * @return \ibidem\access\Protocol $this
 	 */
-	public function everybody()
+	function everybody()
 	{
 		$this->self = null;
 		return $this;
@@ -99,7 +99,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @return boolean|null 
 	 */
-	public function get_self()
+	function get_self()
 	{
 		return $this->self;
 	}
@@ -109,7 +109,7 @@ class Protocol extends \app\Instantiatable
 	 * @param array values
 	 * @return \ibidem\access\Protocol $this
 	 */
-	public function param($name, array $values)
+	function param($name, array $values)
 	{
 		$this->parameters or $this->parameters = array();
 		$this->parameters[$name] = $values;
@@ -119,7 +119,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @return \ibidem\access\Protocol $this
 	 */
-	public function all_parameters()
+	function all_parameters()
 	{
 		$this->all_parameters = true;
 		return $this;
@@ -130,7 +130,7 @@ class Protocol extends \app\Instantiatable
 	 * @param array context
 	 * @param string attribute 
 	 */
-	public function matches($relay, array $context = null, $test_attribute = null)
+	function matches($relay, array $context = null, $test_attribute = null)
 	{
 		// cycle though acceptable relays
 		foreach ($this->relays as $name)

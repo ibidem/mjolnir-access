@@ -4,7 +4,7 @@
 	$provider = \app\CFS::config('ibidem/a12n')['signin']['facebook'];
 	
 	$appid = $provider['AppID'];
-	$redirect = \app\Relay::route('\ibidem\access\channel')->url(['provider' => 'facebook']);
+	$redirect = \app\URL::route('\ibidem\access\channel')->url(['provider' => 'facebook']);
 	$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
 	$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 ?>

@@ -41,7 +41,7 @@
 				<span class="label label-info"><?= Lang::tr('Help') ?></span>
 				<small>
 					<?= Lang::msg('ibidem.access.signin.not_yet_a_member') ?>
-					<a class="nowrap" href="<?= \app\Relay::route('\ibidem\access\a12n')->url(['action' => 'signup']) ?>">
+					<a class="nowrap" href="<?= \app\URL::route('\ibidem\access\a12n')->url(['action' => 'signup']) ?>">
 						<?= Lang::msg('ibiden.access.sign_up_now') ?> 
 					</a>
 				</small>

@@ -40,14 +40,14 @@ class OAuth2Client
 
 	//--
 
-	public function __construct( $client_id = false, $client_secret = false, $redirect_uri='' )
+	function __construct( $client_id = false, $client_secret = false, $redirect_uri='' )
 	{
 		$this->client_id     = $client_id;
 		$this->client_secret = $client_secret; 
 		$this->redirect_uri  = $redirect_uri; 
 	}
 
-	public function authorizeUrl( $extras = array() )
+	function authorizeUrl( $extras = array() )
 	{
 		$params = array(
 			"client_id"     => $this->client_id,
@@ -62,7 +62,7 @@ class OAuth2Client
 		return $this->authorize_url . "?" . http_build_query( $params );
 	}
 
-    public function authenticate( $code )
+    function authenticate( $code )
 	{
 		$params = array(
 			"client_id"     => $this->client_id,
@@ -89,7 +89,7 @@ class OAuth2Client
 		return $response;  
     }
 
-	public function authenticated()
+	function authenticated()
 	{
 		if ( $this->access_token ){
 			if ( $this->token_info_url && $this->refresh_token ){
@@ -119,7 +119,7 @@ class OAuth2Client
 	/** 
 	* Format and sign an oauth for provider api 
 	*/
-	public function api( $url, $method = "GET", $parameters = array() ) 
+	function api( $url, $method = "GET", $parameters = array() ) 
 	{
 		if ( strrpos($url, 'http://') !== 0 && strrpos($url, 'https://') !== 0 ) {
 			$url = $this->api_base_url . $url;
@@ -158,14 +158,14 @@ class OAuth2Client
 
 	// -- tokens
 
-	public function tokenInfo($accesstoken)
+	function tokenInfo($accesstoken)
 	{
 		$params['access_token'] = $this->access_token;
 		$response = $this->request( $this->token_info_url, $params );
 		return $this->parseRequestResult( $response );
 	}
 
-	public function refreshToken( $parameters = array() )
+	function refreshToken( $parameters = array() )
 	{
 		$params = array(
 			"client_id"     => $this->client_id,

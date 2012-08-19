@@ -67,7 +67,7 @@ class Hybrid_Auth
 	/**
 	* Try to initialize Hybrid_Auth with given $config hash or file
 	*/
-	public static function initialize( $config )
+	static function initialize( $config )
 	{
 		if ( ! session_id() ){
 			throw new Exception( "Hybriauth require the use of 'session_start()' at the start of your script.", 1 );
@@ -168,7 +168,7 @@ class Hybrid_Auth
 	* Hybrid_Auth::storage()->get($key) to retrieves the data for the given key, or calling
 	* Hybrid_Auth::storage()->set($key, $value) to store the key => $value set.
 	*/
-	public static function storage()
+	static function storage()
 	{
 		return Hybrid_Auth::$store;
 	}
@@ -207,7 +207,7 @@ class Hybrid_Auth
 	*        openid_identifier: The OpenID identity provider identifier
 	*           google_service: can be "Users" for Google user accounts service or "Apps" for Google hosted Apps
 	*/
-	public static function authenticate( $providerId, $params = NULL )
+	static function authenticate( $providerId, $params = NULL )
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Auth::authenticate( $providerId )" );
 
@@ -233,7 +233,7 @@ class Hybrid_Auth
 	/**
 	* Return the adapter instance for an authenticated provider
 	*/ 
-	public static function getAdapter( $providerId = NULL )
+	static function getAdapter( $providerId = NULL )
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Auth::getAdapter( $providerId )" );
 
@@ -245,7 +245,7 @@ class Hybrid_Auth
 	/**
 	* Setup an adapter for a given provider
 	*/ 
-	public static function setup( $providerId, $params = NULL )
+	static function setup( $providerId, $params = NULL )
 	{
 		Hybrid_Logger::debug( "Enter Hybrid_Auth::setup( $providerId )", $params );
 
@@ -280,7 +280,7 @@ class Hybrid_Auth
 	/**
 	* Check if the current user is connected to a given provider
 	*/
-	public static function isConnectedWith( $providerId )
+	static function isConnectedWith( $providerId )
 	{
 		return (bool) Hybrid_Auth::storage()->get( "hauth_session.{$providerId}.is_logged_in" );
 	}
@@ -290,7 +290,7 @@ class Hybrid_Auth
 	/**
 	* Return array listing all authenticated providers
 	*/ 
-	public static function getConnectedProviders()
+	static function getConnectedProviders()
 	{
 		$idps = array();
 
@@ -308,7 +308,7 @@ class Hybrid_Auth
 	/**
 	* Return array listing all enabled providers as well as a flag if you are connected.
 	*/ 
-	public static function getProviders()
+	static function getProviders()
 	{
 		$idps = array();
 
@@ -330,7 +330,7 @@ class Hybrid_Auth
 	/**
 	* A generic function to logout all connected provider at once 
 	*/ 
-	public static function logoutAllProviders()
+	static function logoutAllProviders()
 	{
 		$idps = Hybrid_Auth::getConnectedProviders();
 
@@ -346,7 +346,7 @@ class Hybrid_Auth
 	/**
 	* Utility function, redirect to a given URL with php header or using javascript location.href
 	*/
-	public static function redirect( $url, $mode = "PHP" )
+	static function redirect( $url, $mode = "PHP" )
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Auth::redirect( $url, $mode )" );
 
@@ -374,7 +374,7 @@ class Hybrid_Auth
 	/**
 	* Utility function, return the current url. TRUE to get $_SERVER['REQUEST_URI'], FALSE for $_SERVER['PHP_SELF']
 	*/
-	public static function getCurrentUrl( $request_uri = true ) 
+	static function getCurrentUrl( $request_uri = true ) 
 	{
 		if(
 			isset( $_SERVER['HTTPS'] ) && ( $_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1 )

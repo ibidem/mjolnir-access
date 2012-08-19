@@ -18,7 +18,7 @@
  */
 class OAuthWrapHandler
 { 
-    public function ProcessRequest()
+    function ProcessRequest()
     {
         $this->ExpireCookies();
         $cookies_setup = $this->convertParamsToCookies($_REQUEST);
@@ -46,7 +46,7 @@ class OAuthWrapHandler
 		return $cookies;
     }
  
-    public function ExpireCookies()
+    function ExpireCookies()
     {
         setcookie ("c_accessToken", "", time() - 3600);
         setcookie ("c_clientId", "", time() - 3600);
@@ -154,7 +154,7 @@ class OAuthWrapHandler
         return $contents;
     }
  
-	public function GET($url,$params=false,$auth=false){
+	function GET($url,$params=false,$auth=false){
 		
 		$url = $this->MakeUrl($url,$params);
 		// borrowed from Andy Langton: http://andylangton.co.uk/
@@ -183,7 +183,7 @@ class OAuthWrapHandler
 		return $result;
 	}
  
-	public function MakeUrl($url,$params){
+	function MakeUrl($url,$params){
 		if(!empty($params) && $params){
 			foreach($params as $k=>$v) $kv[] = "$k=$v";
 			$url_params = str_replace(" ","+",implode('&',$kv));

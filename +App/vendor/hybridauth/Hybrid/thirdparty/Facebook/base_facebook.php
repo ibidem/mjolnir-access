@@ -39,7 +39,7 @@ class FacebookApiException extends Exception
    *
    * @param array $result The result from the API server
    */
-  public function __construct($result) {
+  function __construct($result) {
     $this->result = $result;
 
     $code = isset($result['error_code']) ? $result['error_code'] : 0;
@@ -65,7 +65,7 @@ class FacebookApiException extends Exception
    *
    * @return array The result from the API server
    */
-  public function getResult() {
+  function getResult() {
     return $this->result;
   }
 
@@ -75,7 +75,7 @@ class FacebookApiException extends Exception
    *
    * @return string
    */
-  public function getType() {
+  function getType() {
     if (isset($this->result['error'])) {
       $error = $this->result['error'];
       if (is_string($error)) {
@@ -97,7 +97,7 @@ class FacebookApiException extends Exception
    *
    * @return string The string representation of the error
    */
-  public function __toString() {
+  function __toString() {
     $str = $this->getType() . ': ';
     if ($this->code != 0) {
       $str .= $this->code . ': ';
@@ -210,7 +210,7 @@ abstract class BaseFacebook
    *
    * @param array $config The application configuration
    */
-  public function __construct($config) {
+  function __construct($config) {
     $this->setAppId($config['appId']);
     $this->setAppSecret($config['secret']);
     if (isset($config['fileUpload'])) {
@@ -229,7 +229,7 @@ abstract class BaseFacebook
    * @param string $appId The Application ID
    * @return BaseFacebook
    */
-  public function setAppId($appId) {
+  function setAppId($appId) {
     $this->appId = $appId;
     return $this;
   }
@@ -239,7 +239,7 @@ abstract class BaseFacebook
    *
    * @return string the Application ID
    */
-  public function getAppId() {
+  function getAppId() {
     return $this->appId;
   }
 
@@ -250,7 +250,7 @@ abstract class BaseFacebook
    * @return BaseFacebook
    * @deprecated
    */
-  public function setApiSecret($apiSecret) {
+  function setApiSecret($apiSecret) {
     $this->setAppSecret($apiSecret);
     return $this;
   }
@@ -261,7 +261,7 @@ abstract class BaseFacebook
    * @param string $appSecret The App Secret
    * @return BaseFacebook
    */
-  public function setAppSecret($appSecret) {
+  function setAppSecret($appSecret) {
     $this->appSecret = $appSecret;
     return $this;
   }
@@ -272,7 +272,7 @@ abstract class BaseFacebook
    * @return string the App Secret
    * @deprecated
    */
-  public function getApiSecret() {
+  function getApiSecret() {
     return $this->getAppSecret();
   }
 
@@ -281,7 +281,7 @@ abstract class BaseFacebook
    *
    * @return string the App Secret
    */
-  public function getAppSecret() {
+  function getAppSecret() {
     return $this->appSecret;
   }
 
@@ -291,7 +291,7 @@ abstract class BaseFacebook
    * @param boolean $fileUploadSupport The file upload support status.
    * @return BaseFacebook
    */
-  public function setFileUploadSupport($fileUploadSupport) {
+  function setFileUploadSupport($fileUploadSupport) {
     $this->fileUploadSupport = $fileUploadSupport;
     return $this;
   }
@@ -301,7 +301,7 @@ abstract class BaseFacebook
    *
    * @return boolean true if and only if the server supports file upload.
    */
-  public function getFileUploadSupport() {
+  function getFileUploadSupport() {
     return $this->fileUploadSupport;
   }
 
@@ -312,7 +312,7 @@ abstract class BaseFacebook
    *
    * @return boolean true if and only if the server supports file upload.
    */
-  public function useFileUploadSupport() {
+  function useFileUploadSupport() {
     return $this->getFileUploadSupport();
   }
 
@@ -324,7 +324,7 @@ abstract class BaseFacebook
    * @param string $access_token an access token.
    * @return BaseFacebook
    */
-  public function setAccessToken($access_token) {
+  function setAccessToken($access_token) {
     $this->accessToken = $access_token;
     return $this;
   }
@@ -338,7 +338,7 @@ abstract class BaseFacebook
    *
    * @return string The access token
    */
-  public function getAccessToken() {
+  function getAccessToken() {
     if ($this->accessToken !== null) {
       // we've done this already and cached it.  Just return.
       return $this->accessToken;
@@ -424,7 +424,7 @@ abstract class BaseFacebook
    *
    * @return string the signed request, if available, or null otherwise.
    */
-  public function getSignedRequest() {
+  function getSignedRequest() {
     if (!$this->signedRequest) {
       if (isset($_REQUEST['signed_request'])) {
         $this->signedRequest = $this->parseSignedRequest(
@@ -443,7 +443,7 @@ abstract class BaseFacebook
    *
    * @return string the UID if available.
    */
-  public function getUser() {
+  function getUser() {
     if ($this->user !== null) {
       // we've already determined this and cached the value.
       return $this->user;
@@ -509,7 +509,7 @@ abstract class BaseFacebook
    * @param array $params Provide custom parameters
    * @return string The URL for the login flow
    */
-  public function getLoginUrl($params=array()) {
+  function getLoginUrl($params=array()) {
     $this->establishCSRFTokenState();
     $currentUrl = $this->getCurrentUrl();
 
@@ -538,7 +538,7 @@ abstract class BaseFacebook
    * @param array $params Provide custom parameters
    * @return string The URL for the logout flow
    */
-  public function getLogoutUrl($params=array()) {
+  function getLogoutUrl($params=array()) {
     return $this->getUrl(
       'www',
       'logout.php',
@@ -560,7 +560,7 @@ abstract class BaseFacebook
    * @param array $params Provide custom parameters
    * @return string The URL for the logout flow
    */
-  public function getLoginStatusUrl($params=array()) {
+  function getLoginStatusUrl($params=array()) {
     return $this->getUrl(
       'www',
       'extern/login_status.php',
@@ -579,7 +579,7 @@ abstract class BaseFacebook
    *
    * @return mixed The decoded response
    */
-  public function api(/* polymorphic */) {
+  function api(/* polymorphic */) {
     $args = func_get_args();
     if (is_array($args[0])) {
       return $this->_restserver($args[0]);
@@ -1157,7 +1157,7 @@ abstract class BaseFacebook
   /**
    * Destroy the current session
    */
-  public function destroySession() {
+  function destroySession() {
     $this->accessToken = null;
     $this->signedRequest = null;
     $this->user = null;

@@ -22,7 +22,7 @@ class Layer_Access extends \app\Layer
 	/**
 	 * @return \ibidem\access\Layer_Access $this
 	 */
-	public static function instance()
+	static function instance()
 	{
 		$instance = parent::instance();
 		// setup security protocols
@@ -35,7 +35,7 @@ class Layer_Access extends \app\Layer
 	 * @param \Exception exception
 	 * @param boolean $origin 
 	 */
-	public function exception(\Exception $exception, $no_throw = false, $origin = false)
+	function exception(\Exception $exception, $no_throw = false, $origin = false)
 	{
 		if (\is_a($exception, '\ibidem\types\Exception'))
 		{
@@ -57,12 +57,12 @@ class Layer_Access extends \app\Layer
 	/**
 	 * Execute the layer.
 	 */
-	public function execute()
+	function execute()
 	{
 		try 
 		{			
 			// build context
-			$context = $this->relay['route']->get_context();
+			$context = $this->relay['matcher']->get_context();
 			if (isset($this->relay['context']) && \is_array($this->relay['context']))
 			{
 				$context = \array_merge($context, $this->relay['context']);
@@ -100,7 +100,7 @@ class Layer_Access extends \app\Layer
 	 * @param array relay configuration
 	 * @return \ibidem\base\Layer_MVC $this
 	 */
-	public function relay_config(array $relay)
+	function relay_config(array $relay)
 	{
 		// [!!] don't do actual configuration here; do it in the execution loop;
 		// not only is it potentially unused configuration but when this is 
@@ -113,7 +113,7 @@ class Layer_Access extends \app\Layer
 	 * @param string context
 	 * @return \ibidem\access\Layer_Access $this
 	 */
-	public function target($target)
+	function target($target)
 	{
 		$this->target = $target;
 		return $this;

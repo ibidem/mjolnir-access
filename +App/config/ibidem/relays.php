@@ -2,7 +2,7 @@
 	(
 		'\ibidem\access\channel' => array
 			(
-				'route' => \app\Route_Pattern::instance()
+				'matcher' => \app\Route_Pattern::instance()
 					->standard
 						(
 							'access/channel/<provider>(/<id>)', 
@@ -22,7 +22,7 @@
 	
 		'\ibidem\access\endpoint' => array
 			(
-				'route' => \app\Route_Pattern::instance()
+				'matcher' => \app\Route_Pattern::instance()
 					->standard('access/channel-endpoint', []),
 				'enabled' => false,
 			// MVC
@@ -35,7 +35,7 @@
 	
 		'\ibidem\access\a12n' => array
 			(
-				'route' => \app\Route_Pattern::instance()
+				'matcher' => \app\Route_Pattern::instance()
 					->standard
 						(
 							'access(/<action>)', 

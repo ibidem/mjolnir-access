@@ -23,7 +23,7 @@
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
 				<a class="btn btn-small" 
-				   href="<?= \app\Relay::route('\ibidem\backend')->url(['slug' => 'role-index']) ?>">
+				   href="<?= \app\URL::route('\ibidem\backend')->url(['slug' => 'role-index']) ?>">
 					Cancel
 				</a>
 			</div>

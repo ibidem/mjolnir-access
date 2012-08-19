@@ -17,7 +17,7 @@ class Hybrid_Storage
 		}
 	}
 
-	public function get($key, $expiration = false) 
+	function get($key, $expiration = false) 
 	{
 		$key = strtolower( $key );  
 
@@ -28,7 +28,7 @@ class Hybrid_Storage
 		return NULL; 
 	}
 
-	public function set( $key, $value )
+	function set( $key, $value )
 	{
 		$key = strtolower( $key ); 
 

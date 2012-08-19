@@ -24,7 +24,7 @@ class Hybrid_Logger
 		} 
 	}
 
-	public static function debug( $message, $object = NULL )
+	static function debug( $message, $object = NULL )
 	{
 		if( Hybrid_Auth::$config["debug_mode"] ){
 			$datetime = new DateTime();
@@ -38,7 +38,7 @@ class Hybrid_Logger
 		}
 	}
 
-	public static function info( $message )
+	static function info( $message )
 	{ 
 		if( Hybrid_Auth::$config["debug_mode"] ){
 			$datetime = new DateTime();
@@ -52,7 +52,7 @@ class Hybrid_Logger
 		}
 	}
 
-	public static function error($message, $object = NULL)
+	static function error($message, $object = NULL)
 	{ 
 		if( Hybrid_Auth::$config["debug_mode"] ){
 			$datetime = new DateTime();

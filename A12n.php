@@ -33,7 +33,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @return \ibidem\access\A12n
 	 */
-	public static function instance()
+	static function instance()
 	{
 		static $instance = null;
 		
@@ -46,7 +46,7 @@ class A12n extends \app\Instantiatable
 		return $instance;
 	}
 	
-	public function set_role($role)
+	function set_role($role)
 	{
 		// allow role manipulation in development for mockup purposes
 		if (\defined('DEVELOPMENT') && DEVELOPMENT)
@@ -63,7 +63,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @return int 
 	 */
-	public function user()
+	function user()
 	{
 		return $this->user;
 	}
@@ -71,7 +71,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @return string 
 	 */
-	public function role()
+	function role()
 	{		
 		return $this->role;
 	}
@@ -79,7 +79,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @return array|null user information
 	 */
-	public function current()
+	function current()
 	{
 		static $current = null;
 		
@@ -117,7 +117,7 @@ class A12n extends \app\Instantiatable
 	 * 
 	 * @return string
 	 */
-	public static function guest()
+	static function guest()
 	{
 		// unique identifier
 		return '\ibidem\access\A12n::guest';
@@ -130,7 +130,7 @@ class A12n extends \app\Instantiatable
 	 * 
 	 * @return string
 	 */
-	public static function oauth_guest()
+	static function oauth_guest()
 	{
 		// unique identifier
 		return '\ibidem\access\A12n::oauth_guest';
@@ -139,7 +139,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * Sign out current user. 
 	 */
-	public static function signout()
+	static function signout()
 	{
 		 \app\Session::destroy();
 	}
@@ -148,7 +148,7 @@ class A12n extends \app\Instantiatable
 	 * @param int user
 	 * @param string role 
 	 */
-	public static function signin($user, $role)
+	static function signin($user, $role)
 	{
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
@@ -157,7 +157,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @param 
 	 */
-	public static function inferred_signin($identification, $email, $provider)
+	static function inferred_signin($identification, $email, $provider)
 	{
 		// check if user exists
 		$user = \app\Model_User::for_email($email);
@@ -196,7 +196,7 @@ class A12n extends \app\Instantiatable
 				else # no frontend
 				{
 					// redirect to access page
-					\app\Layer_HTTP::redirect(\app\Relay::route('\ibidem\access')->url());
+					\app\Layer_HTTP::redirect(\app\URL::route('\ibidem\access')->url());
 				}
 			}
 			catch (\Exception $e)

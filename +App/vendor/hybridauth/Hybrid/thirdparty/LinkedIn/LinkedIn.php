@@ -155,7 +155,7 @@ class LinkedIn {
 	 * @return obj
 	 *    A new LinkedIn object.	 
 	 */
-	public function __construct($config) {
+	function __construct($config) {
     if(!is_array($config)) {
       // bad data passed
 		  throw new LinkedInException('LinkedIn->__construct(): bad data passed, $config must be of type array.');
@@ -170,7 +170,7 @@ class LinkedIn {
    * 
    * Explicitly clears LinkedIn object from memory upon destruction.
 	 */
-  public function __destruct() {
+  function __destruct() {
     unset($this);
 	}
 	
@@ -188,7 +188,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function bookmarkJob($jid) {
+	function bookmarkJob($jid) {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -216,7 +216,7 @@ class LinkedIn {
 	 * @return arr
 	 *         Array containing retrieval success, LinkedIn response.
 	 */
-	public function bookmarkedJobs() {	
+	function bookmarkedJobs() {	
     // construct and send the request  
 	  $query    = self::_URL_API . '/v1/people/~/job-bookmarks';
 	  $response = $this->fetch('GET', $query);
@@ -290,7 +290,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function closeJob($jid) {
+	function closeJob($jid) {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -324,7 +324,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.       	 
 	 */
-	public function comment($uid, $comment) {
+	function comment($uid, $comment) {
 	  // check passed data
 	  if(!is_string($uid)) {
 	    // bad data passed
@@ -371,7 +371,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.                  
 	 */
-	public function comments($uid) {
+	function comments($uid) {
 	  // check passed data
 	  if(!is_string($uid)) {
 	    // bad data passed
@@ -407,7 +407,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function company($options, $by_email = FALSE) {
+	function company($options, $by_email = FALSE) {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -446,7 +446,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function companyProducts($cid, $options = '') {
+	function companyProducts($cid, $options = '') {
 	  // check passed data
 	  if(!is_string($cid)) {
 	    // bad data passed
@@ -483,7 +483,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function connections($options = '~/connections') {
+	function connections($options = '~/connections') {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -516,7 +516,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function createPost($gid, $title, $summary = '') {
+	function createPost($gid, $title, $summary = '') {
 		if(!is_string($gid)) {
 			throw new LinkedInException('LinkedIn->createPost(): bad data passed, $gid must be of type string.');
 		}
@@ -557,7 +557,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function deletePost($pid) {
+	function deletePost($pid) {
 		if(!is_string($pid)) {
 			throw new LinkedInException('LinkedIn->deletePost(): bad data passed, $pid must be of type string');
 		}
@@ -590,7 +590,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function editJob($jid, $xml) {
+	function editJob($jid, $xml) {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -729,7 +729,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function flagPost($pid, $type) {
+	function flagPost($pid, $type) {
 		if(!is_string($pid)) {
 			throw new LinkedInException('LinkedIn->flagPost(): bad data passed, $pid must be of type string');
 		}
@@ -775,7 +775,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function followCompany($cid) {
+	function followCompany($cid) {
 	  // check passed data
 	  if(!is_string($cid)) {
 	    // bad data passed
@@ -807,7 +807,7 @@ class LinkedIn {
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
 	
-	public function followPost($pid, $follow) {
+	function followPost($pid, $follow) {
 		if(!is_string($pid)) {
 			throw new LinkedInException('LinkedIn->followPost(): bad data passed, $pid must be of type string');
 		}
@@ -840,7 +840,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function followedCompanies() {	  
+	function followedCompanies() {	  
 	  // construct and send the request
     $query    = self::_URL_API . '/v1/people/~/following/companies';
 	  $response = $this->fetch('GET', $query);
@@ -858,7 +858,7 @@ class LinkedIn {
 	 * @return str 
 	 *    The application key.       	 
 	 */
-	public function getApplicationKey() {
+	function getApplicationKey() {
 	  return $this->application_key;
 	}
 	
@@ -868,7 +868,7 @@ class LinkedIn {
 	 * @return str 
 	 *    The application secret.       	 
 	 */
-	public function getApplicationSecret() {
+	function getApplicationSecret() {
 	  return $this->application_secret;
 	}
 	
@@ -878,7 +878,7 @@ class LinkedIn {
 	 * @return str 
 	 *    The callback url.       	 
 	 */
-	public function getCallbackUrl() {
+	function getCallbackUrl() {
 	  return $this->callback;
 	}
   
@@ -888,7 +888,7 @@ class LinkedIn {
 	 * @return str 
 	 *    The response format.       	 
 	 */
-	public function getResponseFormat() {
+	function getResponseFormat() {
 	  return $this->response_format;
 	}
 	
@@ -898,7 +898,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    The access token.       	 
 	 */
-	public function getToken() {
+	function getToken() {
 	  return $this->token;
 	}
 	
@@ -908,7 +908,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    The access token.       	 
 	 */
-	public function getTokenAccess() {
+	function getTokenAccess() {
 	  return $this->getToken();
 	}
 	
@@ -928,7 +928,7 @@ class LinkedIn {
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
 	
-	public function group($gid, $options = '') {
+	function group($gid, $options = '') {
 		if(!is_string($gid)){
 			throw new LinkedInException('LinkedIn->group(): bad data passed, $gid must be of type string.');
 		}
@@ -958,7 +958,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function groupMemberships($options = '') {
+	function groupMemberships($options = '') {
 		if(!is_string($options)) {
 			throw new LinkedInException('LinkedIn->groupMemberships(): bad data passed, $options must be of type string');
 		}
@@ -987,7 +987,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function groupPost($pid, $options = '') {
+	function groupPost($pid, $options = '') {
 		if(!is_string($pid)) {
 			throw new LinkedInException('LinkedIn->groupPost(): bad data passed, $pid must be of type string.');
 		}
@@ -1019,7 +1019,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function groupPostComments($pid, $options = ''){ 
+	function groupPostComments($pid, $options = ''){ 
 		if(!is_string($pid)){
 			throw new LinkedInException('LinkedIn->groupPostComments(): bad data passed, $pid must be of type string.');
 		}
@@ -1049,7 +1049,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function groupPosts($gid, $options = '') {
+	function groupPosts($gid, $options = '') {
 		if(!is_string($gid)){
 			throw new LinkedInException('LinkedIn->groupPosts(): bad data passed, $gid must be of type string');
 		}
@@ -1081,7 +1081,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function groupSettings($gid, $options = '') {
+	function groupSettings($gid, $options = '') {
 		if(!is_string($gid)) {
 			throw new LinkedInException('LinkedIn->groupSettings(): bad data passed, $gid must be of type string');
 		}
@@ -1122,7 +1122,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.  	 
 	 */
-	public function invite($method, $recipient, $subject, $body, $type = 'friend') {
+	function invite($method, $recipient, $subject, $body, $type = 'friend') {
     /**
      * Clean up the passed data per these rules:
      * 
@@ -1260,7 +1260,7 @@ class LinkedIn {
 	 * @return bool 
 	 *    TRUE/FALSE depending on valid ID format determination.                  
 	 */
-	public static function isId($id) {
+	static function isId($id) {
 	  // check passed data
     if(!is_string($id)) {
 	    // bad data passed
@@ -1292,7 +1292,7 @@ class LinkedIn {
 	 * @return bool
 	 *    TRUE/FALSE depending on content of response.                  
 	 */
-	public static function isThrottled($response) {
+	static function isThrottled($response) {
 	  $return_data = FALSE;
     
     // check the variable
@@ -1330,7 +1330,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function job($jid, $options = '') {
+	function job($jid, $options = '') {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -1363,7 +1363,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.   	 
 	 */
-	public function joinGroup($gid) {
+	function joinGroup($gid) {
 		if(!is_string($gid)) {
 			throw new LinkedInException('LinkedIn->joinGroup(): bad data passed, $gid must be of type string.');
 		}
@@ -1394,7 +1394,7 @@ class LinkedIn {
 	 * @returns str
 	 *    The header, in string format.
 	 */            	
-	public function lastRequestHeader() {
+	function lastRequestHeader() {
 	   return $this->last_request_headers;
 	}
 	
@@ -1405,7 +1405,7 @@ class LinkedIn {
 	 * @returns str
 	 *    The url, in string format.
 	 */            	
-	public function lastRequestUrl() {
+	function lastRequestUrl() {
 	   return $this->last_request_url;
 	}
 	
@@ -1420,7 +1420,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function leaveGroup($gid){
+	function leaveGroup($gid){
 		if(!is_string($gid)) {
 			throw new LinkedInException('LinkedIn->leaveGroup(): bad data passed, $gid must be of type string');
 		}
@@ -1447,7 +1447,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.                  
 	 */
-	public function like($uid) {
+	function like($uid) {
 	  // check passed data
 	  if(!is_string($uid)) {
 	    // bad data passed
@@ -1482,7 +1482,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function likePost($pid, $like) {
+	function likePost($pid, $like) {
 		if(!is_string($pid)) {
 			throw new LinkedInException ('LinkedIn->likePost(): bad data passed, $pid must be of type string');
 		}
@@ -1518,7 +1518,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.                  
 	 */
-	public function likes($uid) {
+	function likes($uid) {
 	  // check passed data
 	  if(!is_string($uid)) {
 	    // bad data passed
@@ -1556,7 +1556,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.      	 
 	 */
-	public function message($recipients, $subject, $body, $copy_self = FALSE) {
+	function message($recipients, $subject, $body, $copy_self = FALSE) {
     /**
      * Clean up the passed data per these rules:
      * 
@@ -1620,7 +1620,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.      	 
 	 */
-	public function postJob($xml) {
+	function postJob($xml) {
     // check passed data
     if(is_string($xml)) {
       $xml = trim(stripslashes($xml));
@@ -1655,7 +1655,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function profile($options = '~') {
+	function profile($options = '~') {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -1690,7 +1690,7 @@ class LinkedIn {
 	 * 		must manually check the return code and compare this to the expected 
 	 * 		API response to determine  if the raw call was successful.
 	 */
-	public function raw($method, $url, $body = NULL) {
+	function raw($method, $url, $body = NULL) {
 	  if(!is_string($method)) {
 	    // bad data passed
 		  throw new LinkedInException('LinkedIn->raw(): bad data passed, $method must be of string value.');
@@ -1720,7 +1720,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function removeSuggestedGroup($gid) {
+	function removeSuggestedGroup($gid) {
 		if(!is_string($gid)) {
 			throw new LinkedInException('LinkedIn->removeSuggestedGroup(): bad data passed, $gid must be of type string');
 		} 
@@ -1751,7 +1751,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function renewJob($jid, $cid) {
+	function renewJob($jid, $cid) {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -1795,7 +1795,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    The Linkedin OAuth/http response, in array format.      	 
 	 */
-	public function retrieveTokenAccess($token, $secret, $verifier) {
+	function retrieveTokenAccess($token, $secret, $verifier) {
 	  // check passed data
     if(!is_string($token) || !is_string($secret) || !is_string($verifier)) {
       // nothing passed, raise an exception
@@ -1841,7 +1841,7 @@ class LinkedIn {
 	 * @return arr
 	 *    The Linkedin OAuth/http response, in array format.      	 
 	 */
-	public function retrieveTokenRequest() {
+	function retrieveTokenRequest() {
     $parameters = array(
       'oauth_callback' => $this->getCallbackUrl()
     );
@@ -1887,7 +1887,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.   	 
 	 */
-	public function revoke() {
+	function revoke() {
 	  // construct and send the request
 	  $response = $this->fetch('GET', self::_URL_REVOKE);
 
@@ -1913,7 +1913,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function search($options = NULL) {
+	function search($options = NULL) {
 		return searchPeople($options);
 	}
 	
@@ -1931,7 +1931,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function searchCompanies($options = '') {
+	function searchCompanies($options = '') {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -1964,7 +1964,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function searchJobs($options = '') {
+	function searchJobs($options = '') {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -1997,7 +1997,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function searchPeople($options = NULL) {
+	function searchPeople($options = NULL) {
 	  // check passed data
     if(!is_null($options) && !is_string($options)) {
 	    // bad data passed
@@ -2021,7 +2021,7 @@ class LinkedIn {
 	 * @param str $key 
 	 *    The application key.       	 
 	 */
-	public function setApplicationKey($key) {
+	function setApplicationKey($key) {
 	  $this->application_key = $key;
 	}
 	
@@ -2031,7 +2031,7 @@ class LinkedIn {
 	 * @param str $secret 
 	 *    The application secret.       	 
 	 */
-	public function setApplicationSecret($secret) {
+	function setApplicationSecret($secret) {
 	  $this->application_secret = $secret;
 	}
 	
@@ -2041,7 +2041,7 @@ class LinkedIn {
 	 * @param str $url 
 	 *    The callback url.       	 
 	 */
-	public function setCallbackUrl($url) {
+	function setCallbackUrl($url) {
 	  $this->callback = $url;
 	}
 	
@@ -2064,7 +2064,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function setGroupSettings($gid, $xml) {
+	function setGroupSettings($gid, $xml) {
 		if(!is_string ($gid)) {
       throw new LinkedInException('LinkedIn->setGroupSettings(): bad data passed, $token_access should be in array format.');
 		}
@@ -2089,7 +2089,7 @@ class LinkedIn {
 	 * @param str $format 
 	 *    [OPTIONAL] The response format to specify to LinkedIn.       	 
 	 */
-	public function setResponseFormat($format = self::_DEFAULT_RESPONSE_FORMAT) {
+	function setResponseFormat($format = self::_DEFAULT_RESPONSE_FORMAT) {
 	  $this->response_format = $format;
 	}
 	
@@ -2099,7 +2099,7 @@ class LinkedIn {
 	 * @return arr $token 
 	 *    The LinkedIn OAuth token.
 	 */
-	public function setToken($token) {
+	function setToken($token) {
     // check passed data
     if(!is_null($token) && !is_array($token)) {
       // bad data passed
@@ -2116,7 +2116,7 @@ class LinkedIn {
 	 * @return arr $token_access 
 	 *    [OPTIONAL] The LinkedIn OAuth access token.
 	 */
-	public function setTokenAccess($token_access) {
+	function setTokenAccess($token_access) {
     $this->setToken($token_access);
 	}
 	
@@ -2145,7 +2145,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.      	 
 	 */
-	public function share($action, $content, $private = TRUE, $twitter = FALSE) {
+	function share($action, $content, $private = TRUE, $twitter = FALSE) {
 	  // check the status itself
     if(!empty($action) && !empty($content)) {
       /**
@@ -2279,7 +2279,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function statistics() {
+	function statistics() {
 	  // construct and send the request
     $query    = self::_URL_API . '/v1/people/~/network/network-stats';
 		$response = $this->fetch('GET', $query);
@@ -2301,7 +2301,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function suggestedCompanies() {
+	function suggestedCompanies() {
 	  // construct and send the request
     $query    = self::_URL_API . '/v1/people/~/suggestions/to-follow/companies';
 	  $response = $this->fetch('GET', $query);
@@ -2321,7 +2321,7 @@ class LinkedIn {
 	 * @return arr
 	 * 		Array containing retrieval success, LinkedIn response.
 	 */
-	public function suggestedGroups() {
+	function suggestedGroups() {
 		// construct and send the request
 		$query    = self::_URL_API . '/v1/people/~/suggestions/groups:(id,name,is-open-to-non-members)';
 		$response = $this->fetch('GET', $query);
@@ -2346,7 +2346,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function suggestedJobs($options = ':(jobs)') {
+	function suggestedJobs($options = ':(jobs)') {
 	  // check passed data
 	  if(!is_string($options)) {
 	    // bad data passed
@@ -2378,7 +2378,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function unbookmarkJob($jid) {
+	function unbookmarkJob($jid) {
 	  // check passed data
 	  if(!is_string($jid)) {
 	    // bad data passed
@@ -2410,7 +2410,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function unfollowCompany($cid) {
+	function unfollowCompany($cid) {
 	  // check passed data
 	  if(!is_string($cid)) {
 	    // bad data passed
@@ -2441,7 +2441,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.                  
 	 */
-	public function unlike($uid) {
+	function unlike($uid) {
 	  // check passed data
 	  if(!is_string($uid)) {
 	    // bad data passed
@@ -2478,7 +2478,7 @@ class LinkedIn {
 	 * @return arr 
 	 *    Array containing retrieval success, LinkedIn response.       	 
 	 */
-	public function updateNetwork($update) {
+	function updateNetwork($update) {
 	  // check passed data
     if(!is_string($update)) {
       // nothing/non-string passed, raise an exception
@@ -2559,7 +2559,7 @@ class LinkedIn {
 	 * @return arr
 	 *    Array containing retrieval success, LinkedIn response.
 	 */
-	public function updates($options = NULL, $id = NULL) {
+	function updates($options = NULL, $id = NULL) {
 	  // check passed data
     if(!is_null($options) && !is_string($options)) {
 	    // bad data passed
@@ -2596,7 +2596,7 @@ class LinkedIn {
 	 * @return bool 
 	 *    FALSE if passed data cannot be parsed to an array.     	 
 	 */
-	public static function xmlToArray($xml) {
+	static function xmlToArray($xml) {
 	  // check passed data
     if(!is_string($xml)) {
 	    // bad data possed

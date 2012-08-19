@@ -29,7 +29,7 @@ class Hybrid_Providers_MySpace extends Hybrid_Provider_Model_OAuth1
 	/**
 	* get the connected uid from myspace api
 	*/
-	public function getCurrentUserId()
+	function getCurrentUserId()
 	{
 		$response = $this->api->get( 'http://api.myspace.com/v1/user.json' );
 

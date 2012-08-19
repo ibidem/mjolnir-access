@@ -165,7 +165,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* return true if the user is connected to the current provider
 	*/ 
-	public function isUserConnected()
+	function isUserConnected()
 	{
 		return (bool) Hybrid_Auth::storage()->get( "hauth_session.{$this->providerId}.is_logged_in" );
 	}
@@ -175,7 +175,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* set user to connected 
 	*/ 
-	public function setUserConnected()
+	function setUserConnected()
 	{
 		Hybrid_Logger::info( "Enter [{$this->providerId}]::setUserConnected()" );
 		
@@ -187,7 +187,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* set user to unconnected 
 	*/ 
-	public function setUserUnconnected()
+	function setUserUnconnected()
 	{
 		Hybrid_Logger::info( "Enter [{$this->providerId}]::setUserUnconnected()" );
 		
@@ -199,7 +199,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* get or set a token 
 	*/ 
-	public function token( $token, $value = NULL )
+	function token( $token, $value = NULL )
 	{
 		if( $value === NULL ){
 			return Hybrid_Auth::storage()->get( "hauth_session.{$this->providerId}.token.$token" );
@@ -214,7 +214,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* delete a stored token 
 	*/ 
-	public function deleteToken( $token )
+	function deleteToken( $token )
 	{
 		Hybrid_Auth::storage()->delete( "hauth_session.{$this->providerId}.token.$token" );
 	}
@@ -224,7 +224,7 @@ abstract class Hybrid_Provider_Model
 	/**
 	* clear all existen tokens for this provider
 	*/ 
-	public function clearTokens()
+	function clearTokens()
 	{ 
 		Hybrid_Auth::storage()->deleteMatch( "hauth_session.{$this->providerId}." );
 	}

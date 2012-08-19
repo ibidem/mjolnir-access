@@ -22,7 +22,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 			$appid = $provider['AppID'];
 			$appsecret = $provider['AppSecret'];
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-			$redirect = $protocol.':'.\app\Relay::route('\ibidem\access\channel')
+			$redirect = $protocol.':'.\app\URL::route('\ibidem\access\channel')
 				->url(['provider' => 'facebook']);
 			
 			$token_url = "https://graph.facebook.com/oauth/access_token?"

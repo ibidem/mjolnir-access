@@ -158,7 +158,7 @@ class Hybrid_Provider_Adapter
 	/**
 	* return true if the user is connected to the current provider
 	*/ 
-	public function isUserConnected()
+	function isUserConnected()
 	{
 		return $this->adapter->isUserConnected();
 	}
@@ -172,7 +172,7 @@ class Hybrid_Provider_Adapter
 	*   getUserActivity() 
 	*   setUserStatus() 
 	*/ 
-	public function __call( $name, $arguments ) 
+	function __call( $name, $arguments ) 
 	{
 		Hybrid_Logger::info( "Enter Hybrid_Provider_Adapter::$name(), Provider: {$this->id}" );
 
@@ -198,7 +198,7 @@ class Hybrid_Provider_Adapter
 	* If the user is connected, then return the access_token and access_token_secret
 	* if the provider api use oauth
 	*/
-	public function getAccessToken()
+	function getAccessToken()
 	{
 		if( ! $this->adapter->isUserConnected() ){
 			Hybrid_Logger::error( "User not connected to the provider." );

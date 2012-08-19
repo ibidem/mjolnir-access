@@ -26,7 +26,7 @@ class Hybrid_User_Activity
 	/* user who created the activity */
 	public $user = NULL;
 
-	public function __construct()
+	function __construct()
 	{
 		$this->user = new stdClass();
 
