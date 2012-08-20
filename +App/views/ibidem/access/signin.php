@@ -2,11 +2,13 @@
 	namespace app; 
 	
 	$access_relay = \app\CFS::config('ibidem/relays');
+	
+	$route_matcher = \app\URL::route('\ibidem\access\a12n');
 ?>
 
 <?= $form = \app\Form::instance()
 	->standard('twitter.general')
-	->action($access_relay['\ibidem\access\a12n']['route']->url(array('action' => 'signin')))
+	->action($route_matcher->url(array('action' => 'signin')))
 	->errors($errors['ibidem\a12n\signin'])
 	->classes(['marginless'])
 	->secure() ?>

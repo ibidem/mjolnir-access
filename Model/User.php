@@ -264,7 +264,7 @@ class Model_User
 		
 		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider']);
 		
-		$user = static::$last_inserter_id = \app\SQL::last_inserted_id();
+		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 		
 		// assign role if set
 		if (isset($fields['role']))
