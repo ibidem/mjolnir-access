@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Schematic_Default_Ibidem_Access_Base extends \app\Schematic_Base
+class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 {
 	function down()
 	{
@@ -27,15 +27,15 @@ class Schematic_Default_Ibidem_Access_Base extends \app\Schematic_Base
 			(
 				\app\Model_User::table(), 
 				'
-					`id`           :key_primary,
-					`nickname`     :username,
-					`email`        :email,
-					`ipaddress`    :ipaddress,
-					`passwordverifier` :secure_hash DEFAULT NULL,
-					`passwordsalt` :secure_hash DEFAULT NULL,
-					`passworddate` :datetime_optional DEFAULT NULL,
-					`provider`     :titlename DEFAULT NULL,
-					`timestamp`    :timestamp,
+					`id`          :key_primary,
+					`nickname`    :username,
+					`email`       :email,
+					`ipaddress`   :ipaddress,
+					`pwdverifier` :secure_hash DEFAULT NULL,
+					`pwdsalt`     :secure_hash DEFAULT NULL,
+					`pwddate`     :datetime_optional DEFAULT NULL,
+					`provider`    :titlename DEFAULT NULL,
+					`timestamp`   :timestamp,
 					
 					PRIMARY KEY (`id`)
 				'

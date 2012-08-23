@@ -75,9 +75,9 @@ class Model_User
 				'nickname' => \htmlspecialchars($fields['nickname']),
 				'email' => \htmlspecialchars($fields['email']),
 				'ipaddress' => \app\Layer_HTTP::detect_ip(),
-				'passwordverifier' => $password['verifier'],
-				'passwordsalt' => $password['salt'],
-				'passworddate' => \date('Y-m-d H:i:s'),
+				'pwdverifier' => $password['verifier'],
+				'pwdsalt' => $password['salt'],
+				'pwddate' => \date('Y-m-d H:i:s'),
 			);
 		
 		static::inserter
@@ -87,9 +87,9 @@ class Model_User
 					'nickname', 
 					'email', 
 					'ipaddress', 
-					'passwordverifier',
-					'passwordsalt',
-					'passworddate',
+					'pwdverifier',
+					'pwdsalt',
+					'pwddate',
 				]
 			)
 			->run();
@@ -335,11 +335,11 @@ class Model_User
 				
 				$new_fields = array
 					(
-						'passwordverifier' => $password['verifier'],
-						'passwordsalt' => $password['salt'],
+						'pwdverifier' => $password['verifier'],
+						'pwdsalt' => $password['salt'],
 					);
 				
-				static::updater($user, $new_fields, ['passwordverifier', 'passwordsalt'])->run();
+				static::updater($user, $new_fields, ['pwdverifier', 'pwdsalt'])->run();
 				
 				\app\SQL::commit();
 			}
@@ -365,27 +365,27 @@ class Model_User
 		// load configuration
 		$security = \app\CFS::config('ibidem/security');
 		// generate password salt and hash
-		$passwordsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
+		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
-		$passwordverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $passwordsalt, true);
+		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, true);
 		// update
 		static::statement
 			(
 				__METHOD__,
 				'
 					UPDATE :table
-					   SET passwordverifier = :passwordverifier
-					   SET passwordsalt = :passwordsalt
-					   SET passworddate = :passworddate
+					   SET pwdverifier = :pwdverifier
+					   SET pwdsalt = :pwdsalt
+					   SET pwddate = :pwddate
 					   SET ipaddress = :ipaddress
 					 WHERE nickname = :nickname
 					   AND provider IS NULL
 				',
 				'mysql'
 			)
-			->bind(':passwordverifier', $passwordverifier)
-			->bind(':passwordsalt', $passwordsalt)
-			->set(':passworddate', \date('Y-m-d H:i:s'))
+			->bind(':pwdverifier', $pwdverifier)
+			->bind(':pwdsalt', $pwdsalt)
+			->set(':pwddate', \date('Y-m-d H:i:s'))
 			->bind(':nickname', $fields['nickname'])
 			->bind(':ipaddress', \app\Layer_HTTP::detect_ip())
 			->execute();
@@ -454,7 +454,7 @@ class Model_User
 			return null;
 		}
 
-		$passwordsalt = $user['passwordsalt'];
+		$pwdsalt = $user['pwdsalt'];
 		
 		// generate password salt and hash
 		$apilocked_password = \hash_hmac
@@ -465,16 +465,16 @@ class Model_User
 				false
 			);
 		
-		$passwordverifier = \hash_hmac
+		$pwdverifier = \hash_hmac
 			(
 				$security['hash']['algorythm'], 
 				$apilocked_password, 
-				$passwordsalt, 
+				$pwdsalt, 
 				false
 			);
 		
 		// verify
-		if ($passwordverifier !== $user['passwordverifier'])
+		if ($pwdverifier !== $user['pwdverifier'])
 		{
 			return null;
 		}
@@ -591,8 +591,8 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT users.passwordsalt salt,
-							   users.passwordverifier verifier
+						SELECT users.pwdsalt salt,
+							   users.pwdverifier verifier
 						  FROM :table users
 						 WHERE users.id = :user
 						 LIMIT 1
