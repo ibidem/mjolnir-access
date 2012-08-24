@@ -7,16 +7,13 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Controller_A12n extends \app\Controller_HTTP
+class Controller_A12n extends \app\Controller_Web
 {
+	protected static $target = null;
+
 	function before()
 	{		
-		$this->layer->dispatch
-			(
-				\app\Event::instance()
-					->subject(\ibidem\types\Event::title)
-					->contents('Access')
-			);
+		\app\GlobalEvent::fire('webpage:title', 'Access');
 	}
 	
 	function action_index()
@@ -25,20 +22,11 @@ class Controller_A12n extends \app\Controller_HTTP
 		
 		if (\app\A12n::instance()->role() === \app\A12n::guest())
 		{
-			\app\Layer_HTTP::redirect
-				(
-					'\ibidem\access\a12n', 
-					['action' => 'signin']
-				);
+			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
 		}
 		
-		$this->layer->dispatch
-			(
-				\app\Event::instance()
-					->subject(\ibidem\types\Event::title)
-					->contents('Lobby · Access')
-			);
-
+		\app\GlobalEvent::fire('webpage:title', 'Lobby · Access');
+		
 		$this->body
 			(
 				\app\ThemeView::instance()
@@ -58,12 +46,7 @@ class Controller_A12n extends \app\Controller_HTTP
 		
 		if ($relay['target'] === null)
 		{	
-			$this->layer->dispatch
-				(
-					\app\Event::instance()
-						->subject(\ibidem\types\Event::title)
-						->contents('Sign In · Access')
-				);
+			\app\GlobalEvent::fire('webpage:title', 'Sign In · Access');
 			
 			$this->body
 				(
@@ -98,14 +81,10 @@ class Controller_A12n extends \app\Controller_HTTP
 	{
 		if (\app\A12n::instance()->role() !== \app\A12n::guest())
 		{
-			\app\Layer_HTTP::redirect
-				(
-					'\ibidem\access\a12n', 
-					['action' => 'index']
-				);
+			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'index']));
 		}
 		
-		if (\app\Layer_HTTP::request_method() === \ibidem\types\HTTP::POST)
+		if (\app\Server::request_method() === 'POST')
 		{
 			$user = \app\Model_User::signin_check($_POST);
 			
@@ -118,14 +97,14 @@ class Controller_A12n extends \app\Controller_HTTP
 				$base_config = \app\CFS::config('ibidem/base');
 				if (isset($base_config['site:frontend']))
 				{
-					\app\Layer_HTTP::redirect_to_url
+					\app\Server::redirect
 						(
 							'//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']
 						);
 				}
 
 				// no default frontend
-				\app\Layer_HTTP::redirect('\ibidem\access\a12n', ['action' => 'lobby']);
+				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'lobby']));
 			}
 			else # signin failed
 			{
@@ -147,7 +126,7 @@ class Controller_A12n extends \app\Controller_HTTP
 	function action_signout()
 	{
 		\app\A12n::signout();
-		\app\Layer_HTTP::redirect('\ibidem\access\a12n', ['action' => 'signin']);
+		\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
 	}
 
 

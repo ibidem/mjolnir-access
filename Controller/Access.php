@@ -12,8 +12,10 @@ require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Controller_Access extends \app\Controller_HTTP
+class Controller_Access extends \app\Controller_Web
 {
+	protected static $target = null;
+
 	function action_channel()
 	{
 		// load channel
