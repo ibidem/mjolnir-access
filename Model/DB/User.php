@@ -272,7 +272,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 				->set(':family_name', \htmlspecialchars($fields['family_name']))
 				->set(':ipaddress', $ipaddress)
 				->set(':passwordverifier', $password['verifier'])
-				->set(':passworddate', \date('c'))
+				->set(':passworddate', \date('Y-m-d H-i-s'))
 				->set(':passwordsalt', $password['salt'])
 				->execute();
 			
@@ -428,7 +428,7 @@ class Model_DB_User extends \app\Model_SQL_Factory
 			)
 			->bind(':passwordverifier', $passwordverifier)
 			->bind(':passwordsalt', $passwordsalt)
-			->bind(':passworddate', \time())
+			->bind(':passworddate', \date('Y-m-d H-i-s'))
 			->bind(':nickname', $fields['nickname'])
 			->bind(':ipaddress', $fields['nickname'])
 			->execute();

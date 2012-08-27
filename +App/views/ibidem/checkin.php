@@ -12,7 +12,7 @@
 
 	<div>
 		<dl>
-			<?= $form->text(\app\Lang::tr('Username'), 'nickname') ?>
+			<?= $form->text(\app\Lang::tr('Username'), 'nickname')->attribute('autofocus', 'autofocus') ?>
 			<?= $form->password(\app\Lang::tr('Password'), 'password') ?>
 		</dl>
 		<button tabindex="<?= \app\Form::tabindex() ?>"><?= \app\Lang::tr('Sign In') ?></button>
