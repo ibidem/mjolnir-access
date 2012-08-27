@@ -14,7 +14,7 @@
 	->secure() ?>
 
 	<fieldset>
-		<?= $form->text(\app\Lang::msg('ibidem.access.signin.username_or_email'), 'identity') ?>
+		<?= $form->text(\app\Lang::msg('ibidem.access.signin.username_or_email'), 'identity')->attribute('autofocus', 'autofocus') ?>
 		<?= $form->password(\app\Lang::tr('Password'), 'password') ?>
 		<?= $form->select(null, 'remember_me', [ Lang::msg('ibidem.access.signin.remember_me') => 'on', Lang::msg('ibidem.access.signin.dont_remember_me') => 'off' ])
 			->value('off') ?>
