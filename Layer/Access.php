@@ -74,7 +74,7 @@ class Layer_Access extends \app\Layer
 				if ($http_layer && \app\Access::can('\ibidem\access\a12n', ['action' => 'signin']))
 				{
 					// redirect to the access route
-					$http_layer->redirect('\ibidem\access\a12n', array('action' => 'signin'));
+					\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
 				}
 				
 				// else; or if the redirect fails 
