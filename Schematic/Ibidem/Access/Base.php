@@ -16,8 +16,8 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 				\app\Model_User::table(), 
 				\app\Model_Role::table(), 
 				\app\Model_User::assoc_roles(),
-				\app\Model_Profile::table(),
-				\app\Model_Profile::assoc_user()
+				\app\Model_ProfileField::table(),
+				\app\Model_ProfileField::assoc_user()
 			);
 	}
 	
@@ -66,7 +66,7 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 		
 		\app\Schematic::table
 			(
-				\app\Model_Profile::table(), 
+				\app\Model_ProfileField::table(), 
 				'
 					`id`       :key_primary,
 					`idx`      :counter DEFAULT 10,
@@ -80,7 +80,7 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 		
 		\app\Schematic::table
 			(
-				\app\Model_Profile::assoc_user(), 
+				\app\Model_ProfileField::assoc_user(), 
 				'
 					`user`  :key_foreign NOT NULL,
 					`field` :key_foreign NOT NULL,
@@ -102,9 +102,9 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
 							'role' => array(\app\Model_Role::table(), 'CASCADE', 'CASCADE'),
 						),
-					\app\Model_Profile::assoc_user() => array
+					\app\Model_ProfileField::assoc_user() => array
 						(
-							'field' => array(\app\Model_Profile::table(), 'CASCADE', 'CASCADE'),
+							'field' => array(\app\Model_ProfileField::table(), 'CASCADE', 'CASCADE'),
 							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
 						)
 				]

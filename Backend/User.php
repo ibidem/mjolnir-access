@@ -19,19 +19,19 @@ class Backend_User extends \app\Backend_Collection
 	
 	function profile_info($id)
 	{
-		return \app\Model_Profile::profile_info($id);
+		return \app\Model_ProfileField::profile_info($id);
 	}
 	
 	function profile_fields()
 	{
-		return \app\Model_Profile::entries(null, null);
+		return \app\Model_ProfileField::entries(null, null);
 	}
 	
 	function action_update_profile()
 	{
 		$id = $_POST['id'];
 		
-		$validator = \app\Model_Profile::update_profile($id, $_POST);
+		$validator = \app\Model_ProfileField::update_profile($id, $_POST);
 		
 		$errors = [];
 		if ($validator !== null)

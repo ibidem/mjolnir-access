@@ -17,10 +17,9 @@ class Context_Access extends \ibidem\access\Context_Access { /** @return \ibidem
 class Controller_A12n extends \ibidem\access\Controller_A12n { /** @return \ibidem\access\Controller_A12n */ static function instance() { return parent::instance(); } }
 class Controller_Access extends \ibidem\access\Controller_Access { /** @return \ibidem\access\Controller_Access */ static function instance() { return parent::instance(); } }
 class Layer_Access extends \ibidem\access\Layer_Access { /** @return \ibidem\access\Layer_Access */ static function instance() { return parent::instance(); } }
-class Migration_Access extends \ibidem\access\Migration_Access { /** @return \ibidem\access\Migration_Access */ static function instance() { return parent::instance(); } }
-class Model_Profile extends \ibidem\access\Model_Profile {}
+class Model_ProfileField extends \ibidem\access\Model_ProfileField {}
 class Model_Role extends \ibidem\access\Model_Role {}
 class Model_User extends \ibidem\access\Model_User {}
 class Protocol extends \ibidem\access\Protocol { /** @return \ibidem\access\Protocol */ static function instance() { return parent::instance(); } }
-class Schematic_Default_Ibidem_Access_Base extends \ibidem\access\Schematic_Default_Ibidem_Access_Base { /** @return \ibidem\access\Schematic_Default_Ibidem_Access_Base */ static function instance() { return parent::instance(); } }
-class Schematic_Default_Ibidem_Access_Oauth extends \ibidem\access\Schematic_Default_Ibidem_Access_Oauth { /** @return \ibidem\access\Schematic_Default_Ibidem_Access_Oauth */ static function instance() { return parent::instance(); } }
+class Schematic_Ibidem_Access_Base extends \ibidem\access\Schematic_Ibidem_Access_Base { /** @return \ibidem\access\Schematic_Ibidem_Access_Base */ static function instance() { return parent::instance(); } }
+class Schematic_Ibidem_Access_Oauth extends \ibidem\access\Schematic_Ibidem_Access_Oauth { /** @return \ibidem\access\Schematic_Ibidem_Access_Oauth */ static function instance() { return parent::instance(); } }

@@ -10,7 +10,7 @@
 class Model_User
 {
 	use \app\Trait_Model_Factory;
-	use \app\Trait_Model_Master;
+	use \app\Trait_Model_Utilities;
 	use \app\Trait_Model_Collection;
 	
 	/**

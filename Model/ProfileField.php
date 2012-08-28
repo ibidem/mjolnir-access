@@ -7,10 +7,10 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_Profile
+class Model_ProfileField
 {
 	use \app\Trait_Model_Factory;
-	use \app\Trait_Model_Master;
+	use \app\Trait_Model_Utilities;
 	use \app\Trait_Model_Collection;
 	
 	/**
@@ -77,7 +77,7 @@ class Model_Profile
 	{
 		$validator = \app\Validator::instance([], $fields);
 		
-		$profile_fields = \app\Model_Profile::entries(null, null);
+		$profile_fields = \app\Model_ProfileField::entries(null, null);
 		foreach ($profile_fields as $field)
 		{
 			if ($field['required'])
@@ -97,7 +97,7 @@ class Model_Profile
 		try
 		{
 			// retrieve profile fields; we need them for the field type mapping
-			$profile_fields = \app\Model_Profile::entries(null, null);
+			$profile_fields = \app\Model_ProfileField::entries(null, null);
 			$map = [];
 			foreach ($profile_fields as $field)
 			{
