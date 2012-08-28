@@ -74,7 +74,7 @@ class Model_User
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
 				'email' => \htmlspecialchars($fields['email']),
-				'ipaddress' => \app\Layer_HTTP::detect_ip(),
+				'ipaddress' => \app\Server::client_ip(),
 				'pwdverifier' => $password['verifier'],
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
@@ -259,7 +259,7 @@ class Model_User
 	
 	static function inferred_signup_process(array $fields)
 	{
-		$fields['ipaddress'] = \app\Layer_HTTP::detect_ip();
+		$fields['ipaddress'] = \app\Server::client_ip();
 		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
 		
 		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider']);
@@ -387,7 +387,7 @@ class Model_User
 			->bind(':pwdsalt', $pwdsalt)
 			->set(':pwddate', \date('Y-m-d H:i:s'))
 			->bind(':nickname', $fields['nickname'])
-			->bind(':ipaddress', \app\Layer_HTTP::detect_ip())
+			->bind(':ipaddress', \app\Server::client_ip())
 			->execute();
 	}
 	
@@ -554,7 +554,7 @@ class Model_User
 			\app\Stash::store
 				(
 					$cachekey, 
-					$roles, 
+					$result, 
 					\app\Stash::tags('User', ['change'])
 				);
 		}
