@@ -81,7 +81,7 @@ class Controller_A12n extends \app\Controller_Web
 	{
 		if (\app\A12n::instance()->role() !== \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'index']));
+			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n'));
 		}
 		
 		if (\app\Server::request_method() === 'POST')

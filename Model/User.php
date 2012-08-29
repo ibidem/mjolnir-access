@@ -262,16 +262,14 @@ class Model_User
 		$fields['ipaddress'] = \app\Server::client_ip();
 		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
 		
-		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider']);
-		
+		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 		
 		// assign role if set
 		if (isset($fields['role']))
-		{	
+		{
 			static::assign_role($user, $fields['role']);
 		}
-		
 	}
 	
 	/**

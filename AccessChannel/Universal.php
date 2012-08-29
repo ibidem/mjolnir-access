@@ -72,9 +72,14 @@ class AccessChannel_Universal extends \app\Instantiatable
 				$email = $user_profile->email;
 			}
 			
+			\var_dump($display_name, $email, $provider_name);
+			
 			\app\A12n::inferred_signin($display_name, $email, $provider_name);
-				
-			\app\Layer_HTTP::redirect('\ibidem\access\a12n');
+			
+			\app\Server::redirect
+				(
+					\app\URL::href('\ibidem\access\a12n')
+				);
 		}
 		catch (\app\Exception_NotApplicable $e)
 		{

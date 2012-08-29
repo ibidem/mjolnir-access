@@ -191,18 +191,17 @@ class A12n extends \app\Instantiatable
 				$base_config = \app\CFS::config('ibidem/base');
 				if (isset($base_config['site:frontend']))
 				{
-					\app\Layer_HTTP::redirect_to_url('//'.$base_config['domain'].$base_config['path'].$base_config['frontend']);
+					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['frontend']);
 				}
 				else # no frontend
 				{
 					// redirect to access page
-					\app\Layer_HTTP::redirect(\app\URL::route('\ibidem\access')->url());
+					\app\Server::redirect(\app\URL::href('\ibidem\access'));
 				}
 			}
 			catch (\Exception $e)
 			{
-				throw $e;
-				throw new \app\Exception_NotApplicable('Failed automated signup process.');
+				throw new \app\Exception_NotApplicable('Failed automated signup process. Feel free to try again. Sorry for the inconvenience.');
 			}
 		}
 		
