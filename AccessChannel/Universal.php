@@ -72,8 +72,6 @@ class AccessChannel_Universal extends \app\Instantiatable
 				$email = $user_profile->email;
 			}
 			
-			\var_dump($display_name, $email, $provider_name);
-			
 			\app\A12n::inferred_signin($display_name, $email, $provider_name);
 			
 			\app\Server::redirect
