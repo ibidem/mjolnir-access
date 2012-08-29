@@ -176,6 +176,13 @@ class Model_User
 			->order($order)
 			->fetch_all();
 	}
+
+	protected static function nullentry_for_current_user( & $entry, $id)
+	{
+		return $entry === null 
+			&& \app\A12n::instance()->role() !== \app\A12n::guest() 
+			&& $id === \app\A12n::instance()->user();
+	}
 	
 	/**
 	 * @param int id
@@ -212,6 +219,11 @@ class Model_User
 				->execute()
 				->fetch_array();
 
+			if (static::nullentry_for_current_user($entry, $id))
+			{
+				\app\Controller_A12n::instance()->action_signout();
+			}
+			
 			$entry['timestamp'] = new \DateTime($entry['timestamp']);
 			
 			\app\Stash::set($stashkey, $entry);
