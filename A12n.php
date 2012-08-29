@@ -191,7 +191,7 @@ class A12n extends \app\Instantiatable
 				$base_config = \app\CFS::config('ibidem/base');
 				if (isset($base_config['site:frontend']))
 				{
-					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['frontend']);
+					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']);
 				}
 				else # no frontend
 				{
