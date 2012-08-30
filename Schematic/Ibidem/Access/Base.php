@@ -70,6 +70,7 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 				'
 					`id`       :key_primary,
 					`idx`      :counter DEFAULT 10,
+					`name`     :title NOT NULL,
 					`title`    :title NOT NULL,
 					`type`     :title NOT NULL,
 					`required` :boolean DEFAULT 0,

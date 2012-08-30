@@ -8,7 +8,7 @@
 					(
 						'icon' => 'reorder',
 						'title' => 'Profile Fields',
-						'context' => '\app\Backend_Profile',
+						'context' => '\app\Backend_ProfileField',
 						'view' => 'ibidem/access/backend/profile-index'
 					),
 			
@@ -16,7 +16,7 @@
 					(
 						'hidden' => true,
 						'title' => 'Edit Fields',
-						'context' => '\app\Backend_Profile',
+						'context' => '\app\Backend_ProfileField',
 						'view' => 'ibidem/access/backend/profile-edit'
 					),
 			),

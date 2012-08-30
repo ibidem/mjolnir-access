@@ -45,8 +45,10 @@ class Model_ProfileField
 	 */
 	static function check(array $fields, $context = null) 
 	{
-		return \app\Validator::instance([], $fields)
-			->ruleset('not_empty', ['title', 'idx', 'type', 'required']);
+		$errors = ['name' => ['unique' => 'Field with the same name already exists.']];
+		return \app\Validator::instance($errors, $fields)
+			->ruleset('not_empty', ['title', 'name', 'idx', 'type', 'required'])
+			->test('name', 'unique', ! static::exists($fields['name'], 'name', $context));
 	}
 	
 	/**
@@ -54,7 +56,7 @@ class Model_ProfileField
 	 */
 	static function process(array $fields) 
 	{
-		static::inserter($fields, ['title', 'idx', 'type'], ['required'])->run();
+		static::inserter($fields, ['title', 'name', 'idx', 'type'], ['required'])->run();
 		static::$last_inserted_id = \app\SQL::last_inserted_id();
 	}
 	
@@ -63,7 +65,7 @@ class Model_ProfileField
 	 */
 	static function update_process($id, array $fields)
 	{
-		static::updater($id, $fields, ['title', 'idx'], ['required'])->run();
+		static::updater($id, $fields, ['title', 'name', 'idx'], ['required'])->run();
 		static::clear_entry_cache($id);
 	}
 	
@@ -210,7 +212,7 @@ class Model_ProfileField
 		$cachekey = \get_called_class().'__profile_info_ID'.$id;
 		$result = \app\Stash::get($cachekey, null);
 		
-		if ($result !== null)
+		if ($result === null)
 		{
 			$result = static::statement
 				(
@@ -218,8 +220,9 @@ class Model_ProfileField
 					'
 						SELECT field.id,
 							   field.title,
-							   field.type
-							   profile.value value,
+							   field.name,
+							   field.type,
+							   profile.value value
 						  FROM :table field
 						  LEFT OUTER
 						  JOIN `'.static::assoc_user().'` profile
@@ -232,10 +235,31 @@ class Model_ProfileField
 				->execute()
 				->fetch_all(static::$field_format);
 			
+			$profile_config = \app\CFS::config('ibidem/profile-fieldtypes');
+			foreach ($result as & $field)
+			{
+				$field['render'] = $profile_config[$field['type']]['render']($field['value']);
+			}
+			
 			\app\Stash::set($cachekey, $result);
 		}
 		
 		return $result;
+	}
+	
+	static function profile_field($user, $field)
+	{
+		$profile_info = static::profile_info($user);
+		
+		foreach ($profile_info as & $profile_field)
+		{
+			if ($profile_field['name'] === $field)
+			{
+				return $profile_field;
+			}
+		}
+		
+		return null;
 	}
 	
 } # class
