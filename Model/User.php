@@ -204,11 +204,7 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT user.id,
-							   user.nickname,
-							   user.email,
-							   user.timestamp,
-							   user.ipaddress,
+						SELECT user.*
 							   assoc.role role,
 							   role.title roletitle
 						  FROM :table user
