@@ -190,6 +190,11 @@ class Model_User
 	 */
 	static function entry($id)
 	{
+		if ($id === null)
+		{
+			return null;
+		}
+		
 		$stashkey = \get_called_class().'_ID'.$id;
 		$entry = \app\Stash::get($stashkey, null);
 		
@@ -217,14 +222,18 @@ class Model_User
 				)
 				->set_int(':id', $id)
 				->execute()
-				->fetch_array();
+				->fetch_array(static::$field_format);
 
 			if (static::nullentry_for_current_user($entry, $id))
 			{
 				\app\Controller_A12n::instance()->action_signout();
+				exit(1);
 			}
 			
-			$entry['timestamp'] = new \DateTime($entry['timestamp']);
+			if ($entry !== null)
+			{
+				$entry['timestamp'] = new \DateTime($entry['timestamp']);
+			}
 			
 			\app\Stash::set($stashkey, $entry);
 		}
