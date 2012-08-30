@@ -198,7 +198,7 @@ class Model_User
 		$stashkey = \get_called_class().'_ID'.$id;
 		$entry = \app\Stash::get($stashkey, null);
 		
-		if ( ! $entry)
+		if ($entry === null)
 		{
 			$entry = static::statement
 				(
