@@ -259,19 +259,52 @@ class Model_User
 	 */
 	static function assign_role($id, $role)
 	{
-		static::statement
+		$result = static::statement
 			(
 				__METHOD__,
 				'
-					UPDATE `'.static::assoc_roles().'`
-					   SET `role` = :role
+					SELECT *
+					  FROM `'.static::assoc_roles().'`
 					 WHERE `user` = :user
 				',
 				'mysql'
 			)
-			->set_int(':role', $role)
 			->set_int(':user', $id)
-			->execute();
+			->execute()
+			->fetch_all();
+		
+		if (empty($result))
+		{
+			static::statement
+				(
+					__METHOD__,
+					'
+						INSERT INTO `'.static::assoc_roles().'`
+							(`user`, `role`)
+						VALUES (:user, :role)
+					',
+					'mysql'
+				)
+				->set_int(':user', $id)
+				->set_int(':role', $role)
+				->execute();
+		}
+		else # already exists
+		{
+			static::statement
+				(
+					__METHOD__,
+					'
+						UPDATE `'.static::assoc_roles().'`
+						   SET `role` = :role
+						 WHERE `user` = :user
+					',
+					'mysql'
+				)
+				->set_int(':role', $role)
+				->set_int(':user', $id)
+				->execute();
+		}
 		
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
@@ -286,6 +319,9 @@ class Model_User
 			->ruleset('not_empty', ['identification', 'email', 'role', 'provider']);
 	}
 	
+	/**
+	 * @param array fields
+	 */
 	static function inferred_signup_process(array $fields)
 	{
 		$fields['ipaddress'] = \app\Server::client_ip();
