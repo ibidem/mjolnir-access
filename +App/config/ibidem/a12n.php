@@ -22,6 +22,8 @@ $validator_unkeyed = function ($config)
 
 return array
 	(
+		'signout.redirect' => \app\URL::href('\ibidem\access\a12n', ['action' => 'signin']),
+	
 		'signin' => array
 			(
 				'facebook' => array

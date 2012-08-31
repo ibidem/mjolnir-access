@@ -126,7 +126,8 @@ class Controller_A12n extends \app\Controller_Web
 	function action_signout()
 	{
 		\app\A12n::signout();
-		\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
+		$a12n_config = \app\CFS::config('ibidem/a12n');
+		\app\Server::redirect($a12n_config['signout.redirect']);
 	}
 
 
