@@ -71,6 +71,14 @@ class A12n extends \app\Instantiatable
 	}
 	
 	/**
+	 * @return int 
+	 */
+	static function id()
+	{
+		return static::instance()->user();
+	}
+	
+	/**
 	 * @return string 
 	 */
 	function role()

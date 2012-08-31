@@ -59,8 +59,7 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
 					
-					KEY `user` (`user`,`role`),
-					KEY `role` (`role`)
+					KEY `user` (`user`)
 				'
 			);
 		

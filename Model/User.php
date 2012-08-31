@@ -55,12 +55,20 @@ class Model_User
 	static function check(array $fields, $context = null) 
 	{
 		$user_config = \app\CFS::config('model/User');
-		return \app\Validator::instance($user_config['errors'], $fields)
-			->ruleset('not_empty', ['nickname', 'email', 'password', 'role'])
+		$validator = \app\Validator::instance($user_config['errors'], $fields)
+			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
-			->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
-			->rule('verifier', 'equal_to', $fields['password'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
+		
+		if ($context === null)
+		{
+			$validator
+				->rule('password', 'not_empty')
+				->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
+				->rule('verifier', 'equal_to', $fields['password']);
+		}
+		
+		return $validator;
 	}
 	
 	/**
@@ -153,6 +161,11 @@ class Model_User
 	 */
 	static function entries($page, $limit, $offset = 0, $order = [])
 	{
+		if (empty($order))
+		{
+			$order = ['id' => 'ASC'];
+		}
+		
 		return static::stash
 			(
 				__METHOD__,
@@ -250,10 +263,9 @@ class Model_User
 			(
 				__METHOD__,
 				'
-					INSERT `'.static::assoc_roles().'`
-						(user, role)
-					VALUES 
-						(:user, :role)
+					UPDATE `'.static::assoc_roles().'`
+					   SET `role` = :role
+					 WHERE `user` = :user
 				',
 				'mysql'
 			)

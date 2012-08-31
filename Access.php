@@ -46,7 +46,7 @@ final class Access
 		if (isset($context['owner']))
 		{
 			// if we need owner computations we store the user
-			$user = \app\A12n::instance()->id();
+			$user = \app\A12n::instance()->user();
 		}
 		
 		// check if no exception exists
