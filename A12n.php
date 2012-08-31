@@ -27,7 +27,7 @@ class A12n extends \app\Instantiatable
 		// check session
 		$instance->user = \app\Session::get('user', null);
 		$instance->role = \app\Session::get('role', static::guest());
-		// @todo encrypt, sign and timestamp session data
+		// @todo HIGH encrypt, sign and timestamp session data
 	}
 	
 	/**
@@ -48,15 +48,17 @@ class A12n extends \app\Instantiatable
 	
 	function set_role($role)
 	{
+		$base_config = \app\CFS::config('ibidem/base');
+		
 		// allow role manipulation in development for mockup purposes
-		if (\defined('DEVELOPMENT') && DEVELOPMENT)
+		if (isset($base_config['development']) && $base_config['development'])
 		{
 			$this->role = $role;
 		}
 		else # access violation
 		{
 			throw new \app\Exception_NotAllowed
-				('Security role manipulation violation.');
+				('Role manipulation violation detected. Terminating.');
 		}
 	}
 	
