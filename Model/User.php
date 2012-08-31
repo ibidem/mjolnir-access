@@ -204,7 +204,7 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT user.*
+						SELECT user.*,
 							   assoc.role role,
 							   role.title roletitle
 						  FROM :table user
