@@ -5,9 +5,9 @@
 	namespace app;
 	
 	$id = $_REQUEST['id'];
-	$profile_info = $context->profile_info($id);
 	$user = $context->entry($id);
 	
+	$profile_info = $context->profile_info($id);
 	$values = [];
 	foreach ($profile_info as $field)
 	{
