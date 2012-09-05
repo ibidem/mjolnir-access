@@ -41,11 +41,14 @@ class Backend_User extends \app\Backend_Collection
 		
 		if (empty($errors))
 		{
-			\app\Layer_HTTP::redirect
+			\app\Server::redirect
 				(
-					'\ibidem\backend', 
-					['slug' => 'user-profile'],
-					['id' => $id]
+					\app\URL::href
+						(
+							'\ibidem\backend', 
+							['slug' => 'user-profile'],
+							"?id=$id"
+						)
 				);
 		}
 		else # got errors

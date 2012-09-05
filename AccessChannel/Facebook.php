@@ -44,7 +44,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 
 				\app\A12n::inferred_signin($user->username, $user->email, 'facebook');
 				
-				\app\Layer_HTTP::redirect('\ibidem\access\a12n');
+				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n'));
 			}
 			else # error in `code` to `token` excahnge
 			{
