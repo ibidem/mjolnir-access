@@ -1,18 +1,16 @@
-<?php return array
-	(
+<?php namespace app; return array
+/////// Access Protocol Configuration //////////////////////////////////////////
+(
 		'whitelist' => array # allow
 			(
-				\app\A12n::guest() => array
+				A12n::guest() => array
 					(
-						\app\Protocol::instance()
-							->relays
-								(
-									[
-										'\ibidem\access\a12n',
-										'\ibidem\access\channel',
-										'\ibidem\access\endpoint',
-									]
-								)
+						Allow::relays
+							(
+								'\ibidem\access\a12n',
+								'\ibidem\access\channel',
+								'\ibidem\access\endpoint'
+							)
 							->all_parameters(),
 					),
 			
@@ -20,22 +18,18 @@
 				// alias list of your own administrator role
 				'+admin' => array
 					(
-						\app\Protocol::instance()
-							->relays(['\ibidem\backend'])
-							->attributes
-								(
-									[
-										'user-index', 
-										'user-edit',
-										'user-edit-profile',
-										'user-role-index',
-										'user-role-edit',
-										'user-profile-index',
-										'user-profile-edit',
-										'user-profile',
-										'user-access-settings',
-									]
-								)
+						Allow::backend
+							(
+								'user-index', 
+								'user-edit',
+								'user-edit-profile',
+								'user-role-index',
+								'user-role-edit',
+								'user-profile-index',
+								'user-profile-edit',
+								'user-profile',
+								'user-access-settings'
+							)
 					),
 			),
 		'blacklist' => array # disallow! (no matter what)
