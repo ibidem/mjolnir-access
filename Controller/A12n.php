@@ -40,7 +40,7 @@ class Controller_A12n extends \app\Controller_Web
 			);
 	}
 	
-	function signin_view()
+	function signin_view($errors = null)
 	{
 		$relay = $this->layer->get_relay();
 		
@@ -48,30 +48,29 @@ class Controller_A12n extends \app\Controller_Web
 		{	
 			\app\GlobalEvent::fire('webpage:title', 'Sign In · Access');
 			
-			$this->body
-				(
-					\app\ThemeView::instance()
-						->theme('ibidem/access')
-						->style('default')
-						->target('signin')
-						->layer($this->layer)
-						->context($relay['context']::instance())
-						->control($relay['control']::instance())
-						->render()
-				);
+			$view = \app\ThemeView::instance()
+				->theme('ibidem/access')
+				->style('default')
+				->target('signin')
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
 		}
 		else # target provided
 		{			
-			$this->body
-				(
-					\app\ThemeView::instance()
-						->target($relay['target'])
-						->layer($this->layer)
-						->context($relay['context']::instance())
-						->control($relay['control']::instance())
-						->render()
-				);
+			$view = \app\ThemeView::instance()
+				->target($relay['target'])
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
 		}
+		
+		if ($errors !== null)
+		{
+			$view->errors($errors);
+		}
+
+		$this->body($view->render());
 	}
 	
 	/**
@@ -107,9 +106,7 @@ class Controller_A12n extends \app\Controller_Web
 				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'lobby']));
 			}
 			else # signin failed
-			{
-				$relay = $this->layer->get_relay();
-				
+			{			
 				$errors = array
 					(
 						'ibidem\a12n\signin' => array
@@ -117,10 +114,16 @@ class Controller_A12n extends \app\Controller_Web
 								'form' => ['Sign in failed. Please check your credentials or try a different password.']
 							)
 					);
+				
+				$this->signin_view($errors);
 			}
 		}
+		else # user === null
+		{
+			$this->signin_view();
+		}
 		
-		$this->signin_view();
+		
 	}
 	
 	function action_signout()

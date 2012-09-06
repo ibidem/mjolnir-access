@@ -2,6 +2,12 @@
 	namespace app; 
 
 	$route_matcher = \app\URL::route('\ibidem\access\a12n');
+	
+	if (isset($errors) && isset($errors['ibidem\a12n\signin']))
+	{
+		$form_errors = $errors['ibidem\a12n\signin']['form'];
+		unset($errors['ibidem\a12n\signin']['form']);
+	}
 ?>
 
 <?= $f = Form::i('twitter.general', $route_matcher->url(['action' => 'signin']))
@@ -10,6 +16,16 @@
 	->secure() ?>
 
 	<fieldset>
+		
+		<? if (isset($_POST) && isset($_POST['form']) && $_POST['form'] === $f->form_id()): ?>
+			<div class="control-group">
+				<? if (isset($form_errors)): ?>
+					<? foreach ($form_errors as $error): ?>
+						<span class="alert alert-error"><?= $error ?></span>
+					<? endforeach; ?>
+				<? endif; ?>
+			</div>
+		<? endif; ?>
 		
 		<?= $f->text(Lang::msg('ibidem.access.signin.username_or_email'), 'identity')->attr('autofocus', 'autofocus') ?>
 		<?= $f->password(Lang::tr('Password'), 'password') ?>
