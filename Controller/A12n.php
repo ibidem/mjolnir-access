@@ -90,7 +90,14 @@ class Controller_A12n extends \app\Controller_Web
 			if ($user !== null)
 			{
 				// logged in
-				\app\A12n::signin($user, \app\Model_User::role_for($user));
+				if ($_POST['remember_me'] === 'on')
+				{
+					\app\A12n::remember_user($user);
+				}
+				else # remember_me === off
+				{
+					\app\A12n::signin($user, \app\Model_User::role_for($user));
+				}
 				
 				// redirect
 				$base_config = \app\CFS::config('ibidem/base');
@@ -98,12 +105,13 @@ class Controller_A12n extends \app\Controller_Web
 				{
 					\app\Server::redirect
 						(
-							'//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']
+							'//'.$base_config['domain'].$base_config['path'].
+							$base_config['site:frontend']
 						);
 				}
 
 				// no default frontend
-				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'lobby']));
+				$this->forward('\ibidem\access\a12n', ['action' => 'lobby']);
 			}
 			else # signin failed
 			{			

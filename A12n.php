@@ -27,7 +27,45 @@ class A12n extends \app\Instantiatable
 		// check session
 		$instance->user = \app\Session::get('user', null);
 		$instance->role = \app\Session::get('role', static::guest());
-		// @todo HIGH encrypt, sign and timestamp session data
+		
+		if ($instance->user === null)
+		{
+			// verify cookies
+			$user = \app\Cookie::get('user', null);
+			$token = \app\Cookie::get('accesstoken', null);
+			
+			if ($user !== null && $token !== null)
+			{
+				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
+				if ( ! empty($entry) && $entry['token'] === $token)
+				{
+					$this->remember_user($user);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Store remember me information.
+	 */
+	static function remember_user($user)
+	{
+		$role = \app\Model_User::role_for($user);
+
+		\app\Session::set('user', $user);
+		\app\Session::set('role', $role);
+
+		$instance = static::instance();
+		$instance->user = $user;
+		$instance->role = $role;
+
+		// generate and save new token
+		$token = \sha1(\uniqid('user_tokens', true));
+
+		\app\Model_UserSigninToken::refresh($user, $token);
+
+		\app\Cookie::set('user', $user);
+		\app\Cookie::set('accesstoken', $token);
 	}
 	
 	/**
@@ -151,7 +189,10 @@ class A12n extends \app\Instantiatable
 	 */
 	static function signout()
 	{
-		 \app\Session::destroy();
+		\app\Model_UserSigninToken::purge(static::instance()->user());
+		\app\Session::destroy();
+		\app\Cookie::delete('user');
+		\app\Cookie::delete('accesstoken');
 	}
 	
 	/**

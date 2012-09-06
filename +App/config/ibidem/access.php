@@ -51,6 +51,6 @@
 		),
 	'roles' => array # roles in system
 		(
-			// empty
+			'admin' => 1,
 		),
 );

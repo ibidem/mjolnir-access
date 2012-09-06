@@ -17,7 +17,8 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 				\app\Model_Role::table(), 
 				\app\Model_User::assoc_roles(),
 				\app\Model_ProfileField::table(),
-				\app\Model_ProfileField::assoc_user()
+				\app\Model_ProfileField::assoc_user(),
+				\app\Model_UserSigninToken::table()
 			);
 	}
 	
@@ -90,6 +91,17 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 					KEY `role` (`field`)
 				'
 			);
+		
+		\app\Schematic::table
+			(
+				\app\Model_UserSigninToken::table(), 
+				'
+					`user`  :key_foreign NOT NULL,
+					`token` varchar(512),
+					
+					UNIQUE `user` (`user`)
+				'
+			);
 	}
 	
 	function bind()
@@ -106,7 +118,11 @@ class Schematic_Ibidem_Access_Base extends \app\Schematic_Base
 						(
 							'field' => array(\app\Model_ProfileField::table(), 'CASCADE', 'CASCADE'),
 							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
-						)
+						),
+					\app\Model_UserSigninToken::table() => array
+						(
+							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
+						),
 				]
 			);
 	}
