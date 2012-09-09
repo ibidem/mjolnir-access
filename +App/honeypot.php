@@ -3,14 +3,14 @@
 // This is an IDE honeypot. It tells IDEs the class hirarchy, but otherwise has
 // no effect on your application. :)
 
-// HowTo: order honeypot -n 'ibidem\access'
+// HowTo: order honeypot -n 'mjolnir\access'
 
 class A12n extends \mjolnir\access\A12n { /** @return \mjolnir\access\A12n */ static function instance() { return parent::instance(); } }
 class Access extends \mjolnir\access\Access {}
 class AccessChannel_Facebook extends \mjolnir\access\AccessChannel_Facebook { /** @return \mjolnir\access\AccessChannel_Facebook */ static function instance() { return parent::instance(); } }
 class AccessChannel_Universal extends \mjolnir\access\AccessChannel_Universal { /** @return \mjolnir\access\AccessChannel_Universal */ static function instance() { return parent::instance(); } }
 class Allow extends \mjolnir\access\Allow {}
-class Auth extends \mjolnir\access\Auth { /** @return \mjolnir\access\Auth */ static function instance() { return parent::instance(); } }
+class Auth extends \mjolnir\access\Auth {}
 class Backend_ProfileField extends \mjolnir\access\Backend_ProfileField { /** @return \mjolnir\access\Backend_ProfileField */ static function instance() { return parent::instance(); } }
 class Backend_Role extends \mjolnir\access\Backend_Role { /** @return \mjolnir\access\Backend_Role */ static function instance() { return parent::instance(); } }
 class Backend_Settings extends \mjolnir\access\Backend_Settings { /** @return \mjolnir\access\Backend_Settings */ static function instance() { return parent::instance(); } }
