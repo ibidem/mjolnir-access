@@ -1,24 +1,47 @@
 <?php return array
 	(
-		'scripts' => 'Scripts',
-		'styles'  => 'Styles',
-
 		// mapping targets to files
 		'targets' => array
 			(
 				'lobby' => array
 					(
-						'common/base', 'lobby'
+						'components/base', 
+						'lobby'
 					),
 			
 				'signin' => array
 					(
-						'common/base', 'signin'
+						'components/base', 
+						'signin'
 					),
 			
 				'signup' => array
 					(
-						'common/base', 'signup'
+						'components/base', 
+						'signup'
+					),
+			
+			//// Exceptions ////////////////////////////////////////////////////
+			
+				'exception-NotFound' => array
+					(
+						'components/errors/base',
+						'errors/not-found' 
+					),
+				'exception-NotAllowed' => array
+					(
+						'components/errors/base',
+						'errors/not-allowed' 
+					),
+				'exception-NotApplicable' => array
+					(
+						'components/errors/base',
+						'errors/not-applicable' 
+					),
+				'exception-Unknown' => array
+					(
+						'components/errors/base',
+						'errors/unknown' 
 					),
 			),
 	);
