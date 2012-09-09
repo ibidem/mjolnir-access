@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -45,7 +45,7 @@ class Protocol extends \app\Instantiatable
 	
 	/**
 	 * @param string relay
-	 * @return \ibidem\access\Protocol_Rule $this
+	 * @return \mjolnir\access\Protocol_Rule $this
 	 */
 	function relays(array $relays)
 	{
@@ -55,7 +55,7 @@ class Protocol extends \app\Instantiatable
 	
 	/**
 	 * @param array attributes
-	 * @return \ibidem\access\Protocol_Rule $this
+	 * @return \mjolnir\access\Protocol_Rule $this
 	 */
 	function attributes(array $attributes)
 	{
@@ -66,7 +66,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Constraints rule to only users who are the owners of said object. 
 	 * 
-	 * @return \ibidem\access\Protocol 
+	 * @return \mjolnir\access\Protocol 
 	 */
 	function only_others()
 	{
@@ -77,7 +77,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Constraints rule to only users who are NOT the owners of said object.
 	 * 
-	 * @return \ibidem\access\Protocol $this
+	 * @return \mjolnir\access\Protocol $this
 	 */
 	function only_owner()
 	{
@@ -88,7 +88,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Resets constraint on ownership back to everybody.
 	 * 
-	 * @return \ibidem\access\Protocol $this
+	 * @return \mjolnir\access\Protocol $this
 	 */
 	function everybody()
 	{
@@ -107,7 +107,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @param string name
 	 * @param array values
-	 * @return \ibidem\access\Protocol $this
+	 * @return \mjolnir\access\Protocol $this
 	 */
 	function param($name, array $values)
 	{
@@ -117,7 +117,7 @@ class Protocol extends \app\Instantiatable
 	}
 	
 	/**
-	 * @return \ibidem\access\Protocol $this
+	 * @return \mjolnir\access\Protocol $this
 	 */
 	function all_parameters()
 	{

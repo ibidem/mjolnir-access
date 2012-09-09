@@ -1,4 +1,4 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 \app\Session::start();
 
@@ -6,7 +6,7 @@ require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
 require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Controller
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team

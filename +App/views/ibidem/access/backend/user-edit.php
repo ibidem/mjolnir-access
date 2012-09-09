@@ -32,7 +32,7 @@
 					Update
 				</button>
 				<a class="btn btn-small" 
-				   href="<?= \app\URL::route('\ibidem\backend')->url(['slug' => 'user-index']) ?>">
+				   href="<?= \app\URL::route('\mjolnir\backend')->url(['slug' => 'user-index']) ?>">
 					Back to User Index
 				</a>
 			</div>

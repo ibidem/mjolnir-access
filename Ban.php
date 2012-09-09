@@ -1,10 +1,10 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
  * This class is merely syntactic sugar for \app\Allow which is syntactic sugar
  * for the \app\Protocol class.
  * 
- * @package    ibidem
+ * @package    mjolnir
  * @category   Access
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team

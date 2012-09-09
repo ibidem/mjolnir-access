@@ -57,6 +57,6 @@
 </a>
 
 <a class="btn btn-small pull-right" 
-   href="<?= \app\URL::route('\ibidem\backend')->url(['slug' => 'user-index']) ?>">
+   href="<?= \app\URL::route('\mjolnir\backend')->url(['slug' => 'user-index']) ?>">
 	Back to Index
 </a>

@@ -22,7 +22,7 @@ $validator_unkeyed = function ($config)
 
 return array
 	(
-		'signout.redirect' => \app\URL::href('\ibidem\access\a12n', ['action' => 'signin']),
+		'signout.redirect' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 	
 		'signin' => array
 			(
@@ -34,7 +34,7 @@ return array
 						'slug' => 'facebook',
 						'icon' => 'facebook',
 						'title' => 'Facebook',
-						'register' => '\ibidem\access\channel\facebook',
+						'register' => '\mjolnir\access\channel\facebook',
 					
 						'validator' => function ($config) {
 							if ($config['AppID'] === null)
@@ -57,7 +57,7 @@ return array
 						'slug' => 'twitter',
 						'icon' => 'twitter',
 						'title' => 'Twitter',
-						'register' => '\ibidem\access\channel\twitter',
+						'register' => '\mjolnir\access\channel\twitter',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Twitter',
@@ -69,7 +69,7 @@ return array
 						'slug' => 'google',
 						'icon' => 'signin',
 						'title' => 'Google',
-						'register' => '\ibidem\access\channel\google',
+						'register' => '\mjolnir\access\channel\google',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Google',
@@ -81,7 +81,7 @@ return array
 						'slug' => 'yahoo',
 						'icon' => 'signin',
 						'title' => 'Yahoo',
-						'register' => '\ibidem\access\channel\yahoo',
+						'register' => '\mjolnir\access\channel\yahoo',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Yahoo',
@@ -93,7 +93,7 @@ return array
 						'slug' => 'aol',
 						'title' => 'AOL',
 						'icon' => 'signin',
-						'register' => '\ibidem\access\channel\aol',
+						'register' => '\mjolnir\access\channel\aol',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'AOL',
@@ -105,7 +105,7 @@ return array
 						'slug' => 'myspace',
 						'title' => 'MySpace',
 						'icon' => 'signin',
-						'register' => '\ibidem\access\channel\myspace',
+						'register' => '\mjolnir\access\channel\myspace',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'MySpace',
@@ -117,7 +117,7 @@ return array
 						'slug' => 'linkedin',
 						'title' => 'LinkedIn',
 						'icon' => 'linkedin',
-						'register' => '\ibidem\access\channel\linkedin',
+						'register' => '\mjolnir\access\channel\linkedin',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'LinkedIn',
@@ -129,7 +129,7 @@ return array
 						'slug' => 'foursquare',
 						'title' => 'Foursquare',
 						'icon' => 'signin',
-						'register' => '\ibidem\access\channel\foursquare',
+						'register' => '\mjolnir\access\channel\foursquare',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Foursquare',
@@ -141,7 +141,7 @@ return array
 						'slug' => 'live',
 						'title' => 'Live',
 						'icon' => 'signin',
-						'register' => '\ibidem\access\channel\live',
+						'register' => '\mjolnir\access\channel\live',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Live',
@@ -153,7 +153,7 @@ return array
 						'slug' => 'github',
 						'title' => 'Github',
 						'icon' => 'github',
-						'register' => '\ibidem\access\channel\github',
+						'register' => '\mjolnir\access\channel\github',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'Github',
@@ -165,7 +165,7 @@ return array
 						'slug' => 'lastfm',
 						'title' => 'LastFM',
 						'icon' => 'signin',
-						'register' => '\ibidem\access\channel\lastfm',
+						'register' => '\mjolnir\access\channel\lastfm',
 						'keys' => [],
 						'scope' => '',
 						'hybridauth.key' => 'LastFM',

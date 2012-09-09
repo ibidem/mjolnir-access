@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -31,7 +31,7 @@ class A12n extends \app\Instantiatable
 	}
 	
 	/**
-	 * @return \ibidem\access\A12n
+	 * @return \mjolnir\access\A12n
 	 */
 	static function instance()
 	{
@@ -130,7 +130,7 @@ class A12n extends \app\Instantiatable
 	static function guest()
 	{
 		// unique identifier
-		return '\ibidem\access\A12n::guest';
+		return '\mjolnir\access\A12n::guest';
 	}
 	
 	/**
@@ -143,7 +143,7 @@ class A12n extends \app\Instantiatable
 	static function oauth_guest()
 	{
 		// unique identifier
-		return '\ibidem\access\A12n::oauth_guest';
+		return '\mjolnir\access\A12n::oauth_guest';
 	}
 	
 	/**
@@ -206,7 +206,7 @@ class A12n extends \app\Instantiatable
 				else # no frontend
 				{
 					// redirect to access page
-					\app\Server::redirect(\app\URL::href('\ibidem\access'));
+					\app\Server::redirect(\app\URL::href('\mjolnir\access'));
 				}
 			}
 			catch (\Exception $e)

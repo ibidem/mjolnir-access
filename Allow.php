@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Access
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -37,7 +37,7 @@ class Allow
 		$args = \func_get_args();
 		
 		return \app\Protocol::instance()
-			->relays(['\ibidem\backend'])
+			->relays(['\mjolnir\backend'])
 			->attributes($args);
 	}
 

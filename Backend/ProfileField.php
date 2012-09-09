@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Backend
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team

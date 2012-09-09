@@ -7,9 +7,9 @@
 				(
 					Allow::relays
 						(
-							'\ibidem\access\a12n',
-							'\ibidem\access\channel',
-							'\ibidem\access\endpoint'
+							'\mjolnir\access\a12n',
+							'\mjolnir\access\channel',
+							'\mjolnir\access\endpoint'
 						)
 						->all_parameters(),
 				),

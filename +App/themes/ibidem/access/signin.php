@@ -35,13 +35,13 @@
 	</section>
 
 
-	<? if (\app\Access::can('\ibidem\access\a12n', ['action' => 'signup'])): ?>
+	<? if (\app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])): ?>
 		<section class="span3">
 			<p>
 				<span class="label label-info"><?= Lang::tr('Help') ?></span>
 				<small>
 					<?= Lang::msg('ibidem.access.signin.not_yet_a_member') ?>
-					<a class="nowrap" href="<?= \app\URL::route('\ibidem\access\a12n')->url(['action' => 'signup']) ?>">
+					<a class="nowrap" href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signup']) ?>">
 						<?= Lang::msg('ibiden.access.sign_up_now') ?> 
 					</a>
 				</small>

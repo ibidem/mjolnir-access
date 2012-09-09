@@ -10,8 +10,8 @@
 	
 	$access_fields = array
 		(
-			'\ibidem\access\signup\public', 
-			'\ibidem\access\signup\capcha',
+			'\mjolnir\access\signup\public', 
+			'\mjolnir\access\signup\capcha',
 		);
 	
 	$access_fields = \app\Register::pull($access_fields);
@@ -32,11 +32,11 @@
 	
 		<fieldset>
 			<legend>Sign Up</legend>
-			<?= $form->select('Public Registration', '\ibidem\access\signup\public', $switch_format)
-				->value($access_fields['\ibidem\access\signup\public']) ?> 
+			<?= $form->select('Public Registration', '\mjolnir\access\signup\public', $switch_format)
+				->value($access_fields['\mjolnir\access\signup\public']) ?> 
 			
-			<?= $form->select('Capcha', '\ibidem\access\signup\capcha', $switch_format)
-				->value($access_fields['\ibidem\access\signup\capcha']) ?> 
+			<?= $form->select('Capcha', '\mjolnir\access\signup\capcha', $switch_format)
+				->value($access_fields['\mjolnir\access\signup\capcha']) ?> 
 		</fieldset>
 	
 		<? if ( ! empty($signin_providers)): ?>

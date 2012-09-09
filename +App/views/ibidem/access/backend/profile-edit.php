@@ -31,7 +31,7 @@
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
 				<a class="btn btn-small" 
-				   href="<?= \app\URL::route('\ibidem\backend')->url(['slug' => 'user-profile-index']) ?>">
+				   href="<?= \app\URL::route('\mjolnir\backend')->url(['slug' => 'user-profile-index']) ?>">
 					Cancel
 				</a>
 			</div>

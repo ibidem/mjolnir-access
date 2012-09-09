@@ -15,7 +15,7 @@
 <? if ( ! empty($users)): ?>
 
 	<?= $form = Form::instance()
-		->method(\ibidem\types\HTTP::POST)
+		->method(\mjolnir\types\HTTP::POST)
 		->action($control->action('delete'))
 		->field_template(':field') ?>
 

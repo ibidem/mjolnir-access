@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Backend
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -16,8 +16,8 @@ class Backend_Settings extends \app\Instantiatable
 
 		$access_fields = array
 			(
-				'\ibidem\access\signup\public', 
-				'\ibidem\access\signup\capcha',
+				'\mjolnir\access\signup\public', 
+				'\mjolnir\access\signup\capcha',
 			);
 		
 		$fields = \array_merge($providers, $access_fields); 

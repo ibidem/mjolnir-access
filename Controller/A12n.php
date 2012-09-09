@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -22,7 +22,7 @@ class Controller_A12n extends \app\Controller_Web
 		
 		if (\app\A12n::instance()->role() === \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
+			\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
 		}
 		
 		\app\GlobalEvent::fire('webpage:title', 'Lobby · Access');
@@ -80,7 +80,7 @@ class Controller_A12n extends \app\Controller_Web
 	{
 		if (\app\A12n::instance()->role() !== \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n'));
+			\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n'));
 		}
 		
 		if (\app\Server::request_method() === 'POST')
@@ -103,7 +103,7 @@ class Controller_A12n extends \app\Controller_Web
 				}
 
 				// no default frontend
-				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'lobby']));
+				\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'lobby']));
 			}
 			else # signin failed
 			{			
