@@ -4,7 +4,7 @@
 
 <div class="row">
 	<div class="span12">
-		<h1><?= Lang::msg('ibidem.access.signin.title') ?></h1>
+		<h1><?= Lang::msg('mjolnir.access.signin.title') ?></h1>
 		<br/>
 	</div>
 </div>
@@ -15,7 +15,7 @@
 		<div class="well">
 			<br/>
 			<?= \app\View::instance()
-				->file('ibidem/access/signin')
+				->file('mjolnir/access/signin')
 				->variable('errors', $errors)
 				->render() ?>
 
@@ -28,7 +28,7 @@
 	<section class="span3">
 
 		<?= \app\View::instance()
-			->file('ibidem/access/auth')
+			->file('mjolnir/access/auth')
 			->variable('context', $context)
 			->render() ?>
 
@@ -40,7 +40,7 @@
 			<p>
 				<span class="label label-info"><?= Lang::tr('Help') ?></span>
 				<small>
-					<?= Lang::msg('ibidem.access.signin.not_yet_a_member') ?>
+					<?= Lang::msg('mjolnir.access.signin.not_yet_a_member') ?>
 					<a class="nowrap" href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signup']) ?>">
 						<?= Lang::msg('ibiden.access.sign_up_now') ?> 
 					</a>
