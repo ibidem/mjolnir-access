@@ -17,7 +17,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		
 		if($session_state && ($session_state === $state)) 
 		{
-			$provider = \app\CFS::config('ibidem/a12n')['signin']['facebook'];
+			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 			
 			$appid = $provider['AppID'];
 			$appsecret = $provider['AppSecret'];
@@ -61,7 +61,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 	
 	static function signin_url()
 	{
-		$provider = \app\CFS::config('ibidem/a12n')['signin']['facebook'];
+		$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 		$appid = $provider['AppID'];
 		$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
 		$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));

@@ -15,7 +15,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 	{
 		\app\Session::start(); # required by hybrid auth
 		
-		$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_name];
+		$provider = \app\CFS::config('mjolnir/a12n')['signin'][$provider_name];
 		
 		$provider_key = $provider['hybridauth.key'];
 		$config = array

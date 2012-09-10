@@ -93,7 +93,7 @@ class Controller_A12n extends \app\Controller_Web
 				\app\A12n::signin($user, \app\Model_User::role_for($user));
 				
 				// redirect
-				$base_config = \app\CFS::config('ibidem/base');
+				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
 				{
 					\app\Server::redirect
@@ -129,7 +129,7 @@ class Controller_A12n extends \app\Controller_Web
 	function action_signout()
 	{
 		\app\A12n::signout();
-		$a12n_config = \app\CFS::config('ibidem/a12n');
+		$a12n_config = \app\CFS::config('mjolnir/a12n');
 		\app\Server::redirect($a12n_config['signout.redirect']);
 	}
 

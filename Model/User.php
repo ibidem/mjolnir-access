@@ -33,7 +33,7 @@ class Model_User
 	 */
 	static function assoc_roles()
 	{
-		$database_config = \app\CFS::config('ibidem/database');
+		$database_config = \app\CFS::config('mjolnir/database');
 		return $database_config['table_prefix'].static::$user_role_table;
 	}
 	
@@ -426,7 +426,7 @@ class Model_User
 	static function recompute_password(array $fields)
 	{
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		// generate password salt and hash
 		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
@@ -473,7 +473,7 @@ class Model_User
 		}
 		
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		
 		if (\strpos($fields['identity'], '@') === false)
 		{
@@ -700,7 +700,7 @@ class Model_User
 		$password = [];
 		
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		
 		// generate password salt and hash
 		if ($salt === null)

@@ -26,7 +26,7 @@ class Layer_Access extends \app\Layer
 	{
 		$instance = parent::instance();
 		// setup security protocols
-		\app\Access::protocols(\app\CFS::config('ibidem/access'));
+		\app\Access::protocols(\app\CFS::config('mjolnir/access'));
 		
 		return $instance;
 	}

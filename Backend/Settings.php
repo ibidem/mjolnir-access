@@ -11,7 +11,7 @@ class Backend_Settings extends \app\Instantiatable
 {
 	function action_update()
 	{
-		$signin_providers = \app\CFS::config('ibidem/a12n')['signin'];
+		$signin_providers = \app\CFS::config('mjolnir/a12n')['signin'];
 		$providers = \app\Collection::gather($signin_providers, 'register');
 
 		$access_fields = array

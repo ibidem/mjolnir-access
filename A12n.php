@@ -48,7 +48,7 @@ class A12n extends \app\Instantiatable
 	
 	function set_role($role)
 	{
-		$base_config = \app\CFS::config('ibidem/base');
+		$base_config = \app\CFS::config('mjolnir/base');
 		
 		// allow role manipulation in development for mockup purposes
 		if (isset($base_config['development']) && $base_config['development'])
@@ -198,7 +198,7 @@ class A12n extends \app\Instantiatable
 				\app\Session::set('user', $user);
 				\app\Session::set('role', \app\Model_User::role_for($user));
 				
-				$base_config = \app\CFS::config('ibidem/base');
+				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
 				{
 					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']);
