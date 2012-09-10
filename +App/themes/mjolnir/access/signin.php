@@ -1,5 +1,5 @@
-<? 
-	namespace app; 
+<?
+	namespace app;
 ?>
 
 <div class="row">
@@ -42,7 +42,7 @@
 				<small>
 					<?= Lang::msg('mjolnir.access.signin.not_yet_a_member') ?>
 					<a class="nowrap" href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signup']) ?>">
-						<?= Lang::msg('ibiden.access.sign_up_now') ?> 
+						<?= Lang::msg('mjolnir.access.sign_up_now') ?>
 					</a>
 				</small>
 			</p>
