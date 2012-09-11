@@ -24,5 +24,5 @@ class Model_ProfileField extends \mjolnir\access\Model_ProfileField {}
 class Model_Role extends \mjolnir\access\Model_Role {}
 class Model_User extends \mjolnir\access\Model_User {}
 class Protocol extends \mjolnir\access\Protocol { /** @return \mjolnir\access\Protocol */ static function instance() { return parent::instance(); } }
-class Schematic_Ibidem_Access_Base extends \mjolnir\access\Schematic_Ibidem_Access_Base { /** @return \mjolnir\access\Schematic_Ibidem_Access_Base */ static function instance() { return parent::instance(); } }
-class Schematic_Ibidem_Access_Oauth extends \mjolnir\access\Schematic_Ibidem_Access_Oauth { /** @return \mjolnir\access\Schematic_Ibidem_Access_Oauth */ static function instance() { return parent::instance(); } }
+class Schematic_Mjolnir_Access_Base extends \mjolnir\access\Schematic_Mjolnir_Access_Base { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Base */ static function instance() { return parent::instance(); } }
+class Schematic_Mjolnir_Access_Oauth extends \mjolnir\access\Schematic_Mjolnir_Access_Oauth { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Oauth */ static function instance() { return parent::instance(); } }
