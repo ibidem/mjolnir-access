@@ -46,8 +46,8 @@
 			 */
 
 			// examples
-			# 'member' => [ \app\A12n::guest() ],
-			# 'admin'  => [ \app\A12n::guest(), 'member' ],
+			# 'member' => [ A12n::guest() ],
+			# 'admin'  => [ A12n::guest(), 'member' ],
 		),
 	'roles' => array # roles in system
 		(
