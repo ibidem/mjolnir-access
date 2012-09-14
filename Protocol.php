@@ -64,7 +64,7 @@ class Protocol extends \app\Instantiatable
 	}
 	
 	/**
-	 * Constraints rule to only users who are the owners of said object. 
+	 * Constraints rule to only users who are NOT the owners of said object. 
 	 * 
 	 * @return \mjolnir\access\Protocol 
 	 */
@@ -75,7 +75,7 @@ class Protocol extends \app\Instantiatable
 	}
 	
 	/**
-	 * Constraints rule to only users who are NOT the owners of said object.
+	 * Constraints rule to only users who are the owners of said object.
 	 * 
 	 * @return \mjolnir\access\Protocol $this
 	 */

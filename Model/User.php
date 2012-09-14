@@ -428,19 +428,19 @@ class Model_User
 		// load configuration
 		$security = \app\CFS::config('mjolnir/security');
 		// generate password salt and hash
-		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
-		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, true);
+		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], false);
+		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, false);
 		// update
 		static::statement
 			(
 				__METHOD__,
 				'
 					UPDATE :table
-					   SET pwdverifier = :pwdverifier
-					   SET pwdsalt = :pwdsalt
-					   SET pwddate = :pwddate
-					   SET ipaddress = :ipaddress
+					   SET pwdverifier = :pwdverifier,
+					       pwdsalt = :pwdsalt,
+					       pwddate = :pwddate,
+					       ipaddress = :ipaddress
 					 WHERE nickname = :nickname
 					   AND provider IS NULL
 				',
@@ -450,7 +450,7 @@ class Model_User
 			->bind(':pwdsalt', $pwdsalt)
 			->set(':pwddate', \date('Y-m-d H:i:s'))
 			->bind(':nickname', $fields['nickname'])
-			->bind(':ipaddress', \app\Server::client_ip())
+			->set(':ipaddress', \app\Server::client_ip())
 			->execute();
 	}
 	
