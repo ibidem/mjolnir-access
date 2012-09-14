@@ -101,7 +101,7 @@
 	<?= $form = Form::instance()
 		->standard('twitter.general')
 		->errors($errors['user-new'])
-		->auto_complte($_POST)
+		->auto_complete($_POST)
 		->action($control->action('new')) ?>
 
 		<fieldset>
