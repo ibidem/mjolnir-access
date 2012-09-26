@@ -1,9 +1,9 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
  * Shorthand for A12n.
  * 
- * @package    ibidem
+ * @package    mjolnir
  * @category   Access
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team

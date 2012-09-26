@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -20,13 +20,13 @@ class Layer_Access extends \app\Layer
 	private $relay;
 	
 	/**
-	 * @return \ibidem\access\Layer_Access $this
+	 * @return \mjolnir\access\Layer_Access $this
 	 */
 	static function instance()
 	{
 		$instance = parent::instance();
 		// setup security protocols
-		\app\Access::protocols(\app\CFS::config('ibidem/access'));
+		\app\Access::protocols(\app\CFS::config('mjolnir/access'));
 		
 		return $instance;
 	}
@@ -37,15 +37,15 @@ class Layer_Access extends \app\Layer
 	 */
 	function exception(\Exception $exception, $no_throw = false, $origin = false)
 	{
-		if (\is_a($exception, '\ibidem\types\Exception'))
+		if (\is_a($exception, '\mjolnir\types\Exception'))
 		{
-			if ($exception->get_type() === \ibidem\types\Exception::NotAllowed)
+			if ($exception->get_type() === \mjolnir\types\Exception::NotAllowed)
 			{
 				$this->contents(null);
 				$layer = $this->find('http');
 				if ($layer !== null)
 				{
-					$layer->status(\ibidem\types\HTTP::STATUS_Forbidden);
+					$layer->status(\mjolnir\types\HTTP::STATUS_Forbidden);
 				}
 			}
 		}
@@ -71,10 +71,10 @@ class Layer_Access extends \app\Layer
 			if ( ! \app\Access::can($this->target, $context))
 			{
 				$http_layer = \app\Layer::find('http');
-				if ($http_layer && \app\Access::can('\ibidem\access\a12n', ['action' => 'signin']))
+				if ($http_layer && \app\Access::can('\mjolnir\access\a12n', ['action' => 'signin']))
 				{
 					// redirect to the access route
-					\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
+					\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
 				}
 				
 				// else; or if the redirect fails 
@@ -98,7 +98,7 @@ class Layer_Access extends \app\Layer
 		
 	/**
 	 * @param array relay configuration
-	 * @return \ibidem\base\Layer_MVC $this
+	 * @return \mjolnir\base\Layer_MVC $this
 	 */
 	function relay_config(array $relay)
 	{
@@ -111,7 +111,7 @@ class Layer_Access extends \app\Layer
 	
 	/**
 	 * @param string context
-	 * @return \ibidem\access\Layer_Access $this
+	 * @return \mjolnir\access\Layer_Access $this
 	 */
 	function target($target)
 	{

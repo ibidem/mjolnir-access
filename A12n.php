@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -69,7 +69,7 @@ class A12n extends \app\Instantiatable
 	}
 	
 	/**
-	 * @return \ibidem\access\A12n
+	 * @return \mjolnir\access\A12n
 	 */
 	static function instance()
 	{
@@ -86,7 +86,7 @@ class A12n extends \app\Instantiatable
 	
 	function set_role($role)
 	{
-		$base_config = \app\CFS::config('ibidem/base');
+		$base_config = \app\CFS::config('mjolnir/base');
 		
 		// allow role manipulation in development for mockup purposes
 		if (isset($base_config['development']) && $base_config['development'])
@@ -168,7 +168,7 @@ class A12n extends \app\Instantiatable
 	static function guest()
 	{
 		// unique identifier
-		return '\ibidem\access\A12n::guest';
+		return '\mjolnir\access\A12n::guest';
 	}
 	
 	/**
@@ -181,7 +181,7 @@ class A12n extends \app\Instantiatable
 	static function oauth_guest()
 	{
 		// unique identifier
-		return '\ibidem\access\A12n::oauth_guest';
+		return '\mjolnir\access\A12n::oauth_guest';
 	}
 	
 	/**
@@ -239,7 +239,7 @@ class A12n extends \app\Instantiatable
 				\app\Session::set('user', $user);
 				\app\Session::set('role', \app\Model_User::role_for($user));
 				
-				$base_config = \app\CFS::config('ibidem/base');
+				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
 				{
 					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']);
@@ -247,7 +247,7 @@ class A12n extends \app\Instantiatable
 				else # no frontend
 				{
 					// redirect to access page
-					\app\Server::redirect(\app\URL::href('\ibidem\access'));
+					\app\Server::redirect(\app\URL::href('\mjolnir\access'));
 				}
 			}
 			catch (\Exception $e)

@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   AccessChannel
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -17,12 +17,12 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		
 		if($session_state && ($session_state === $state)) 
 		{
-			$provider = \app\CFS::config('ibidem/a12n')['signin']['facebook'];
+			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 			
 			$appid = $provider['AppID'];
 			$appsecret = $provider['AppSecret'];
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-			$redirect = $protocol.':'.\app\URL::route('\ibidem\access\channel')
+			$redirect = $protocol.':'.\app\URL::route('\mjolnir\access\channel')
 				->url(['provider' => 'facebook']);
 			
 			$token_url = "https://graph.facebook.com/oauth/access_token?"
@@ -44,7 +44,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 
 				\app\A12n::inferred_signin($user->username, $user->email, 'facebook');
 				
-				\app\Server::redirect(\app\URL::href('\ibidem\access\a12n'));
+				\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n'));
 			}
 			else # error in `code` to `token` excahnge
 			{
@@ -61,9 +61,9 @@ class AccessChannel_Facebook extends \app\Instantiatable
 	
 	static function signin_url()
 	{
-		$provider = \app\CFS::config('ibidem/a12n')['signin']['facebook'];
+		$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 		$appid = $provider['AppID'];
-		$redirect = \app\URL::route('\ibidem\access\channel')->url(['provider' => 'facebook']);
+		$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
 		$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
 		$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 	

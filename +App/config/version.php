@@ -1,8 +1,8 @@
 <?php return array
 	(
-		'ibidem\access' => array
+		'mjolnir\access' => array
 			(
-				'major' => '1',
+				'major' => '0',
 				'minor' => '0',
 			)
 	);

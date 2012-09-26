@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -12,25 +12,25 @@ class Controller_A12n extends \app\Controller_Web
 	protected static $target = null;
 
 	function before()
-	{		
+	{
 		\app\GlobalEvent::fire('webpage:title', 'Access');
 	}
-	
+
 	function action_index()
 	{
 		$relay = $this->layer->get_relay();
-		
+
 		if (\app\A12n::instance()->role() === \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n', ['action' => 'signin']));
+			\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
 		}
-		
+
 		\app\GlobalEvent::fire('webpage:title', 'Lobby · Access');
-		
+
 		$this->body
 			(
 				\app\ThemeView::instance()
-					->theme('ibidem/access')
+					->theme('mjolnir/access')
 					->style('default')
 					->target('lobby')
 					->layer($this->layer)
@@ -39,17 +39,17 @@ class Controller_A12n extends \app\Controller_Web
 					->render()
 			);
 	}
-	
+
 	function signin_view($errors = null)
 	{
 		$relay = $this->layer->get_relay();
-		
+
 		if ($relay['target'] === null)
-		{	
+		{
 			\app\GlobalEvent::fire('webpage:title', 'Sign In · Access');
-			
+
 			$view = \app\ThemeView::instance()
-				->theme('ibidem/access')
+				->theme('mjolnir/access')
 				->style('default')
 				->target('signin')
 				->layer($this->layer)
@@ -57,14 +57,14 @@ class Controller_A12n extends \app\Controller_Web
 				->control($relay['control']::instance());
 		}
 		else # target provided
-		{			
+		{
 			$view = \app\ThemeView::instance()
 				->target($relay['target'])
 				->layer($this->layer)
 				->context($relay['context']::instance())
 				->control($relay['control']::instance());
 		}
-		
+
 		if ($errors !== null)
 		{
 			$view->errors($errors);
@@ -72,21 +72,21 @@ class Controller_A12n extends \app\Controller_Web
 
 		$this->body($view->render());
 	}
-	
+
 	/**
-	 * @throws \app\Exception_NotAllowed 
+	 * @throws \app\Exception_NotAllowed
 	 */
 	function action_signin()
 	{
 		if (\app\A12n::instance()->role() !== \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\URL::href('\ibidem\access\a12n'));
+			\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n'));
 		}
-		
+
 		if (\app\Server::request_method() === 'POST')
 		{
 			$user = \app\Model_User::signin_check($_POST);
-			
+
 			if ($user !== null)
 			{
 				// logged in
@@ -100,7 +100,7 @@ class Controller_A12n extends \app\Controller_Web
 				}
 				
 				// redirect
-				$base_config = \app\CFS::config('ibidem/base');
+				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
 				{
 					\app\Server::redirect
@@ -114,7 +114,7 @@ class Controller_A12n extends \app\Controller_Web
 				$this->forward('\ibidem\access\a12n', ['action' => 'lobby']);
 			}
 			else # signin failed
-			{			
+			{
 				$errors = array
 					(
 						'ibidem\a12n\signin' => array
@@ -122,7 +122,7 @@ class Controller_A12n extends \app\Controller_Web
 								'form' => ['Sign in failed. Please check your credentials or try a different password.']
 							)
 					);
-				
+
 				$this->signin_view($errors);
 			}
 		}
@@ -130,14 +130,14 @@ class Controller_A12n extends \app\Controller_Web
 		{
 			$this->signin_view();
 		}
-		
-		
+
+
 	}
-	
+
 	function action_signout()
 	{
 		\app\A12n::signout();
-		$a12n_config = \app\CFS::config('ibidem/a12n');
+		$a12n_config = \app\CFS::config('mjolnir/a12n');
 		\app\Server::redirect($a12n_config['signout.redirect']);
 	}
 

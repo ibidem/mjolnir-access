@@ -1,9 +1,9 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   AccessChannel
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -15,12 +15,12 @@ class AccessChannel_Universal extends \app\Instantiatable
 	{
 		\app\Session::start(); # required by hybrid auth
 		
-		$provider = \app\CFS::config('ibidem/a12n')['signin'][$provider_name];
+		$provider = \app\CFS::config('mjolnir/a12n')['signin'][$provider_name];
 		
 		$provider_key = $provider['hybridauth.key'];
 		$config = array
 			(
-				'base_url' => 'http:'.\app\URL::route('\ibidem\access\endpoint')->url(),
+				'base_url' => 'http:'.\app\URL::route('\mjolnir\access\endpoint')->url(),
 				'providers' => array
 					(
 						$provider_key => array 
@@ -76,7 +76,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 			
 			\app\Server::redirect
 				(
-					\app\URL::href('\ibidem\access\a12n')
+					\app\URL::href('\mjolnir\access\a12n')
 				);
 		}
 		catch (\app\Exception_NotApplicable $e)

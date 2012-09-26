@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -60,7 +60,7 @@ final class Access
 				if ($permission->get_self() !== null)
 				{
 					// if we didn't get an owner parameter we deny access
-					if ($context['owner'] == null)
+					if ( ! isset($context['owner']) || $context['owner'] == null)
 					{
 						// NOTE: there are objects that have NULL owner, it 
 						// means they were submitted anoynmously (usually) so 

@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Security
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -33,7 +33,7 @@ class Model_User
 	 */
 	static function assoc_roles()
 	{
-		$database_config = \app\CFS::config('ibidem/database');
+		$database_config = \app\CFS::config('mjolnir/database');
 		return $database_config['table_prefix'].static::$user_role_table;
 	}
 	
@@ -426,21 +426,21 @@ class Model_User
 	static function recompute_password(array $fields)
 	{
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		// generate password salt and hash
-		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), true);
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], true);
-		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, true);
+		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], false);
+		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, false);
 		// update
 		static::statement
 			(
 				__METHOD__,
 				'
 					UPDATE :table
-					   SET pwdverifier = :pwdverifier
-					   SET pwdsalt = :pwdsalt
-					   SET pwddate = :pwddate
-					   SET ipaddress = :ipaddress
+					   SET pwdverifier = :pwdverifier,
+					       pwdsalt = :pwdsalt,
+					       pwddate = :pwddate,
+					       ipaddress = :ipaddress
 					 WHERE nickname = :nickname
 					   AND provider IS NULL
 				',
@@ -450,7 +450,7 @@ class Model_User
 			->bind(':pwdsalt', $pwdsalt)
 			->set(':pwddate', \date('Y-m-d H:i:s'))
 			->bind(':nickname', $fields['nickname'])
-			->bind(':ipaddress', \app\Server::client_ip())
+			->set(':ipaddress', \app\Server::client_ip())
 			->execute();
 	}
 	
@@ -473,7 +473,7 @@ class Model_User
 		}
 		
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		
 		if (\strpos($fields['identity'], '@') === false)
 		{
@@ -700,7 +700,7 @@ class Model_User
 		$password = [];
 		
 		// load configuration
-		$security = \app\CFS::config('ibidem/security');
+		$security = \app\CFS::config('mjolnir/security');
 		
 		// generate password salt and hash
 		if ($salt === null)

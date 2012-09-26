@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Context
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -12,7 +12,7 @@ class Context_Access extends \app\Instantiatable
 	function authorized_a12n_providers()
 	{
 		// get all supported providers
-		$providers = \app\CFS::config('ibidem/a12n')['signin'];
+		$providers = \app\CFS::config('mjolnir/a12n')['signin'];
 		
 		// filter to enabled providers
 		$enabled_providers = [];

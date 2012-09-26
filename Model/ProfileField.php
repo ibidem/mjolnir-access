@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Model
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -33,7 +33,7 @@ class Model_ProfileField
 	 */
 	static function assoc_user()
 	{
-		$database_config = \app\CFS::config('ibidem/database');
+		$database_config = \app\CFS::config('mjolnir/database');
 		return $database_config['table_prefix'].static::$table_user_field;
 	}
 	
@@ -120,7 +120,7 @@ class Model_ProfileField
 				->execute();
 
 			// load fieldtypes
-			$field_types = \app\CFS::config('ibidem/profile-fieldtypes');
+			$field_types = \app\CFS::config('mjolnir/profile-fieldtypes');
 
 			// go though all fields
 			foreach ($fields as $field => $value)
@@ -235,7 +235,7 @@ class Model_ProfileField
 				->execute()
 				->fetch_all(static::$field_format);
 			
-			$profile_config = \app\CFS::config('ibidem/profile-fieldtypes');
+			$profile_config = \app\CFS::config('mjolnir/profile-fieldtypes');
 			foreach ($result as & $field)
 			{
 				$field['render'] = $profile_config[$field['type']]['render']($field['value']);

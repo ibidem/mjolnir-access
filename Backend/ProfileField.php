@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Backend
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -16,7 +16,7 @@ class Backend_ProfileField extends \app\Backend_Collection
 	{
 		return \app\Collection::mirror
 			(
-				\array_keys(\app\CFS::config('ibidem/profile-fieldtypes'))
+				\array_keys(\app\CFS::config('mjolnir/profile-fieldtypes'))
 			);
 	}
 	

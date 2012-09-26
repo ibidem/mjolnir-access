@@ -1,4 +1,4 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 \app\Session::start();
 
@@ -6,7 +6,7 @@ require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
 require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Controller
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -34,7 +34,7 @@ class Controller_Access extends \app\Controller_Web
 			}
 			
 			// this hard coded security test is intentional
-			$register = \app\CFS::config('ibidem/a12n')['signin'][$id]['register'];
+			$register = \app\CFS::config('mjolnir/a12n')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				throw new \app\Exception_NotApplicable('Access Denied.');
@@ -48,7 +48,7 @@ class Controller_Access extends \app\Controller_Web
 		else # non-universal
 		{
 			// this hard coded security test is intentional
-			$register = \app\CFS::config('ibidem/a12n')['signin'][$provider]['register'];
+			$register = \app\CFS::config('mjolnir/a12n')['signin'][$provider]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				throw new \app\Exception_NotApplicable('Access Denied.');
