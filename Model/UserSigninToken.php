@@ -1,7 +1,7 @@
-<?php namespace ibidem\access;
+<?php namespace mjolnir\access;
 
 /**
- * @package    ibidem
+ * @package    mjolnir
  * @category   Model
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
@@ -25,6 +25,11 @@ class Model_UserSigninToken extends \app\Instantiatable
 	 * @var array
 	 */
 	protected static $field_format = [];
+	
+	/**
+	 * @var string
+	 */
+	protected static $unique_id = 'user';
 	
 	/**
 	 * Inserts or updates token for user.
