@@ -39,7 +39,7 @@ class A12n extends \app\Instantiatable
 				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
 				if ( ! empty($entry) && $entry['token'] === $token)
 				{
-					$this->remember_user($user);
+					static::remember_user($user);
 				}
 			}
 		}

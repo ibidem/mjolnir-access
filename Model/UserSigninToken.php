@@ -29,7 +29,7 @@ class Model_UserSigninToken extends \app\Instantiatable
 	/**
 	 * @var string
 	 */
-	protected static $unique_id = 'user';
+	protected static $unique_key = 'user';
 	
 	/**
 	 * Inserts or updates token for user.
