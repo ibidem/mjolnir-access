@@ -74,7 +74,7 @@ class Layer_Access extends \app\Layer
 				if ($http_layer && \app\Access::can('\mjolnir\access\a12n', ['action' => 'signin']))
 				{
 					// redirect to the access route
-					\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
+					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signout.redirect']);
 				}
 				
 				// else; or if the redirect fails 
