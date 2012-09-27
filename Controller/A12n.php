@@ -22,7 +22,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if (\app\A12n::instance()->role() === \app\A12n::guest())
 		{
-			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signout.redirect']);
+			\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
 		}
 
 		\app\GlobalEvent::fire('webpage:title', 'Lobby · Access');
