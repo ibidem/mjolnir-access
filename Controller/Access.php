@@ -14,8 +14,14 @@ require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
  */
 class Controller_Access extends \app\Controller_Web
 {
+	/**
+	 * @var string
+	 */
 	protected static $target = null;
 
+	/**
+	 * Action: channel manager
+	 */
 	function action_channel()
 	{
 		// load channel
@@ -61,6 +67,9 @@ class Controller_Access extends \app\Controller_Web
 		}
 	}
 	
+	/**
+	 * Action: endpoind for HybridAuth's protocol
+	 */
 	function action_endpoint()
 	{
 		\Hybrid_Endpoint::process();

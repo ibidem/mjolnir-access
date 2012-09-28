@@ -111,13 +111,13 @@ class Controller_A12n extends \app\Controller_Web
 				}
 
 				// no default frontend
-				$this->forward('\ibidem\access\a12n', ['action' => 'lobby']);
+				$this->forward('\mjolnir\access\a12n', ['action' => 'lobby']);
 			}
 			else # signin failed
 			{
 				$errors = array
 					(
-						'ibidem\a12n\signin' => array
+						'\mjolnir\a12n\signin' => array
 							(
 								'form' => ['Sign in failed. Please check your credentials or try a different password.']
 							)

@@ -3,15 +3,15 @@
 
 	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
 
-	if (isset($errors) && isset($errors['mjolnir\a12n\signin']))
+	if (isset($errors) && isset($errors['\mjolnir\a12n\signin']))
 	{
-		$form_errors = $errors['mjolnir\a12n\signin']['form'];
-		unset($errors['mjolnir\a12n\signin']['form']);
+		$form_errors = $errors['\mjolnir\a12n\signin']['form'];
+		unset($errors['\mjolnir\a12n\signin']['form']);
 	}
 ?>
 
 <?= $f = Form::i('twitter.general', $route_matcher->url(['action' => 'signin']))
-	->errors($errors['mjolnir\a12n\signin'])
+	->errors($errors['\mjolnir\a12n\signin'])
 	->classes(['marginless'])
 	->secure() ?>
 

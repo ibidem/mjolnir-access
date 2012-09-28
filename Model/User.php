@@ -221,10 +221,13 @@ class Model_User
 							   assoc.role role,
 							   role.title roletitle
 						  FROM :table user
+						  
 						  JOIN `'.static::assoc_roles().'` assoc
 							ON user.id = assoc.user
+							
 						  JOIN `'.static::roles_table().'` role
 							ON role.id = assoc.role
+							
 						 WHERE user.id = :id
 					',
 					'mysql'
