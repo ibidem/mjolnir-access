@@ -26,7 +26,8 @@ class Allow
 	{
 		return \app\Protocol::instance()
 			->relays([$relay])
-			->attributes($args);
+			->attributes($args)
+			->all_parameters();
 	}
 	
 	/**
@@ -38,7 +39,8 @@ class Allow
 		
 		return \app\Protocol::instance()
 			->relays(['\mjolnir\backend'])
-			->attributes($args);
+			->attributes($args)
+			->all_parameters();
 	}
 
 } # class
