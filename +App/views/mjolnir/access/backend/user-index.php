@@ -10,7 +10,7 @@
 
 <h1>Users</h1>
 
-<? $users = $context->entries($page, $pagelimit, 0, ['role' => 'asc']) ?>
+<? $users = $context->entries($page, $pagelimit, 0, ['role' => 'asc', 'nickname' => 'asc']) ?>
 
 <? if ( ! empty($users)): ?>
 
