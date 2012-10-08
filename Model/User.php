@@ -177,11 +177,14 @@ class Model_User
 					       user.ipaddress,
 					       role.id role,
 					       role.title roletitle
-					  FROM :table user,
-					       `'.static::roles_table().'` role,
-					       `'.static::assoc_roles().'` assoc_roles
-					 WHERE assoc_roles.role = role.id 
-					   AND assoc_roles.user = user.id 
+						   
+					  FROM :table user
+					  
+					  JOIN `'.static::assoc_roles().'` assoc_roles
+						ON assoc_roles.user = user.id
+
+					  JOIN `'.static::roles_table().'` role
+						ON assoc_roles.role = role.id
 				'
 			)
 			->key(__FUNCTION__)
