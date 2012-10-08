@@ -90,7 +90,7 @@ class Controller_A12n extends \app\Controller_Web
 			if ($user !== null)
 			{
 				// logged in
-				if ($_POST['remember_me'] === 'on')
+				if (isset($_POST['remember_me']) && $_POST['remember_me'] === 'on')
 				{
 					\app\A12n::remember_user($user);
 				}
