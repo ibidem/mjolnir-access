@@ -39,5 +39,28 @@ class Model_Role
 						),
 				),
 		);
+	
+	// ------------------------------------------------------------------------
+	// etc
+	
+	/**
+	 * @return int
+	 */
+	static function role_by_name($name)
+	{
+		return (int) static::statement
+			(
+				__METHOD__,
+				'
+					SELECT id
+					  FROM :table
+					 WHERE title = :name
+				'
+			)
+			->set(':name', $name)
+			->execute()
+			->fetch_array()
+			['id'];
+	}
 
 } # class

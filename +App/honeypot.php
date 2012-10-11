@@ -23,7 +23,7 @@ class Layer_Access extends \mjolnir\access\Layer_Access { /** @return \mjolnir\a
 class Model_ProfileField extends \mjolnir\access\Model_ProfileField {}
 class Model_Role extends \mjolnir\access\Model_Role {}
 class Model_User extends \mjolnir\access\Model_User {}
-class Model_UserSigninToken extends \mjolnir\access\Model_UserSigninToken {}
+class Model_UserSigninToken extends \mjolnir\access\Model_UserSigninToken { /** @return \mjolnir\access\Model_UserSigninToken */ static function instance() { return parent::instance(); } }
 class Protocol extends \mjolnir\access\Protocol { /** @return \mjolnir\access\Protocol */ static function instance() { return parent::instance(); } }
 class Schematic_Mjolnir_Access_Base extends \mjolnir\access\Schematic_Mjolnir_Access_Base { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Base */ static function instance() { return parent::instance(); } }
 class Schematic_Mjolnir_Access_Oauth extends \mjolnir\access\Schematic_Mjolnir_Access_Oauth { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Oauth */ static function instance() { return parent::instance(); } }
