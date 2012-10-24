@@ -58,17 +58,24 @@ class AccessChannel_Facebook extends \app\Instantiatable
 			throw new \app\Exception_NotAllowed('Potential CSFR attack detected. Access denied.');
 		}
 	}
+	private static $signin_url = null;
 	
 	static function signin_url()
 	{
-		$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
-		$appid = $provider['AppID'];
-		$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
-		$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
-		$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
+		if (self::$signin_url === null)
+		{
+		
+			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
+			$appid = $provider['AppID'];
+			$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
+			$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
+			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 	
-		return 'https://www.facebook.com/dialog/oauth?client_id='
-			. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope=email&amp;state='.$state;
+			self::$signin_url = 'https://www.facebook.com/dialog/oauth?client_id='
+				. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope=email&amp;state='.$state;
+		}
+		
+		return self::$signin_url;
 	}
 
 } # class
