@@ -115,11 +115,23 @@ class Controller_A12n extends \app\Controller_Web
 			}
 			else # signin failed
 			{
+				$error_message = 'Sign in failed. We do not know of any such user or email.';
+				
+				if (\app\Model_User::exists($_POST['identity'], 'email'))
+				{
+					$error_message = 'Sign in failed. You\'ve typed an incorect password, please try again.';
+				}
+				
+				if (\app\Model_User::exists($_POST['identity'], 'nickname'))
+				{
+					$error_message = 'Sign in failed. You\'ve typed an incorect password, please try again.';
+				}
+				
 				$errors = array
 					(
 						'\mjolnir\a12n\signin' => array
 							(
-								'form' => ['Sign in failed. Please check your credentials or try a different password.']
+								'form' => [$error_message]
 							)
 					);
 
