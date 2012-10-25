@@ -12,22 +12,22 @@ class Model_User
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Utilities;
 	use \app\Trait_Model_Collection;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected static $table = 'users';
-	
+
 	/**
 	 * @var array
 	 */
 	protected static $field_format = [];
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	protected static $user_role_table = 'user_role';
-		
+
 	/**
 	 * @return string table name
 	 */
@@ -36,7 +36,7 @@ class Model_User
 		$database_config = \app\CFS::config('mjolnir/database');
 		return $database_config['table_prefix'].static::$user_role_table;
 	}
-	
+
 	/**
 	 * @return string table
 	 */
@@ -44,22 +44,22 @@ class Model_User
 	{
 		return \app\Model_Role::table();
 	}
-	
+
 	// -------------------------------------------------------------------------
 	// factory interface
-	
+
 	/**
 	 * @param array fields
-	 * @return Validator 
+	 * @return Validator
 	 */
-	static function check(array $fields, $context = null) 
+	static function check(array $fields, $context = null)
 	{
 		$user_config = \app\CFS::config('model/User');
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
-		
+
 		if ($context === null)
 		{
 			$validator
@@ -67,17 +67,17 @@ class Model_User
 				->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
 				->rule('verifier', 'equal_to', $fields['password']);
 		}
-		
+
 		return $validator;
 	}
-	
+
 	/**
-	 * @param array (nickname, email, password, verifier) 
+	 * @param array (nickname, email, password, verifier)
 	 */
 	static function process(array $fields)
 	{
 		$password = static::generate_password($fields['password']);
-		
+
 		$filtered_fields = array
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
@@ -87,36 +87,36 @@ class Model_User
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
 			);
-		
+
 		static::inserter
 			(
-				$filtered_fields, 
+				$filtered_fields,
 				[
-					'nickname', 
-					'email', 
-					'ipaddress', 
+					'nickname',
+					'email',
+					'ipaddress',
 					'pwdverifier',
 					'pwdsalt',
 					'pwddate',
 				]
 			)
 			->run();
-		
+
 		// resolve dependencies
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 		static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
-		
+
 		// assign role if set
 		if (isset($fields['role']))
 		{
 			static::assign_role($user, $fields['role']);
 		}
-		
+
 		// cache already reset by inserter
 	}
-	
+
 	/**
-	 * @param string user id 
+	 * @param string user id
 	 * @param array config
 	 */
 	static function dependencies($id, array $config = null)
@@ -148,10 +148,10 @@ class Model_User
 		static::updater($id, $fields, ['nickname', 'email'])->run();
 		static::clear_entry_cache($id);
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// Collection interface
-	
+
 	/**
 	 * @param int page
 	 * @param int limit
@@ -165,21 +165,21 @@ class Model_User
 		{
 			$order = ['id' => 'ASC'];
 		}
-		
+
 		return static::stash
 			(
 				__METHOD__,
 				'
 					SELECT user.id,
-					       user.nickname, 
+					       user.nickname,
 					       user.email,
 						   user.timestamp,
 					       user.ipaddress,
 					       role.id role,
 					       role.title roletitle
-						   
+
 					  FROM :table user
-					  
+
 					  JOIN `'.static::assoc_roles().'` assoc_roles
 						ON assoc_roles.user = user.id
 
@@ -195,11 +195,11 @@ class Model_User
 
 	protected static function nullentry_for_current_user( & $entry, $id)
 	{
-		return $entry === null 
-			&& \app\A12n::instance()->role() !== \app\A12n::guest() 
+		return $entry === null
+			&& \app\A12n::instance()->role() !== \app\A12n::guest()
 			&& $id === \app\A12n::instance()->user();
 	}
-	
+
 	/**
 	 * @param int id
 	 * @return array (id, role, roletitle, nickname, email, ipaddress)
@@ -210,10 +210,10 @@ class Model_User
 		{
 			return null;
 		}
-		
+
 		$stashkey = \get_called_class().'_ID'.$id;
 		$entry = \app\Stash::get($stashkey, null);
-		
+
 		if ($entry === null)
 		{
 			$entry = static::statement
@@ -224,13 +224,13 @@ class Model_User
 							   assoc.role role,
 							   role.title roletitle
 						  FROM :table user
-						  
+
 						  JOIN `'.static::assoc_roles().'` assoc
 							ON user.id = assoc.user
-							
+
 						  JOIN `'.static::roles_table().'` role
 							ON role.id = assoc.role
-							
+
 						 WHERE user.id = :id
 					',
 					'mysql'
@@ -244,21 +244,21 @@ class Model_User
 				\app\Controller_A12n::instance()->action_signout();
 				exit(1);
 			}
-			
+
 			if ($entry !== null)
 			{
 				$entry['timestamp'] = new \DateTime($entry['timestamp']);
 			}
-			
+
 			\app\Stash::set($stashkey, $entry);
 		}
-			
+
 		return $entry;
 	}
-	
+
 	// -------------------------------------------------------------------------
 	// Extended
-	
+
 	/**
 	 * @param int user id
 	 * @param int role
@@ -278,7 +278,7 @@ class Model_User
 			->set_int(':user', $id)
 			->execute()
 			->fetch_all();
-		
+
 		if (empty($result))
 		{
 			static::statement
@@ -311,10 +311,10 @@ class Model_User
 				->set_int(':user', $id)
 				->execute();
 		}
-		
+
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 	/**
 	 * @param array (identification, email, provider)
 	 * @return \app\Validator
@@ -324,7 +324,7 @@ class Model_User
 		return \app\Validator::instance([], $fields)
 			->ruleset('not_empty', ['identification', 'email', 'role', 'provider']);
 	}
-	
+
 	/**
 	 * @param array fields
 	 */
@@ -332,17 +332,17 @@ class Model_User
 	{
 		$fields['ipaddress'] = \app\Server::client_ip();
 		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
-		
+
 		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
-		
+
 		// assign role if set
 		if (isset($fields['role']))
 		{
 			static::assign_role($user, $fields['role']);
 		}
 	}
-	
+
 	/**
 	 * @param array (identification, email, provider)
 	 * @return \app\Validator|null
@@ -350,14 +350,14 @@ class Model_User
 	static function inferred_signup(array $fields)
 	{
 		$errors = static::inferred_signup_check($fields)->errors();
-		
+
 		if (empty($errors))
 		{
 			\app\SQL::begin();
 			try
 			{
 				static::inferred_signup_process($fields);
-				
+
 				\app\SQL::commit();
 			}
 			catch (\Exception $e)
@@ -365,7 +365,7 @@ class Model_User
 				\app\SQL::rollback();
 				throw $e;
 			}
-			
+
 			return null;
 		}
 		else # invalid
@@ -373,7 +373,7 @@ class Model_User
 			return $errors;
 		}
 	}
-	
+
 	/**
 	 * @param array fields
 	 * @return \app\Validator|null
@@ -381,19 +381,19 @@ class Model_User
 	static function change_passwords_check($user, array $fields)
 	{
 		$user_config = \app\CFS::config('model/User');
-		
+
 		return \app\Validator::instance($user_config['errors'], $fields)
 			->rule('password', 'not_empty')
 			->rule('verifier', 'equal_to', $fields['password']);
 	}
-	
+
 	/**
-	 * @return \app\Validator|null 
+	 * @return \app\Validator|null
 	 */
 	static function change_password($user, array $fields)
 	{
 		$errors = static::change_passwords_check($user, $fields)->errors();
-		
+
 		if (empty($errors))
 		{
 			\app\SQL::begin();
@@ -401,15 +401,15 @@ class Model_User
 			{
 				// compute password
 				$password = static::generate_password($fields['password']);
-				
+
 				$new_fields = array
 					(
 						'pwdverifier' => $password['verifier'],
 						'pwdsalt' => $password['salt'],
 					);
-				
+
 				static::updater($user, $new_fields, ['pwdverifier', 'pwdsalt'])->run();
-				
+
 				\app\SQL::commit();
 			}
 			catch (\Exception $e)
@@ -417,7 +417,7 @@ class Model_User
 				\app\SQL::rollback();
 				throw $e;
 			}
-			
+
 			return null;
 		}
 		else # invalid
@@ -425,9 +425,9 @@ class Model_User
 			return $errors;
 		}
 	}
-	
+
 	/**
-	 * @param array fields 
+	 * @param array fields
 	 */
 	static function recompute_password(array $fields)
 	{
@@ -459,10 +459,10 @@ class Model_User
 			->set(':ipaddress', \app\Server::client_ip())
 			->execute();
 	}
-	
+
 	/**
 	 * @param array (identity, password)
-	 * @return boolean 
+	 * @return boolean
 	 */
 	static function signin_check(array $fields = null)
 	{
@@ -471,16 +471,16 @@ class Model_User
 		{
 			return null;
 		}
-		
+
 		// got required fields
 		if ( ! isset($fields['identity']) || ! isset($fields['password']))
 		{
 			return null;
 		}
-		
+
 		// load configuration
 		$security = \app\CFS::config('mjolnir/security');
-		
+
 		if (\strpos($fields['identity'], '@') === false)
 		{
 			$user = static::statement
@@ -517,42 +517,64 @@ class Model_User
 				->execute()
 				->fetch_array();
 		}
-		
+
 		if ( ! $user)
 		{
 			return null;
 		}
 
+		// check password attempts
+		if ($user['pwdattempts'] > 5)
+		{
+			if ( ! isset($fields['recaptcha_challenge_field'], $fields['recaptcha_response_field']))
+			{
+				return null;
+			}
+
+			// we've got 5 failed attempts, captcha checks must pass to avoid
+			// bots brute forcing their way in
+			$captcha_check = \app\ReCaptcha::verify
+				(
+					$fields['recaptcha_challenge_field'],
+					$fields['recaptcha_response_field']
+				);
+
+			if ( ! $captcha_check)
+			{
+				return null;
+			}
+		}
+
 		$pwdsalt = $user['pwdsalt'];
-		
+
 		// generate password salt and hash
 		$apilocked_password = \hash_hmac
 			(
-				$security['hash']['algorythm'], 
-				$fields['password'], 
-				$security['keys']['apikey'], 
+				$security['hash']['algorythm'],
+				$fields['password'],
+				$security['keys']['apikey'],
 				false
 			);
-		
+
 		$pwdverifier = \hash_hmac
 			(
-				$security['hash']['algorythm'], 
-				$apilocked_password, 
-				$pwdsalt, 
+				$security['hash']['algorythm'],
+				$apilocked_password,
+				$pwdsalt,
 				false
 			);
-		
+
 		// verify
 		if ($pwdverifier !== $user['pwdverifier'])
 		{
 			return null;
 		}
-		
+
 		// all tests passed
 		return $user['id'];
 	}
-	
-		
+
+
 	/**
 	 * @param int user_id
 	 * @return string or null
@@ -561,7 +583,7 @@ class Model_User
 	{
 		$cachekey = __METHOD__.'_ID'.$user_id;
 		$roles = \app\Stash::get($cachekey, null);
-		
+
 		if ($roles === null)
 		{
 			$roles = static::statement
@@ -580,10 +602,10 @@ class Model_User
 				->set_int(':user', $user_id)
 				->execute()
 				->fetch_all();
-			
+
 			\app\Stash::store($cachekey, $roles, \app\Stash::tags('User', ['change']));
 		}
-		
+
 		if (empty($roles))
 		{
 			return null; # no role
@@ -593,7 +615,7 @@ class Model_User
 			return $roles[0]['role'];
 		}
 	}
-	
+
 	/**
 	 * @param string email
 	 * @return int id
@@ -602,7 +624,7 @@ class Model_User
 	{
 		$cachekey = __METHOD__.'_'.\sha1($email);
 		$result = \app\Stash::get($cachekey, null);
-		
+
 		if ($result === null)
 		{
 			$result = static::statement
@@ -619,15 +641,15 @@ class Model_User
 				->set(':email', $email)
 				->execute()
 				->fetch_all();
-			
+
 			\app\Stash::store
 				(
-					$cachekey, 
-					$result, 
+					$cachekey,
+					$result,
 					\app\Stash::tags('User', ['change'])
 				);
 		}
-		
+
 		if ( ! empty($result))
 		{
 			return $result[0]['id'];
@@ -640,19 +662,19 @@ class Model_User
 
 	// -------------------------------------------------------------------------
 	// Validator Helpers
-	
+
 	/**
 	 * Confirm password matches user.
-	 * 
+	 *
 	 * @param string password
 	 * @param int user
-	 * @return boolean 
+	 * @return boolean
 	 */
 	static function matching_password($password, $user)
 	{
 		$cachekey = __METHOD__.'__userinfo_'.$user;
 		$user_info = \app\Stash::get($cachekey, null);
-		
+
 		if ($user_info === null)
 		{
 			// get user data
@@ -671,18 +693,18 @@ class Model_User
 				->set_int(':user', $user)
 				->execute()
 				->fetch_array();
-			
+
 			\app\Stash::store
 				(
-					$cachekey, 
-					$user_info, 
+					$cachekey,
+					$user_info,
 					\app\Stash::tags('User', ['change'])
 				);
 		}
-		
+
 		// compute verifier for given password
 		$test = static::generate_password($password, $user_info['salt']);
-		
+
 		if ($test['verifier'] == $user_info['verifier'])
 		{
 			return true;
@@ -695,7 +717,7 @@ class Model_User
 
 	// -------------------------------------------------------------------------
 	// Helpers
-	
+
 	/**
 	 * @param string password (plaintext)
 	 * @param string salt
@@ -704,10 +726,10 @@ class Model_User
 	protected static function generate_password($password_text, $salt = null)
 	{
 		$password = [];
-		
+
 		// load configuration
 		$security = \app\CFS::config('mjolnir/security');
-		
+
 		// generate password salt and hash
 		if ($salt === null)
 		{
@@ -719,9 +741,9 @@ class Model_User
 		}
 		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password_text, $security['keys']['apikey'], false);
 		$password['verifier'] = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $password['salt'], false);
-		
+
 		return $password;
 	}
-	
+
 } # class
 

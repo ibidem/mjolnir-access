@@ -73,6 +73,39 @@ class Controller_A12n extends \app\Controller_Web
 		$this->body($view->render());
 	}
 
+	function signup_view($errors = null)
+	{
+		$relay = $this->layer->get_relay();
+
+		if ($relay['target'] === null)
+		{
+			\app\GlobalEvent::fire('webpage:title', 'Sign Up');
+
+			$view = \app\ThemeView::instance()
+				->theme('mjolnir/access')
+				->style('default')
+				->target('signup')
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
+		}
+		else # target provided
+		{
+			$view = \app\ThemeView::instance()
+				->target($relay['target'])
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
+		}
+
+		if ($errors !== null)
+		{
+			$view->errors($errors);
+		}
+
+		$this->body($view->render());
+	}
+
 	/**
 	 * @throws \app\Exception_NotAllowed
 	 */
@@ -98,7 +131,7 @@ class Controller_A12n extends \app\Controller_Web
 				{
 					\app\A12n::signin($user, \app\Model_User::role_for($user));
 				}
-				
+
 				// redirect
 				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
@@ -116,17 +149,17 @@ class Controller_A12n extends \app\Controller_Web
 			else # signin failed
 			{
 				$error_message = 'Sign in failed. We do not know of any such user or email.';
-				
+
 				if (\app\Model_User::exists($_POST['identity'], 'email'))
 				{
 					$error_message = 'Sign in failed. You\'ve typed an incorect password, please try again.';
 				}
-				
+
 				if (\app\Model_User::exists($_POST['identity'], 'nickname'))
 				{
 					$error_message = 'Sign in failed. You\'ve typed an incorect password, please try again.';
 				}
-				
+
 				$errors = array
 					(
 						'\mjolnir\a12n\signin' => array
@@ -142,8 +175,6 @@ class Controller_A12n extends \app\Controller_Web
 		{
 			$this->signin_view();
 		}
-
-
 	}
 
 	function action_signout()
@@ -153,5 +184,27 @@ class Controller_A12n extends \app\Controller_Web
 		\app\Server::redirect($a12n_config['signout.redirect']);
 	}
 
+	function action_signup()
+	{
+		if (\app\Server::request_method() === 'POST')
+		{
+			$_POST['role'] = \app\Model_Role::role_by_name('member');
+
+			$errors = \app\Model_User::push($_POST);
+
+			if ($errors === null)
+			{
+				\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
+			}
+			else # got errors
+			{
+				$this->signup_view($errors);
+			}
+		}
+		else # user === null
+		{
+			$this->signup_view();
+		}
+	}
 
 } # class

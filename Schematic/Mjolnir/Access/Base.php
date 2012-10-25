@@ -13,20 +13,20 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 	{
 		\app\Schematic::destroy
 			(
-				\app\Model_User::table(), 
-				\app\Model_Role::table(), 
+				\app\Model_User::table(),
+				\app\Model_Role::table(),
 				\app\Model_User::assoc_roles(),
 				\app\Model_ProfileField::table(),
 				\app\Model_ProfileField::assoc_user(),
 				\app\Model_UserSigninToken::table()
 			);
 	}
-	
+
 	function up()
 	{
 		\app\Schematic::table
 			(
-				\app\Model_User::table(), 
+				\app\Model_User::table(),
 				'
 					`id`          :key_primary,
 					`nickname`    :username,
@@ -35,38 +35,39 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`pwdverifier` :secure_hash DEFAULT NULL,
 					`pwdsalt`     :secure_hash DEFAULT NULL,
 					`pwddate`     :datetime_optional DEFAULT NULL,
+					`pwdattempts` int,
 					`provider`    :titlename DEFAULT NULL,
 					`timestamp`   :timestamp,
-					
+
 					PRIMARY KEY (`id`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
-				\app\Model_Role::table(), 
+				\app\Model_Role::table(),
 				'
 					`id`    :key_primary,
 					`title` :title NOT NULL,
-					
+
 					PRIMARY KEY (`id`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
 				\app\Model_User::assoc_roles(),
 				'
 					`user` :key_foreign NOT NULL,
 					`role` :key_foreign NOT NULL,
-					
+
 					KEY `user` (`user`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
-				\app\Model_ProfileField::table(), 
+				\app\Model_ProfileField::table(),
 				'
 					`id`       :key_primary,
 					`idx`      :counter DEFAULT 10,
@@ -74,36 +75,36 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`title`    :title NOT NULL,
 					`type`     :title NOT NULL,
 					`required` :boolean DEFAULT 0,
-					
+
 					PRIMARY KEY (`id`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
-				\app\Model_ProfileField::assoc_user(), 
+				\app\Model_ProfileField::assoc_user(),
 				'
 					`user`  :key_foreign NOT NULL,
 					`field` :key_foreign NOT NULL,
 					`value` :block,
-					
+
 					KEY `user` (`user`,`field`),
 					KEY `role` (`field`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
-				\app\Model_UserSigninToken::table(), 
+				\app\Model_UserSigninToken::table(),
 				'
 					`user`  :key_foreign NOT NULL,
 					`token` varchar(512),
-					
+
 					UNIQUE `user` (`user`)
 				'
 			);
 	}
-	
+
 	function bind()
 	{
 		\app\Schematic::constraints
@@ -126,7 +127,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				]
 			);
 	}
-	
+
 	function build()
 	{
 		// inject roles
@@ -147,7 +148,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				)
 				->bind_int(':id', $id)
 				->bind(':title', $title);
-			
+
 			\app\SQL::begin();
 			try
 			{
@@ -157,7 +158,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					$id = $desired_id;
 					$statement->execute();
 				}
-				
+
 				\app\SQL::commit();
 			}
 			catch(\Exception $e)

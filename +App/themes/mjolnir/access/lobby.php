@@ -1,11 +1,13 @@
-<? 
-	namespace app; 
-	
+<?
+	namespace app;
+
+	/* @var $theme ThemeView */
+
 	$user = \app\Model_User::entry(\app\A12n::instance()->user());
 ?>
 
-<section class="content"> 
-	
+<div class="content">
+
 	<div class="row">
 		<div class="span12">
 			<? if (empty($user['provider'])): ?>
@@ -15,5 +17,5 @@
 			<? endif; ?>
 		</div>
 	</div>
-	
-</section>
+
+</div>
