@@ -25,6 +25,8 @@ class Model_Role extends \mjolnir\access\Model_Role {}
 class Model_User extends \mjolnir\access\Model_User {}
 class Model_UserSigninToken extends \mjolnir\access\Model_UserSigninToken { /** @return \mjolnir\access\Model_UserSigninToken */ static function instance() { return parent::instance(); } }
 class Protocol extends \mjolnir\access\Protocol { /** @return \mjolnir\access\Protocol */ static function instance() { return parent::instance(); } }
-class ReCaptcha extends \mjolnir\access\ReCaptcha { /** @return \mjolnir\access\ReCaptcha */ static function instance() { return parent::instance(); } }
+class ReCaptcha extends \mjolnir\access\ReCaptcha {}
 class Schematic_Mjolnir_Access_Base extends \mjolnir\access\Schematic_Mjolnir_Access_Base { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Base */ static function instance() { return parent::instance(); } }
 class Schematic_Mjolnir_Access_Oauth extends \mjolnir\access\Schematic_Mjolnir_Access_Oauth { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Oauth */ static function instance() { return parent::instance(); } }
+trait Trait_Controller_MjolnirSignin { use \mjolnir\access\Trait_Controller_MjolnirSignin; }
+trait Trait_Controller_MjolnirSignup { use \mjolnir\access\Trait_Controller_MjolnirSignup; }

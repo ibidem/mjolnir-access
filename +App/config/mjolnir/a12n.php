@@ -22,7 +22,7 @@ $validator_unkeyed = function ($config)
 
 return array
 	(
-		'signout.redirect' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
+		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
 	
