@@ -17,6 +17,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		
 		if($session_state && ($session_state === $state)) 
 		{
+			\app\Session::set('facebook_state', null);
 			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 			
 			$appid = $provider['AppID'];
@@ -64,11 +65,16 @@ class AccessChannel_Facebook extends \app\Instantiatable
 	{
 		if (self::$signin_url === null)
 		{
+			$state = \app\Session::get('facebook_state', null);
+			
+			if ($state === null)
+			{
+				$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
+			}
 		
 			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
 			$appid = $provider['AppID'];
 			$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
-			$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 	
 			self::$signin_url = 'https://www.facebook.com/dialog/oauth?client_id='
