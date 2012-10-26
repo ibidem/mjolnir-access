@@ -6,5 +6,6 @@
 		'mjolnir.access.signin.remember_me' => 'Private area. Remember Me...',
 		'mjolnir.access.signin.not_yet_a_member' => 'Not yet a member?',
 		'mjolnir.access.signin.dont_remember_me' => 'Public area; temporary login.',
-		'mjolnir.access.stats.title' => 'Welcome back!'
+		'mjolnir.access.stats.title' => 'Welcome back!',
+		'mjolnir.access.signup.title' => 'Sign Up',
 	);

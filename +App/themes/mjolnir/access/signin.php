@@ -1,5 +1,7 @@
 <?
 	namespace app;
+
+	/* @var $theme ThemeView */
 ?>
 
 <div class="row">
@@ -10,7 +12,7 @@
 </div>
 <div class="row">
 
-	<section class="span6">
+	<div class="span6">
 
 		<div class="well">
 			<br/>
@@ -21,22 +23,20 @@
 
 		</div>
 
+	</div>
 
-
-	</section>
-
-	<section class="span3">
+	<div class="span3">
 
 		<?= \app\View::instance()
 			->file('mjolnir/access/auth')
 			->variable('context', $context)
 			->render() ?>
 
-	</section>
+	</div>
 
 
 	<? if (\app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])): ?>
-		<section class="span3">
+		<div class="span3">
 			<p>
 				<span class="label label-info"><?= Lang::tr('Help') ?></span>
 				<small>
@@ -46,6 +46,6 @@
 					</a>
 				</small>
 			</p>
-		</section>
+		</div>
 	<? endif; ?>
 </div>

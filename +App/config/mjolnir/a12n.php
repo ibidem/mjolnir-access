@@ -1,6 +1,6 @@
 <?php namespace app;
 
-$validator_keyed = function ($config) 
+$validator_keyed = function ($config)
 	{
 		if ($config['key'] === null)
 		{
@@ -14,8 +14,8 @@ $validator_keyed = function ($config)
 
 		return null;
 	};
-	
-$validator_unkeyed = function ($config) 
+
+$validator_unkeyed = function ($config)
 	{
 		return null;
 	};
@@ -23,6 +23,15 @@ $validator_unkeyed = function ($config)
 return array
 	(
 		'signout.redirect' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
+
+		'recaptcha' => array
+			(
+				'public_key' => null,
+				'private_key' => null,
+				
+			),
+	
+		'catptcha.signin.attempts' => 5,
 	
 		'signin' => array
 			(
@@ -30,28 +39,28 @@ return array
 					(
 						'AppID' => null,
 						'AppSecret' => null,
-					
+
 						'slug' => 'facebook',
 						'icon' => 'facebook',
 						'title' => 'Facebook',
 						'register' => '\mjolnir\access\channel\facebook',
-					
+
 						'validator' => function ($config) {
 							if ($config['AppID'] === null)
 							{
 								return 'App ID is missing.';
 							}
-							
+
 							if ($config['AppSecret'] === null)
 							{
 								return 'App Secret is missing.';
 							}
-							
+
 							return null;
 						}
-						
+
 					),
-				
+
 				'twitter' => array
 					(
 						'slug' => 'twitter',
@@ -63,7 +72,7 @@ return array
 						'hybridauth.key' => 'Twitter',
 						'validator' => $validator_keyed,
 					),
-				
+
 				'google' => array
 					(
 						'slug' => 'google',
@@ -75,7 +84,7 @@ return array
 						'hybridauth.key' => 'Google',
 						'validator' => $validator_keyed,
 					),
-				
+
 				'yahoo' => array
 					(
 						'slug' => 'yahoo',
@@ -87,7 +96,7 @@ return array
 						'hybridauth.key' => 'Yahoo',
 						'validator' => $validator_unkeyed,
 					),
-				
+
 				'aol' => array
 					(
 						'slug' => 'aol',
@@ -99,7 +108,7 @@ return array
 						'hybridauth.key' => 'AOL',
 						'validator' => $validator_unkeyed,
 					),
-							
+
 				'myspace' => array
 					(
 						'slug' => 'myspace',
@@ -111,7 +120,7 @@ return array
 						'hybridauth.key' => 'MySpace',
 						'validator' => $validator_keyed,
 					),
-							
+
 				'linkedin' => array
 					(
 						'slug' => 'linkedin',
@@ -123,7 +132,7 @@ return array
 						'hybridauth.key' => 'LinkedIn',
 						'validator' => $validator_keyed,
 					),
-							
+
 				'foursquare' => array
 					(
 						'slug' => 'foursquare',
@@ -135,7 +144,7 @@ return array
 						'hybridauth.key' => 'Foursquare',
 						'validator' => $validator_keyed,
 					),
-							
+
 				'live' => array
 					(
 						'slug' => 'live',
@@ -147,7 +156,7 @@ return array
 						'hybridauth.key' => 'Live',
 						'validator' => $validator_keyed,
 					),
-							
+
 				'github' => array
 					(
 						'slug' => 'github',
@@ -159,7 +168,7 @@ return array
 						'hybridauth.key' => 'Github',
 						'validator' => $validator_keyed,
 					),
-							
+
 				'lastfm' => array
 					(
 						'slug' => 'lastfm',

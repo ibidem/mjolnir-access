@@ -201,6 +201,9 @@ class A12n extends \app\Instantiatable
 	 */
 	static function signin($user, $role)
 	{
+		// reset signin attempts
+		\app\Model_User::reset_pwdattempts($user);
+		
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
 	}
