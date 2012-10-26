@@ -100,6 +100,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if ($errors !== null)
 		{
+			$errors = ['\mjolnir\a12n\signup' => $errors];
 			$view->errors($errors);
 		}
 
@@ -189,19 +190,41 @@ class Controller_A12n extends \app\Controller_Web
 		if (\app\Server::request_method() === 'POST')
 		{
 			$_POST['role'] = \app\Model_Role::role_by_name('member');
-
-			$errors = \app\Model_User::push($_POST);
-
-			if ($errors === null)
+			
+			// check recaptcha
+			$error = \app\ReCaptcha::verify
+				(
+					$_POST['recaptcha_challenge_field'], 
+					$_POST['recaptcha_response_field']
+				);
+			
+			if ($error !== null)
 			{
-				\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
-			}
-			else # got errors
-			{
+				$errors = \app\Model_User::check($_POST)->errors();
+				if ( ! isset($errors['form']))
+				{
+					$errors['form'] = [];
+				}
+				
+				$errors['form'][] = 'You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.';
+				
 				$this->signup_view($errors);
 			}
+			else # captcha test passed
+			{
+				$errors = \app\Model_User::push($_POST);
+
+				if ($errors === null)
+				{
+					\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']));
+				}
+				else # got errors
+				{
+					$this->signup_view($errors);
+				}
+			}
 		}
-		else # user === null
+		else # treat as GET
 		{
 			$this->signup_view();
 		}

@@ -29,9 +29,9 @@ class ReCaptcha
 	}
 
 	/**
-	 * Verify recaptcha is valid. Expects POST.
+	 * Verify recaptcha is valid.
 	 *
-	 * @return boolean
+	 * @return string or null on success
 	 */
 	static function verify($recaptcha_challenge_field, $recaptcha_response_field)
 	{
@@ -45,7 +45,14 @@ class ReCaptcha
 				$recaptcha_response_field
 			);
 
-		return $response->is_valid();
+		if ($response->is_valid)
+		{
+			return null;
+		}
+		else # error
+		{
+			return $response->error;
+		}
 	}
 
 } # class

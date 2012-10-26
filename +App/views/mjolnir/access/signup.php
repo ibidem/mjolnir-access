@@ -5,7 +5,7 @@
 
 	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
 
-	if (isset($errors) && isset($errors['\mjolnir\a12n\signup']))
+	if (isset($errors, $errors['\mjolnir\a12n\signup'], $errors['\mjolnir\a12n\signup']['form']))
 	{
 		$form_errors = $errors['\mjolnir\a12n\signup']['form'];
 		unset($errors['\mjolnir\a12n\signup']['form']);
