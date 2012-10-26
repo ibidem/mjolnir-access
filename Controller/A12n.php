@@ -54,6 +54,8 @@ class Controller_A12n extends \app\Controller_Web
 		{
 			$errors = ['form' => []];
 			
+			$a12n_config = \app\CFS::config('mjolnir/a12n');
+			
 			// got required fields
 			if ( ! isset($_POST['identity']) || ! isset($_POST['password']))
 			{
@@ -71,7 +73,7 @@ class Controller_A12n extends \app\Controller_Web
 			}
 
 			// check password attempts
-			if ($user['pwdattempts'] > 5)
+			if ($user['pwdattempts'] > $a12n_config['catptcha.signin.attempts'])
 			{
 				$_POST['show_captcha'] = true;
 				

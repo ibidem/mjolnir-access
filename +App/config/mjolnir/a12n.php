@@ -28,8 +28,11 @@ return array
 			(
 				'public_key' => null,
 				'private_key' => null,
+				
 			),
-
+	
+		'catptcha.signin.attempts' => 5,
+	
 		'signin' => array
 			(
 				'facebook' => array
