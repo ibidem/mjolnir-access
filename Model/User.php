@@ -193,6 +193,9 @@ class Model_User
 			->fetch_all();
 	}
 
+	/**
+	 * @return boolean
+	 */
 	protected static function nullentry_for_current_user( & $entry, $id)
 	{
 		return $entry === null
@@ -461,26 +464,10 @@ class Model_User
 	}
 
 	/**
-	 * @param array (identity, password)
-	 * @return boolean
+	 * @return array or null
 	 */
-	static function signin_check(array $fields = null)
+	static function detect_identity(array $fields)
 	{
-		// got fields?
-		if ( ! $fields)
-		{
-			return null;
-		}
-
-		// got required fields
-		if ( ! isset($fields['identity']) || ! isset($fields['password']))
-		{
-			return null;
-		}
-
-		// load configuration
-		$security = \app\CFS::config('mjolnir/security');
-
 		if (\strpos($fields['identity'], '@') === false)
 		{
 			$user = static::statement
@@ -517,63 +504,9 @@ class Model_User
 				->execute()
 				->fetch_array();
 		}
-
-		if ( ! $user)
-		{
-			return null;
-		}
-
-		// check password attempts
-		if ($user['pwdattempts'] > 5)
-		{
-			if ( ! isset($fields['recaptcha_challenge_field'], $fields['recaptcha_response_field']))
-			{
-				return null;
-			}
-
-			// we've got 5 failed attempts, captcha checks must pass to avoid
-			// bots brute forcing their way in
-			$captcha_check = \app\ReCaptcha::verify
-				(
-					$fields['recaptcha_challenge_field'],
-					$fields['recaptcha_response_field']
-				);
-
-			if ( ! $captcha_check)
-			{
-				return null;
-			}
-		}
-
-		$pwdsalt = $user['pwdsalt'];
-
-		// generate password salt and hash
-		$apilocked_password = \hash_hmac
-			(
-				$security['hash']['algorythm'],
-				$fields['password'],
-				$security['keys']['apikey'],
-				false
-			);
-
-		$pwdverifier = \hash_hmac
-			(
-				$security['hash']['algorythm'],
-				$apilocked_password,
-				$pwdsalt,
-				false
-			);
-
-		// verify
-		if ($pwdverifier !== $user['pwdverifier'])
-		{
-			return null;
-		}
-
-		// all tests passed
-		return $user['id'];
+		
+		return $user;
 	}
-
 
 	/**
 	 * @param int user_id
@@ -659,10 +592,49 @@ class Model_User
 			return null;
 		}
 	}
+	
+	// -------------------------------------------------------------------------
+	// etc
+	
+	/**
+	 * Password attempts are incremented by 1.
+	 */
+	static function bump_pwdattempts($user)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET pwdattempts = pwdattempts + 1
+					 WHERE id = :user
+				'
+			)
+			->set_int(':user', $user)
+			->execute();
+	}
+	
+	/**
+	 * Password attempts are reset to 0.
+	 */
+	static function reset_pwdattempts($user)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET pwdattempts = 0
+					 WHERE id = :user
+				'
+			)
+			->set_int(':user', $user)
+			->execute();
+	}
 
 	// -------------------------------------------------------------------------
 	// Validator Helpers
-
+	
 	/**
 	 * Confirm password matches user.
 	 *

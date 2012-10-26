@@ -2,8 +2,8 @@
 	namespace app;
 
 	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
-
-	if (isset($errors) && isset($errors['\mjolnir\a12n\signin']))
+	
+	if (isset($errors, $errors['\mjolnir\a12n\signin'], $errors['\mjolnir\a12n\signin']['form']))
 	{
 		$form_errors = $errors['\mjolnir\a12n\signin']['form'];
 		unset($errors['\mjolnir\a12n\signin']['form']);
@@ -28,9 +28,23 @@
 		<? endif; ?>
 
 		<?= $f->text(Lang::msg('mjolnir.access.signin.username_or_email'), 'identity')->attr('autofocus', 'autofocus') ?>
+		
 		<?= $f->password(Lang::tr('Password'), 'password') ?>
-		<?= $f->select(null, 'remember_me', [ Lang::msg('mjolnir.access.signin.remember_me') => 'on', Lang::msg('mjolnir.access.signin.dont_remember_me') => 'off' ])
+		
+		<?= $f->select
+			(
+				null, 
+				'remember_me', 
+				[ 
+					Lang::msg('mjolnir.access.signin.remember_me') => 'on', 
+					Lang::msg('mjolnir.access.signin.dont_remember_me') => 'off' 
+				]
+			)
 			->value('off') ?>
+		
+		<? if (isset($_POST, $_POST['show_captcha'])): ?>
+			<?= \app\ReCaptcha::html() ?>
+		<? endif; ?>
 
 		<div class="form-actions">
 			<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
