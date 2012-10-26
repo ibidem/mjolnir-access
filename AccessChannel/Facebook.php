@@ -45,7 +45,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 
 				\app\A12n::inferred_signin($user->username, $user->email, 'facebook');
 				
-				\app\Server::redirect(\app\URL::href('\mjolnir\access\a12n'));
+				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
 			}
 			else # error in `code` to `token` excahnge
 			{

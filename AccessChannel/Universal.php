@@ -74,10 +74,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 			
 			\app\A12n::inferred_signin($display_name, $email, $provider_name);
 			
-			\app\Server::redirect
-				(
-					\app\URL::href('\mjolnir\access\a12n')
-				);
+			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
 		}
 		catch (\app\Exception_NotApplicable $e)
 		{

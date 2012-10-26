@@ -24,11 +24,12 @@ return array
 	(
 		'signout.redirect' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 
+		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
+	
 		'recaptcha' => array
 			(
 				'public_key' => null,
 				'private_key' => null,
-				
 			),
 	
 		'catptcha.signin.attempts' => 5,
