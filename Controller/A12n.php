@@ -9,9 +9,9 @@
  */
 class Controller_A12n extends \app\Controller_Web
 {
-	use \app\Trait_Controller_MjolnirSingin;
-	use \app\Trait_Controller_MjolnirSingup;
-	
+	use \app\Trait_Controller_MjolnirSignin;
+	use \app\Trait_Controller_MjolnirSignup;
+
 	/**
 	 * @var string
 	 */
@@ -51,10 +51,10 @@ class Controller_A12n extends \app\Controller_Web
 					->render()
 			);
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// etc
-	
+
 	/**
 	 * Setup view used when signing in.
 	 */
