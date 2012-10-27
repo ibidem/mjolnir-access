@@ -28,25 +28,25 @@ class Controller_Access extends \app\Controller_Web
 		$provider = $this->params->get('provider', null);
 		if ($provider === null)
 		{
-			throw new \app\Exception_NotApplicable('Provider not specified.');
+			throw new \app\Exception('Provider not specified.');
 		}
-		
+
 		if ($provider == 'universal')
 		{
 			$id = $this->params->get('id', null);
 			if ($id === null)
 			{
-				throw new \app\Exception_NotApplicable('Provider id not specified.');
+				throw new \app\Exception('Provider id not specified.');
 			}
-			
+
 			// this hard coded security test is intentional
 			$register = \app\CFS::config('mjolnir/a12n')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				throw new \app\Exception_NotApplicable('Access Denied.');
-				\app\Log::message('sec error', 'Attempt to access unauthorized area.');
+				\app\Log::message('SecurityError', 'Attempt to access unauthorized area.', 'Security/');
 			}
-			
+
 			$channel_class = '\app\AccessChannel_Universal';
 			$c = $channel_class::instance();
 			$c->authorize($id);
@@ -58,15 +58,15 @@ class Controller_Access extends \app\Controller_Web
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				throw new \app\Exception_NotApplicable('Access Denied.');
-				\app\Log::message('sec error', 'Attempt to access unauthorized area.');
+				\app\Log::message('SecurityError', 'Attempt to access unauthorized area.', 'Security/');
 			}
-			
+
 			$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
 			$c = $channel_class::instance();
 			$c->authorize();
 		}
 	}
-	
+
 	/**
 	 * Action: endpoind for HybridAuth's protocol
 	 */
