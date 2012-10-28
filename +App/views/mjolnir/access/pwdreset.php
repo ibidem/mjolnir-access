@@ -58,7 +58,7 @@
 
 			<div class="form-actions">
 				<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
-					<i class="icon-signin"></i> <?= Lang::tr('Reset Password') ?>
+					<i class="icon-unlock"></i> <?= Lang::tr('Reset Password') ?>
 				</button>
 			</div>
 
