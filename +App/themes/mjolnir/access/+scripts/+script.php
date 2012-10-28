@@ -5,7 +5,7 @@
 		// set the script.root to '' (empty string) when writing (entirely) just
 		// plain old js files; and not compiling coffee scripts, etc
 		'script.root' => '',
-	
+
 		// will be included in all explicity targets; if a target needs to be
 		// script free then simply ommit it in the targets declaration bellow
 		'common' => array
@@ -28,6 +28,10 @@
 				'lobby' => array
 					(
 						// empty; loads common
+					),
+				'pwdreset' => array
+					(
+						// empty
 					),
 			),
 	);

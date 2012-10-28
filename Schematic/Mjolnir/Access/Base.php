@@ -32,10 +32,15 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`nickname`    :username,
 					`email`       :email,
 					`ipaddress`   :ipaddress,
+					
 					`pwdverifier` :secure_hash DEFAULT NULL,
 					`pwdsalt`     :secure_hash DEFAULT NULL,
 					`pwddate`     :datetime_optional DEFAULT NULL,
 					`pwdattempts` int DEFAULT 0,
+
+					`pwdreset`         :secure_hash DEFAULT NULL,
+					`pwdreset_expires` :datetime_optional DEFAULT NULL,
+
 					`provider`    :titlename DEFAULT NULL,
 					`timestamp`   :timestamp,
 

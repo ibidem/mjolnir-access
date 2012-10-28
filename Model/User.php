@@ -21,7 +21,12 @@ class Model_User
 	/**
 	 * @var array
 	 */
-	protected static $field_format = [];
+	protected static $field_format = array
+		(
+			'pwddate' => 'datetime',
+			'pwdreset_expires' => 'datetime',
+			'timestamp' => 'datetime',
+		);
 
 	/**
 	 * @var string
@@ -504,7 +509,7 @@ class Model_User
 				->execute()
 				->fetch_array();
 		}
-		
+
 		return $user;
 	}
 
@@ -592,10 +597,10 @@ class Model_User
 			return null;
 		}
 	}
-	
+
 	// -------------------------------------------------------------------------
 	// etc
-	
+
 	/**
 	 * Password attempts are incremented by 1.
 	 */
@@ -613,7 +618,7 @@ class Model_User
 			->set_int(':user', $user)
 			->execute();
 	}
-	
+
 	/**
 	 * Password attempts are reset to 0.
 	 */
@@ -632,9 +637,93 @@ class Model_User
 			->execute();
 	}
 
+	/**
+	 * @return string new password reset key
+	 */
+	static function pwdreset_key($user)
+	{
+		$user_entry = static::entry($user);
+
+		// load configuration
+		$security = \app\CFS::config('mjolnir/security');
+
+		// pwdreset_key = hash(hash(salt, nans), apikey)
+		$key = \hash_hmac($security['hash']['algorythm'], \uniqid(\rand(), true), $user_entry['pwdsalt'], false);
+		$pwdreset_key = \hash_hmac($security['hash']['algorythm'], $key, $security['keys']['apikey'], false);
+
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET `pwdreset` = :key,
+					       `pwdreset_expires` = :expires
+					 WHERE `id` = :user
+				'
+			)
+			->set_int(':user', $user)
+			->set_date(':expires', \date_create('+3 hours')->format('Y-m-d H:i:s'))
+			->set(':key', $pwdreset_key)
+			->execute();
+
+		// make sure to clear cache
+		\app\Stash::purge(\app\Stash::tags('User', ['change']));
+
+		return $pwdreset_key;
+	}
+
+	/**
+	 * @return array of errors or null on success
+	 */
+	static function pwdreset($user, $key, $password)
+	{
+		$entry = static::entry($user);
+
+		// verify pwd reset key and that reset has not expired
+		if ($entry['pwdreset'] !== $key || $entry['pwdreset_expires'] < \date_create('now'))
+		{
+			// this has dual meaning: either times up or the key was already used
+			// meaning should likely be clear regardless of translation 
+			return [ \app\Lang::tr('Password reset has expired.') ];
+		}
+
+		// load configuration
+		$security = \app\CFS::config('mjolnir/security');
+		// generate password salt and hash
+		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
+		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password, $security['keys']['apikey'], false);
+		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, false);
+		// update
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET pwdverifier = :pwdverifier,
+					       pwdsalt = :pwdsalt,
+					       pwddate = :pwddate,
+					       ipaddress = :ipaddress,
+						   pwdreset = NULL,
+						   pwdreset_expires = NULL
+					 WHERE id = :user
+				',
+				'mysql'
+			)
+			->set(':pwdverifier', $pwdverifier)
+			->set(':pwdsalt', $pwdsalt)
+			->set(':pwddate', \date('Y-m-d H:i:s'))
+			->set_int(':user', $entry['id'])
+			->set(':ipaddress', \app\Server::client_ip())
+			->execute();
+
+		\app\Stash::purge(\app\Stash::tags('User', ['change']));
+
+		return null;
+	}
+
 	// -------------------------------------------------------------------------
 	// Validator Helpers
-	
+
 	/**
 	 * Confirm password matches user.
 	 *

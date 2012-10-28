@@ -29,10 +29,13 @@
 			</div>
 		<? endif; ?>
 
+		<?= $f->text(Lang::tr('Name'), 'nickname')
+			->attr('autofocus', 'autofocus') ?>
 
-		<?= $f->text(Lang::tr('Name'), 'nickname')->attr('autofocus', 'autofocus') ?>
 		<?= $f->text(Lang::tr('Email'), 'email') ?>
+
 		<?= $f->password(Lang::tr('Password'), 'password') ?>
+
 		<?= $f->password(Lang::tr('Password (again)'), 'verifier') ?>
 
 		<hr/>
@@ -45,3 +48,5 @@
 			</button>
 		</div>
 	</fieldset>
+
+<?= $f->close() ?>

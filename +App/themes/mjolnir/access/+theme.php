@@ -5,43 +5,49 @@
 			(
 				'lobby' => array
 					(
-						'components/base', 
+						'components/base',
 						'lobby'
 					),
-			
+
 				'signin' => array
 					(
-						'components/base', 
+						'components/base',
 						'signin'
 					),
-			
+
 				'signup' => array
 					(
-						'components/base', 
+						'components/base',
 						'signup'
 					),
-			
+
+				'pwdreset' => array
+					(
+						'components/base',
+						'pwdreset'
+					),
+
 			//// Exceptions ////////////////////////////////////////////////////
-			
+
 				'exception-NotFound' => array
 					(
 						'components/errors/base',
-						'errors/not-found' 
+						'errors/not-found'
 					),
 				'exception-NotAllowed' => array
 					(
 						'components/errors/base',
-						'errors/not-allowed' 
+						'errors/not-allowed'
 					),
 				'exception-NotApplicable' => array
 					(
 						'components/errors/base',
-						'errors/not-applicable' 
+						'errors/not-applicable'
 					),
 				'exception-Unknown' => array
 					(
 						'components/errors/base',
-						'errors/unknown' 
+						'errors/unknown'
 					),
 			),
 	);

@@ -2,8 +2,6 @@
 	namespace app;
 
 	/* @var $theme ThemeView */
-
-	// \app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])
 ?>
 
 <div class="row">
@@ -35,7 +33,6 @@
 			->render() ?>
 
 	</div>
-
 
 	<? if ($context->can_signup()): ?>
 		<div class="span3">

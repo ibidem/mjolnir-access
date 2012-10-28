@@ -28,5 +28,6 @@ class Protocol extends \mjolnir\access\Protocol { /** @return \mjolnir\access\Pr
 class ReCaptcha extends \mjolnir\access\ReCaptcha {}
 class Schematic_Mjolnir_Access_Base extends \mjolnir\access\Schematic_Mjolnir_Access_Base { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Base */ static function instance() { return parent::instance(); } }
 class Schematic_Mjolnir_Access_Oauth extends \mjolnir\access\Schematic_Mjolnir_Access_Oauth { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Oauth */ static function instance() { return parent::instance(); } }
+trait Trait_Controller_MjolnirPwdReset { use \mjolnir\access\Trait_Controller_MjolnirPwdReset; }
 trait Trait_Controller_MjolnirSignin { use \mjolnir\access\Trait_Controller_MjolnirSignin; }
 trait Trait_Controller_MjolnirSignup { use \mjolnir\access\Trait_Controller_MjolnirSignup; }

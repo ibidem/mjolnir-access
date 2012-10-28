@@ -2,7 +2,7 @@
 	namespace app;
 
 	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
-	
+
 	if (isset($errors, $errors['\mjolnir\a12n\signin'], $errors['\mjolnir\a12n\signin']['form']))
 	{
 		$form_errors = $errors['\mjolnir\a12n\signin']['form'];
@@ -27,21 +27,22 @@
 			</div>
 		<? endif; ?>
 
-		<?= $f->text(Lang::msg('mjolnir.access.signin.username_or_email'), 'identity')->attr('autofocus', 'autofocus') ?>
-		
+		<?= $f->text(Lang::msg('mjolnir.access.signin.username_or_email'), 'identity')
+			->attr('autofocus', 'autofocus') ?>
+
 		<?= $f->password(Lang::tr('Password'), 'password') ?>
-		
+
 		<?= $f->select
 			(
-				null, 
-				'remember_me', 
-				[ 
-					Lang::msg('mjolnir.access.signin.remember_me') => 'on', 
-					Lang::msg('mjolnir.access.signin.dont_remember_me') => 'off' 
+				null,
+				'remember_me',
+				[
+					Lang::msg('mjolnir.access.signin.remember_me') => 'on',
+					Lang::msg('mjolnir.access.signin.dont_remember_me') => 'off'
 				]
 			)
 			->value('off') ?>
-		
+
 		<? if (isset($_POST, $_POST['show_captcha'])): ?>
 			<?= \app\ReCaptcha::html() ?>
 		<? endif; ?>
@@ -50,7 +51,13 @@
 			<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
 				<i class="icon-signin"></i> <?= Lang::tr('Sign In') ?>
 			</button>
+
+			&nbsp;
+			<a href="<?= \app\CFS::config('mjolnir/a12n')['default.pwdreset'] ?>">
+				<?= \app\Lang::tr('Reset Password') ?>
+			</a>
 		</div>
+
 	</fieldset>
 
 <?= $f->close() ?>

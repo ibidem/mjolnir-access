@@ -34,6 +34,8 @@ class Context_Access extends \app\Instantiatable
 
 	/**
 	 * Check if current user (ie. guest) can use signup feature.
+	 *
+	 * @return boolean
 	 */
 	function can_signup()
 	{

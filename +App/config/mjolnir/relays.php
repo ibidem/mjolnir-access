@@ -5,7 +5,7 @@
 				'matcher' => \app\Route_Pattern::instance()
 					->standard
 						(
-							'access/channel/<provider>(/<id>)', 
+							'access/channel/<provider>(/<id>)',
 							[
 								'provider' => '[a-zA-Z0-9]+',
 								'id' => '[a-zA-Z0-9]+',
@@ -19,7 +19,7 @@
 				'control' => '\mjolnir\access\Controller_Access',
 				'context' => '\mjolnir\access\Context_Access',
 			),
-	
+
 		'\mjolnir\access\endpoint' => array
 			(
 				'matcher' => \app\Route_Pattern::instance()
@@ -32,15 +32,15 @@
 				'control' => '\mjolnir\access\Controller_Access',
 				'context' => '\mjolnir\access\Context_Access',
 			),
-	
+
 		'\mjolnir\access\a12n' => array
 			(
 				'matcher' => \app\Route_Pattern::instance()
 					->standard
 						(
-							'access(/<action>)', 
+							'access(/<action>)',
 							[
-								'action' => '(signin|signout|signup|lobby)'
+								'action' => '(signin|signout|signup|lobby|pwdreset)'
 							]
 						),
 				'enabled' => false,

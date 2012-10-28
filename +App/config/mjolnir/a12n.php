@@ -24,6 +24,8 @@ return array
 	(
 		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 
+		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset']),
+
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
 
 		'recaptcha' => array
