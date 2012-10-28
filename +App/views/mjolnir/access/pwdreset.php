@@ -18,7 +18,7 @@
 
 <? else: # pwdreset form ?>
 
-	<?= $f = Form::i('twitter.general', $route_matcher->url(['action' => 'pwdreset']))
+	<?= $f = Form::i('twitter.general', \app\CFS::config('mjolnir/a12n')['default.pwdreset'])
 		->errors($errors['\mjolnir\a12n\pwdreset'])
 		->classes(['marginless'])
 		->secure() ?>
