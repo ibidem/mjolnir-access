@@ -14,17 +14,22 @@ trait Trait_Controller_MjolnirSignup
 	 */
 	function action_signup()
 	{
+		if ( ! \app\CFS::config('mjolnir/a12n')['standard.signup'])
+		{
+			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+		}
+
 		if (\app\Server::request_method() === 'POST')
 		{
 			$_POST['role'] = \app\Model_Role::role_by_name('member');
-			
+
 			// check recaptcha
 			$error = \app\ReCaptcha::verify
 				(
-					$_POST['recaptcha_challenge_field'], 
+					$_POST['recaptcha_challenge_field'],
 					$_POST['recaptcha_response_field']
 				);
-			
+
 			if ($error !== null)
 			{
 				$errors = \app\Model_User::check($_POST)->errors();
@@ -32,9 +37,9 @@ trait Trait_Controller_MjolnirSignup
 				{
 					$errors['form'] = [];
 				}
-				
+
 				$errors['form'][] = 'You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.';
-				
+
 				$this->signup_view($errors);
 			}
 			else # captcha test passed

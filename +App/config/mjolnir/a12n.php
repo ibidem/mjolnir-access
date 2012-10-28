@@ -25,15 +25,17 @@ return array
 		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
-	
+
 		'recaptcha' => array
 			(
 				'public_key' => null,
 				'private_key' => null,
 			),
-	
+
 		'catptcha.signin.attempts' => 5,
-	
+
+		'standard.signup' => false, # true = enabled, false = disabled
+
 		'signin' => array
 			(
 				'facebook' => array

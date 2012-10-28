@@ -9,11 +9,14 @@
  */
 class Context_Access extends \app\Instantiatable
 {
+	/**
+	 * @return array list of open authentication providers
+	 */
 	function authorized_a12n_providers()
 	{
 		// get all supported providers
 		$providers = \app\CFS::config('mjolnir/a12n')['signin'];
-		
+
 		// filter to enabled providers
 		$enabled_providers = [];
 		foreach ($providers as $provider)
@@ -25,8 +28,17 @@ class Context_Access extends \app\Instantiatable
 				$enabled_providers[] = $provider;
 			}
 		}
-		
+
 		return $enabled_providers;
+	}
+
+	/**
+	 * Check if current user (ie. guest) can use signup feature.
+	 */
+	function can_signup()
+	{
+		return \app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])
+			&& \app\CFS::config('mjolnir/a12n')['standard.signup'];
 	}
 
 } # class
