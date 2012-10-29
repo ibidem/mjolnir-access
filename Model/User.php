@@ -258,7 +258,7 @@ class Model_User
 				$entry['timestamp'] = new \DateTime($entry['timestamp']);
 			}
 
-			\app\Stash::set($stashkey, $entry, \app\Stash::tags(\get_called_class(), ['change']));
+			\app\Stash::store($stashkey, $entry, \app\Stash::tags(\get_called_class(), ['change']));
 		}
 
 		return $entry;
