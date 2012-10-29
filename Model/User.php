@@ -258,7 +258,7 @@ class Model_User
 				$entry['timestamp'] = new \DateTime($entry['timestamp']);
 			}
 
-			\app\Stash::set($stashkey, $entry);
+			\app\Stash::set($stashkey, $entry, \app\Stash::tags(\get_called_class(), ['change']));
 		}
 
 		return $entry;
@@ -667,7 +667,7 @@ class Model_User
 			->execute();
 
 		// make sure to clear cache
-		\app\Stash::purge(\app\Stash::tags('User', ['change']));
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 
 		return $pwdreset_key;
 	}
