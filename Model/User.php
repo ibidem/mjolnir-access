@@ -680,11 +680,13 @@ class Model_User
 		$entry = static::entry($user);
 
 		// verify pwd reset key and that reset has not expired
-		if ($entry['pwdreset'] !== $key || $entry['pwdreset_expires'] < \date_create('now'))
+		if ($entry['pwdreset'] !== $key)
 		{
-			// this has dual meaning: either times up or the key was already used
-			// meaning should likely be clear regardless of translation 
-			return [ \app\Lang::tr('Password reset has expired.') ];
+			return [ \app\Lang::tr('Invalid password reset key. Please repeat the process.') ];
+		}
+		elseif ($entry['pwdreset_expires'] < \date_create('now'))
+		{
+			return [ \app\Lang::tr('Password reset has expired. Please repeat the process.') ];
 		}
 
 		// load configuration

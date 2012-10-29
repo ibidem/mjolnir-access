@@ -28,7 +28,7 @@ trait Trait_Controller_MjolnirPwdReset
 				}
 				else # got errors
 				{
-					$_POST['notice'] = \app\Lang::msg('mjolnir.access.pwdreset.failure');
+					$_POST['notice'] = $errors[0];
 					$this->pwdreset_view();
 				}
 			}
@@ -53,7 +53,7 @@ trait Trait_Controller_MjolnirPwdReset
 
 					if ($user === null)
 					{
-						$errors = [ 'identity' => [\app\Lang::tr('No such user / email.')] ];
+						$errors = [ 'identity' => [\app\Lang::tr('We do not know of any such user or email.')] ];
 					}
 
 					if ($errors === null)
