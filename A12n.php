@@ -250,7 +250,7 @@ class A12n extends \app\Instantiatable
 				else # no frontend
 				{
 					// redirect to access page
-					\app\Server::redirect(\app\URL::href('\mjolnir\access'));
+					\app\Server::redirect(\app\CFS::config('mjolnir/access')['default.signin']);
 				}
 			}
 			catch (\Exception $e)
