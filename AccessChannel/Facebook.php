@@ -49,13 +49,13 @@ class AccessChannel_Facebook extends \app\Instantiatable
 			}
 			else # error in `code` to `token` excahnge
 			{
-				\app\Log::message('Feedback', 'Facebook: "'.$response['message'].'" Code: '.$response['code'], 'oauth');
+				\mjolnir\quicklog('Feedback', 'Facebook: "'.$response['message'].'" Code: '.$response['code'], 'oauth');
 				throw new \app\Exception_NotAllowed('An error has occured during the access flow, please try again.');
 			}
 		}
 		else # invalid state, assume CSFR
 		{
-			\app\Log::message('Alert', 'Possible CSFR attempt.', '+security');
+			\mjolnir\quicklog('Alert', 'Possible CSFR attempt.', '+security');
 			throw new \app\Exception_NotAllowed('Potential CSFR attack detected. Access denied.');
 		}
 	}

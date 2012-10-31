@@ -43,8 +43,8 @@ class Controller_Access extends \app\Controller_Web
 			$register = \app\CFS::config('mjolnir/a12n')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
+				\mjolnir\quicklog('SecurityError', 'Attempt to access unauthorized area.', '+security/');
 				throw new \app\Exception_NotApplicable('Access Denied.');
-				\app\Log::message('SecurityError', 'Attempt to access unauthorized area.', 'Security/');
 			}
 
 			$channel_class = '\app\AccessChannel_Universal';
@@ -57,8 +57,8 @@ class Controller_Access extends \app\Controller_Web
 			$register = \app\CFS::config('mjolnir/a12n')['signin'][$provider]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
+				\mjolnir\quicklog('SecurityError', 'Attempt to access unauthorized area.', '+security/');
 				throw new \app\Exception_NotApplicable('Access Denied.');
-				\app\Log::message('SecurityError', 'Attempt to access unauthorized area.', 'Security/');
 			}
 
 			$channel_class = '\app\AccessChannel_'.\ucfirst($provider);
