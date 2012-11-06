@@ -77,8 +77,10 @@ class AccessChannel_Facebook extends \app\Instantiatable
 			$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 	
+			$permissions = \app\CFS::config('mjolnir/a12n')['signin']['facebook']['scope'];
+			
 			self::$signin_url = 'https://www.facebook.com/dialog/oauth?client_id='
-				. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope=email&amp;state='.$state;
+				. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope='.$permissions.'&amp;state='.$state;
 		}
 		
 		return self::$signin_url;

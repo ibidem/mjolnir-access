@@ -49,6 +49,8 @@ return array
 						'icon' => 'facebook',
 						'title' => 'Facebook',
 						'register' => '\mjolnir\access\channel\facebook',
+					
+						'scope' => 'email',
 
 						'validator' => function ($config) {
 							if ($config['AppID'] === null)
