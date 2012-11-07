@@ -211,7 +211,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @param 
 	 */
-	static function inferred_signin($identification, $email, $provider)
+	static function inferred_signin($identification, $email, $provider, $attributes = null)
 	{
 		// check if user exists
 		$user = \app\Model_User::for_email($email);
