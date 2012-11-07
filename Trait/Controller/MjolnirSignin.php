@@ -36,7 +36,7 @@ trait Trait_Controller_MjolnirSignin
 
 			if ( ! $user)
 			{
-				$errors['form'][] = 'Sign in failed. We do not know of any such user or email.';
+				$errors['form'][] = \app\Lang::tr('Sign in failed. We do not know of any such user or email.');
 				$this->signin_view($errors); 
 				return;
 			}
@@ -68,7 +68,7 @@ trait Trait_Controller_MjolnirSignin
 						$errors['form'] = [];
 					}
 
-					$errors['form'][] = 'You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.';
+					$errors['form'][] = \app\Lang::tr('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
 					\app\Model_User::bump_pwdattempts($user['id']);
 					
 					$this->signin_view($errors); 
@@ -101,7 +101,7 @@ trait Trait_Controller_MjolnirSignin
 			// verify
 			if ($pwdverifier !== $user['pwdverifier'])
 			{
-				$errors['password'] = ['The password you have entered is inccorect.'];
+				$errors['password'] = [\app\Lang::tr('The password you have entered is incorect.')];
 				\app\Model_User::bump_pwdattempts($user['id']);
 				$this->signin_view($errors); 
 				return;
