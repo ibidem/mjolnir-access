@@ -48,7 +48,8 @@ trait Trait_Controller_MjolnirSignin
 				
 				if ( ! isset($_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']))
 				{	
-					$errors['form'][] = 'You\'ve performed '.$user['pwdattempts'].' unnsuccesful password attempts; <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check is required.';
+					
+					$errors['form'][] = Lang::msg('login.passwordattemps', [':number' => $user['pwdattempts']]);
 					$this->signin_view($errors);
 					return;
 				}
