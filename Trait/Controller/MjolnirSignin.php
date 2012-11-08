@@ -121,7 +121,17 @@ trait Trait_Controller_MjolnirSignin
 			$base_config = \app\CFS::config('mjolnir/base');
 			if (isset($a12n_config['signin.redirect']))
 			{
-				\app\Server::redirect($a12n_config['signin.redirect']);
+				if (\is_string($a12n_config['signin.redirect']))
+				{
+					\app\Server::redirect($a12n_config['signin.redirect']);
+				}
+				else # assume function
+				{
+					\app\Server::redirect
+						(
+							$a12n_config['signin.redirect']($user)
+						);
+				}
 			}
 			else if (isset($base_config['site:frontend']))
 			{
