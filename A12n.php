@@ -64,8 +64,10 @@ class A12n extends \app\Instantiatable
 
 		\app\Model_UserSigninToken::refresh($user, $token);
 
-		\app\Cookie::set('user', $user);
-		\app\Cookie::set('accesstoken', $token);
+		$timeout = \app\CFS::config('mjolnir/a12n')['remember_me.timeout'];
+		
+		\app\Cookie::set('user', $user, $timeout);
+		\app\Cookie::set('accesstoken', $token, $timeout);
 	}
 	
 	/**
@@ -211,7 +213,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * @param 
 	 */
-	static function inferred_signin($identification, $email, $provider)
+	static function inferred_signin($identification, $email, $provider, $attributes = null)
 	{
 		// check if user exists
 		$user = \app\Model_User::for_email($email);
