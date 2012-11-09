@@ -39,7 +39,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				\parse_str($response, $params);
 
 				$graph_url = "https://graph.facebook.com/me?access_token=" 
-				  . $params['access_token'] . '&fields=picture.type(large)';
+				  . $params['access_token'] . '&fields=id,name,picture.type(large),first_name,last_name,gender,locale,username,link';
 
 				$user = \json_decode(\file_get_contents($graph_url));
 				\var_dump($user);die;
