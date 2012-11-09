@@ -58,6 +58,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 			throw new \app\Exception_NotAllowed('Potential CSFR attack detected. Access denied.');
 		}
 	}
+	
 	private static $signin_url = null;
 	
 	static function signin_url()
