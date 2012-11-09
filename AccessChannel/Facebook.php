@@ -39,10 +39,9 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				\parse_str($response, $params);
 
 				$graph_url = "https://graph.facebook.com/me?access_token=" 
-				  . $params['access_token'];
+				  . $params['access_token'] . '&fields=id,name,picture.type(large),first_name,last_name,gender,locale,username,link,email,verified';
 
 				$user = \json_decode(\file_get_contents($graph_url));
-
 				\app\A12n::inferred_signin($user->username, $user->email, 'facebook', $user);
 				
 				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
