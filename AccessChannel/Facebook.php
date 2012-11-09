@@ -54,7 +54,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		}
 		else # invalid state, assume CSFR
 		{
-			\mjolnir\log('Alert', 'Possible CSFR attempt.', '+security');
+			\mjolnir\log('Alert', 'Possible CSFR attempt.', '+Security/');
 			throw new \app\Exception_NotAllowed('Potential CSFR attack detected. Access denied.');
 		}
 	}

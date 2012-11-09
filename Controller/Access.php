@@ -43,7 +43,7 @@ class Controller_Access extends \app\Controller_Web
 			$register = \app\CFS::config('mjolnir/a12n')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
-				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+security/');
+				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
 				throw new \app\Exception_NotApplicable('Access Denied.');
 			}
 
@@ -57,7 +57,7 @@ class Controller_Access extends \app\Controller_Web
 			$register = \app\CFS::config('mjolnir/a12n')['signin'][$provider]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
-				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+security/');
+				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
 				throw new \app\Exception_NotApplicable('Access Denied.');
 			}
 
