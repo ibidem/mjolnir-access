@@ -2,8 +2,8 @@
 
 \app\Session::start();
 
-require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Auth.php';
-require_once \app\CFS::dir('vendor/hybridauth').'/Hybrid/Endpoint.php';
+require_once \app\CFS::dir('vendor/hybridauth').'Hybrid/Auth.php';
+require_once \app\CFS::dir('vendor/hybridauth').'Hybrid/Endpoint.php';
 
 /**
  * @package    mjolnir
