@@ -688,6 +688,8 @@ class Model_User
 		{
 			return [ \app\Lang::tr('Password reset has expired. Please repeat the process.') ];
 		}
+		
+		\var_dump($entry); die;
 
 		// load configuration
 		$security = \app\CFS::config('mjolnir/security');
