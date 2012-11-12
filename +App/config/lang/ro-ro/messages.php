@@ -27,7 +27,7 @@
 			{
 				return \strtr
 					(
-						"Dacă nu ați cerut o resetare de parola va rugam să ignorați acest email.\n\n".
+						"Dacă nu ați cerut o resetare de parola va rugăm să ignorați acest email.\n\n".
 						"Pentru a continua cu procesul de resetare a parolei vizitați pagina următoare:\n :url",
 						$in
 					);
