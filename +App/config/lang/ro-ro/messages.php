@@ -22,7 +22,7 @@
 		'mjolnir.access.pwdreset.failure'
 			=> 'Procesul de resetare a eșuat. Vă rugăm încercați să resetați din nou de la început.',
 		'mjolnir.access.pwdreset.finished'
-			=> 'Parola dumeneavoastră a fost resetată.',
+			=> 'Parola dumneavoastră a fost resetată. Vă rugăm să vă logați folosind formularul de login.',
 		'mjolnir.access.pwdreset.password_reset_url' => function ($in)
 			{
 				return \strtr
