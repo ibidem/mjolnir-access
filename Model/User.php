@@ -684,7 +684,7 @@ class Model_User
 		{
 			return [ \app\Lang::tr('Invalid password reset key. Please repeat the process.') ];
 		}
-		elseif (\strtotime($entry['pwdreset_expires']) < \time())
+		elseif ($entry['pwdreset_expires'] < \date_create('now'))
 		{
 			return [ \app\Lang::tr('Password reset has expired. Please repeat the process.') ];
 		}
