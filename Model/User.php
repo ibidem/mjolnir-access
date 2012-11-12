@@ -12,6 +12,7 @@ class Model_User
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Utilities;
 	use \app\Trait_Model_Collection;
+	use \app\Trait_Model_SecurityToken;
 
 	/**
 	 * @var string
@@ -62,6 +63,7 @@ class Model_User
 		$user_config = \app\CFS::config('model/User');
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
+			->test('email', ':valid', \app\Email::valid($fields['email']))
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
@@ -478,6 +480,7 @@ class Model_User
 						  FROM :table
 						 WHERE nickname = :nickname
 						   AND provider IS NULL
+						   AND `locked` = FALSE
 						 LIMIT 1
 					',
 					'mysql'
@@ -496,6 +499,7 @@ class Model_User
 						  FROM :table
 						 WHERE email = :email
 						   AND provider IS NULL
+						   AND `locked` = FALSE
 						 LIMIT 1
 					',
 					'mysql'
@@ -567,6 +571,7 @@ class Model_User
 						SELECT id
 						  FROM :table
 						 WHERE email = :email
+						   AND `loacked` = FALSE
 						 LIMIT 1
 					',
 					'mysql'
@@ -596,6 +601,27 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// etc
 
+	/**
+	 * Lock account, prevent access to it. Inspection functions will still work
+	 * but authorization functions will ignore the account.
+	 */
+	static function lock($user_id)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET `locked` = TRUE
+					 WHERE `id` = :id
+				'
+			)
+			->set_int(':id', $user_id)
+			->execute();
+		
+		\app\Stash::purge(\app\Stash::tags(__CLASS__, ['change']));
+	}
+	
 	/**
 	 * Password attempts are incremented by 1.
 	 */

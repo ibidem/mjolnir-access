@@ -11,16 +11,25 @@
 		
 		<ul class="nav nav-pills">
 			<li><a href="<?= $landing_page ?>"><i class="icon-home"></i> <?= $base_config['site:title'] ?></a></li>
+			
 			<? if (\app\Access::can('\mjolnir\backend')): ?>
 				<li><a href="<?= \app\URL::route('\mjolnir\backend')->url() ?>"><i class="icon-briefcase"></i> <?= Lang::tr('Backend') ?></a></li>
 			<? endif; ?>
+			
 			<? if (\app\A12n::instance()->role() !== \app\A12n::guest()): ?>
+				<li>
+					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'emails']) ?>">
+						<i class="icon-key"></i> <?= Lang::tr('Emails') ?>
+					</a>
+				</li>
+				
 				<li>
 					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signout']) ?>">
 						<i class="icon-signout"></i> <?= Lang::tr('Sign Out') ?>
 					</a>
 				</li>
 			<? endif; ?>
+				
 		</ul>
 		
 		<hr/>

@@ -18,7 +18,9 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				\app\Model_User::assoc_roles(),
 				\app\Model_ProfileField::table(),
 				\app\Model_ProfileField::assoc_user(),
-				\app\Model_UserSigninToken::table()
+				\app\Model_UserSigninToken::table(),
+				\app\Model_SecurityToken::table(),
+				\app\Model_SecondaryEmail::table()
 			);
 	}
 
@@ -29,6 +31,8 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				\app\Model_User::table(),
 				'
 					`id`          :key_primary,
+					`token`       :key_foreign,
+
 					`nickname`    :username,
 					`email`       :email,
 					`ipaddress`   :ipaddress,
@@ -38,11 +42,12 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`pwddate`     :datetime_optional DEFAULT NULL,
 					`pwdattempts` int DEFAULT 0,
 
-					`pwdreset`         :secure_hash DEFAULT NULL,
-					`pwdreset_expires` :datetime_optional DEFAULT NULL,
-
 					`provider`    :titlename DEFAULT NULL,
 					`timestamp`   :timestamp,
+					`locked`      :boolean DEFAULT FALSE,
+					
+					`pwdreset`         :secure_hash DEFAULT NULL,
+					`pwdreset_expires` :datetime_optional DEFAULT NULL,
 
 					PRIMARY KEY (`id`)
 				'
@@ -103,9 +108,34 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				\app\Model_UserSigninToken::table(),
 				'
 					`user`  :key_foreign NOT NULL,
-					`token` varchar(512),
+					`token` :secure_hash,
 
 					UNIQUE `user` (`user`)
+				'
+			);
+		
+		\app\Schematic::table
+			(
+				\app\Model_SecurityToken::table(),
+				'
+					`id`      :key_primary,
+					`token`   :secure_hash,
+					`purpose` varchar(255),
+					`expires` :datetime_required,
+					
+					PRIMARY KEY (`id`)
+				'
+			);
+		
+		\app\Schematic::table
+			(
+				\app\Model_SecondaryEmail::table(),
+				'
+					`id`    :key_primary,
+					`user`  :key_foreign,
+					`email` :email,
+					
+					PRIMARY KEY (`id`)
 				'
 			);
 	}
@@ -117,17 +147,22 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				[
 					\app\Model_User::assoc_roles() => array
 						(
-							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
-							'role' => array(\app\Model_Role::table(), 'CASCADE', 'CASCADE'),
+							'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
+							'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],
+							'token' => [ \app\Model_SecurityToken::table(), 'CASCADE', 'CASCADE' ],
 						),
 					\app\Model_ProfileField::assoc_user() => array
 						(
-							'field' => array(\app\Model_ProfileField::table(), 'CASCADE', 'CASCADE'),
-							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
+							'field' => [ \app\Model_ProfileField::table(), 'CASCADE', 'CASCADE' ],
+							'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
 						),
 					\app\Model_UserSigninToken::table() => array
 						(
-							'user' => array(\app\Model_User::table(), 'CASCADE', 'CASCADE'),
+							'user' => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
+						),
+					\app\Model_SecondaryEmail::table() => array
+						(
+							'user' => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
 						),
 				]
 			);

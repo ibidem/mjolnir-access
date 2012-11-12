@@ -32,5 +32,17 @@
 						$in
 					);
 			},
-
+					
+		'\mjolnir\access\user:emails:title' => 'Emails',
+					
+		'\mjolnir\access\user:emails:intructions' => 
+'To sign in via additional providers please link the emails by which those 
+providers know you as to this account. If an account already exists on our end 
+with the given email it will be locked and using said email will sign you into 
+this account.',
+					
+		'\mjolnir\access\user:emails:no_secondary_emails' 
+			=> 'You currently have no secondary emails.',
+					
+			
 	);

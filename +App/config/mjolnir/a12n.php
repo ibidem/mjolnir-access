@@ -27,7 +27,9 @@ return array
 		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 
 		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset']),
-
+	
+		'default.emails_manager' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'emails']),
+	
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
 
 		'recaptcha' => array
