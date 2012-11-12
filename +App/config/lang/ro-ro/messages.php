@@ -18,7 +18,7 @@
 
 		'mjolnir.access.pwdreset.title' => 'Resetare Parolă',
 		'mjolnir.access.pwdreset.success'
-			=> 'Instrucțiuni suplimentare au fost trimise la adresa dumeneavoastră de email.',
+			=> '<b>Instrucțiuni suplimentare</b> au fost trimise la adresa dumneavoastră de email. Vă rugăm să verificați și <b>secțiunea Spam</b> a căsuței de email.',
 		'mjolnir.access.pwdreset.failure'
 			=> 'Procesul de resetare a eșuat. Vă rugăm încercați să resetați din nou de la început.',
 		'mjolnir.access.pwdreset.finished'
