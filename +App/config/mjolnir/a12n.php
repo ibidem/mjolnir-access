@@ -68,7 +68,9 @@ return array
 							}
 
 							return null;
-						}
+						},
+						
+						'session.token.name' => 'tkbf',
 
 					),
 
