@@ -66,13 +66,13 @@ class Model_SecurityToken
 				__METHOD__,
 				'
 					DELETE FROM :table
-					 WHERE expires > NOW()
+					 WHERE expires < NOW()
 				'
 			)
 			->execute();
 		
 		// clear cache
-		\app\Stash::purge(\app\Stash::tags(__CLASS__, ['change']));
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
 	
 } # class

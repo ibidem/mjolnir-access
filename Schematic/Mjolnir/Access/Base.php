@@ -145,11 +145,14 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 		\app\Schematic::constraints
 			(
 				[
+					\app\Model_User::table() => array
+						(
+							'token' => [ \app\Model_SecurityToken::table(), 'SET NULL', 'CASCADE' ],
+						),
 					\app\Model_User::assoc_roles() => array
 						(
 							'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
-							'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],
-							'token' => [ \app\Model_SecurityToken::table(), 'CASCADE', 'CASCADE' ],
+							'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],							
 						),
 					\app\Model_ProfileField::assoc_user() => array
 						(

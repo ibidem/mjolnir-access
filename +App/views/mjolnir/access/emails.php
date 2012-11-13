@@ -6,14 +6,16 @@
 	$h = isset($h) ? $h : H::up();
 	$h1 = $h;
 	$h2 = H::up($h1);
+	
+	$email_manager = \app\CFS::config('mjolnir/a12n')['default.emails_manager'];
 ?>
 
-<?= $f = Form::i('twitter.general', \app\CFS::config('mjolnir/a12n')['default.emails_manager'])
+<?= $f = Form::i('twitter.general', $email_manager)
 	->errors($errors['\mjolnir\access\A12n::update_mainemail']) ?>
 
 	<fieldset>
 		
-		<?= $f->hidden('action', 'change-main-email') ?>
+		<?= $f->hidden('action')->value('change-main-email') ?>
 		
 		<?= $f->composite
 			(
@@ -23,7 +25,8 @@
 				$f->submit(\app\Lang::tr('Update'))
 					->classes(['btn', 'btn-primary'])
 			)
-			->format('%1 %2') ?>
+			->format('%1 %2')
+			->help('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
 		
 	</fieldset>
 
@@ -37,8 +40,19 @@
 <? if (\count($secondary_emails) > 0): ?>
 	<<?= $h2 ?>><?= Lang::tr('Secondary Emails') ?></<?= $h2 ?>>
 
-	<table>
-		
+	<table class="table">
+		<? foreach ($secondary_emails as $secondary_email): ?>
+			<tr>
+				<td style="width: 1%;">
+					<?= $f = Form::i('twitter.general', $email_manager) ?>
+						<?= $f->hidden('id')->value($secondary_email['id']) ?>
+						<?= $f->hidden('action')->value('remove-secondary-email') ?>
+						<button type="submit" class="btn btn-warning btn-mini"><?= Lang::tr('Remove') ?></button>
+					<?= $f->close() ?>
+				</td>
+				<td><?= $secondary_email['email'] ?></td>
+			</tr>
+		<? endforeach; ?>
 	</table>
 <? else: # blank state ?>
 	<p class="alert alert-warning">
@@ -50,22 +64,31 @@
 
 <br/>
 
-<?= $f = Form::i('twitter.general', \app\CFS::config('mjolnir/a12n')['default.emails_manager'])
+<?= $f = Form::i('twitter.general', $email_manager)
 	->errors($errors['\mjolnir\access\A12n::update_mainemail']) ?>
 
 	<fieldset>
 
-		<?= $f->hidden('action', 'add-secondary-email') ?>
+		<?= $f->hidden('action')->value('add-secondary-email') ?>
 		
-		<?= $f->text('Email', 'email')
-			->help('<i class="icon-warning-sign"></i> If the email belongs to another account, that account will be locked.') ?>
-		
-		<div class="form-actions">
-			<button class="btn btn-primary" type="submit">
-				<?= Lang::tr('Send Authorization Code') ?>
-			</button>
-		</div>
+		<?= $f->composite
+			(
+				'Secondary Email',
+				$f->text(null, 'email')
+					->value($control->mainemail()),
+				$f->submit(Lang::tr('Send Authorization Code'))
+					->classes(['btn', 'btn-primary'])
+			)
+			->format('%1 %2')
+			->help('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
 		
 	</fieldset>
 	
 <?= $f->close() ?>
+
+<<?= $h2 ?>><?= Lang::tr('Link Account') ?></<?= $h2 ?>>
+
+<?= \app\View::instance()
+	->file('mjolnir/access/auth')
+	->variable('context', $context)
+	->render() ?>

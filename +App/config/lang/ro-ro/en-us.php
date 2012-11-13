@@ -15,4 +15,9 @@
 		'Password reset has expired. Please repeat the process.' => 'Linkul de resetare a parolei a expirat. Te rugăm să repeți procedura.',
 		'Invalid password reset key. Please repeat the process.' => 'Cheie de resetare a parolei nevalidă. Te rugăm să repeți procedura.',
 		'<b>Username</b> or <b>Email</b>' => '<b>Username</b> sau <b>Email</b>',
+	
+		'Your :provider account has been linked to your site account.' => function ($in)
+			{
+				return \strtr('Contul dumneavoastră de :provider a fost contectat de contul dumneavoastră de pe site.', $in);
+			}
 	);

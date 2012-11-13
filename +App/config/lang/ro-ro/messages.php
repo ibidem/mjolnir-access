@@ -32,4 +32,20 @@
 						$in
 					);
 			},
+					
+		'\mjolnir\access\user:emails:title' => 'Adrese de Email',
+					
+		'\mjolnir\access\user:emails:intructions' => 
+'Pentru a vă loga cu situri externe trebuie sa va conectați adresele de email
+prin care sunteți recunoscut pe siturile respective. Daca aveți deja alt cont
+la noi cu aceiasi adresă de email, contul respectiv va fi blocat și logarea prin
+emailul respectiv vă va redirecta către contul curent.',
+					
+		'\mjolnir\access\user:emails:no_secondary_emails' 
+			=> 'Nu aveți momentan nici un email suplimentar.',
+					
+		'mjolnir:email:visit_url_to_finish' => function ($in)
+			{
+				return \strtr('Va rugăm sa vizitați url-ul următor pentru a finaliza procesul:'."\n:url", $in);
+			}
 	);

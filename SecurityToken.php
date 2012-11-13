@@ -44,7 +44,7 @@ class SecurityToken
 	 * 
 	 * @return int token id
 	 */
-	static function make($purpose = 'mjolnir:universal', $expires = null, $key = null)
+	static function make($expires = null, $purpose = 'mjolnir:universal', $key = null)
 	{
 		// load configuration
 		$security = \app\CFS::config('mjolnir/security');
@@ -54,42 +54,113 @@ class SecurityToken
 			$expires = $security['tokens']['default.expires'];
 		}
 
+		$nans = \hash_hmac
+			(
+				$security['hash']['algorythm'], 
+				\uniqid(\rand(), true),
+				$security['keys']['apikey'], 
+				false
+			);
+		
 		if ($key !== null)
 		{
-			$nans = \hash_hmac($security['hash']['algorythm'], \uniqid(\rand(), true),$key, false);
+			$token = \hash_hmac
+				(
+					$security['hash']['algorythm'], 
+					$nans, 
+					$key, 
+					false
+				);
 		}
 		else # no key
 		{
-			$nans = \uniqid(\rand(), true);
+			$token = $nans;
 		}
 		
-		$token = \hash_hmac($security['hash']['algorythm'], $key, $security['keys']['apikey'], false);
-		
-		\app\Model_SecurityToken::push
+		// create token
+		$errors = \app\Model_SecurityToken::push
 			(
 				[
 					'purpose' => $purpose,
 					'token' => $token, 
-					'expires' => \make_date($expires)->format('Y-m-d H:i:s')
+					'expires' => \date_create($expires)->format('Y-m-d H:i:s')
 				]
 			);
+		
+		if ($errors !== null)
+		{
+			throw new \Exception('Failed to create security token.');
+		}
 		
 		$token_id = \app\Model_SecurityToken::last_inserted_id();
 		
 		// purge all expired tokens
 		\app\Model_SecurityToken::purge();
 		
-		return [$token, $token_id];
+		// return unkeyed token along with id
+		return [$nans, $token_id];
 	}
 	
-	static function validate($token, $id, $key = null)
-	{
-		if ($key === null)
+	/**
+	 * Checks token at specified id against test token, with given purpose and 
+	 * key; as explained in `SecurityToken::make`.
+	 * 
+	 * @return boolean
+	 */
+	static function confirm($token_id, $test_token, $purpose = 'mjolnir:universal', $key = null)
+	{	
+		// retrieve token at given key
+		$entry = \app\Model_SecurityToken::entry($token_id);
+		
+		// check if entry exists
+		if ($entry === null)
 		{
 			return false;
 		}
 		
-		// retrieve token at given key
+		// check purpose
+		if ($purpose !== $entry['purpose'])
+		{
+			return false;
+		}
+		
+		// check if token is not expired
+		if ($entry['expires'] < \date_create('now'))
+		{
+			return false;
+		}
+		
+		// load security configuration
+		$security = \app\CFS::config('mjolnir/security');
+		
+		// do we have key?
+		if ($key !== null)
+		{
+			$test_token = \hash_hmac
+				(
+					$security['hash']['algorythm'], 
+					$test_token, 
+					$key, 
+					false
+				);
+		}
+		
+		// check for token match
+		if ($test_token !== $entry['token'])
+		{
+			return false;
+		}
+		
+		// all tests passed
+		return true;
+	}
+	
+	/**
+	 * ...
+	 */
+	static function delete(array $tokens)
+	{
+		\app\Model_SecurityToken::delete($tokens);
 	}
 
 } # class

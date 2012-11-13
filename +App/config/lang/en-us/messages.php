@@ -44,5 +44,10 @@ this account.',
 		'\mjolnir\access\user:emails:no_secondary_emails' 
 			=> 'You currently have no secondary emails.',
 					
+		'mjolnir:email:visit_url_to_finish' => function ($in)
+			{
+				return \strtr('Please visit following url to complete the process:'."\n:url", $in);
+			}
 			
 	);
+	

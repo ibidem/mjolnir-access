@@ -103,7 +103,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', 'Sign Up');
+			\app\GlobalEvent::fire('webpage:title', 'Sign Up · Access');
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')
@@ -140,7 +140,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', 'Password Reset');
+			\app\GlobalEvent::fire('webpage:title', 'Password Reset · Access');
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')
@@ -177,7 +177,7 @@ class Controller_A12n extends \app\Controller_Web
 		
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', 'Providers');
+			\app\GlobalEvent::fire('webpage:title', \app\Lang::tr('Emails · Access'));
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')

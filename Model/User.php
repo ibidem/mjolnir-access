@@ -337,6 +337,10 @@ class Model_User
 	{
 		$fields['ipaddress'] = \app\Server::client_ip();
 		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
+		
+		// most providers are pretty bad at passing a sensible username; so we have
+		// to do some really burtish processing on it
+		$fields['nickname'] = \str_replace(' ', '-', \preg_replace('#[^-a-zA-Z0-9_ ]#', '', \trim($fields['nickname'])));
 
 		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
@@ -487,7 +491,7 @@ class Model_User
 				)
 				->bind(':nickname', $fields['identity'])
 				->execute()
-				->fetch_array();
+				->fetch_array(static::field_format());
 		}
 		else # email
 		{
@@ -506,7 +510,18 @@ class Model_User
 				)
 				->bind(':email', $fields['identity'])
 				->execute()
-				->fetch_array();
+				->fetch_array(static::field_format());
+			
+			if ($user === null)
+			{
+				// check secondary emails
+				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $fields['identity']]);
+				
+				if ($entry !== null)
+				{
+					$user = static::entry($entry['user']);
+				}
+			}
 		}
 
 		return $user;
@@ -561,7 +576,7 @@ class Model_User
 	{
 		$cachekey = __METHOD__.'_'.\sha1($email);
 		$result = \app\Stash::get($cachekey, null);
-
+		
 		if ($result === null)
 		{
 			$result = static::statement
@@ -571,7 +586,7 @@ class Model_User
 						SELECT id
 						  FROM :table
 						 WHERE email = :email
-						   AND `loacked` = FALSE
+						   AND `locked` = FALSE
 						 LIMIT 1
 					',
 					'mysql'
@@ -579,28 +594,151 @@ class Model_User
 				->set(':email', $email)
 				->execute()
 				->fetch_all();
+			
+			if (empty($result))
+			{
+				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $email]);
+				
+				if ($entry !== null)
+				{
+					$result = $entry['user'];
+				}
+				else # no secondary email match
+				{
+					$result = null;
+				}
+			}
+			else # not empty result
+			{
+				$result = $result[0]['id'];
+			}
 
 			\app\Stash::store
 				(
 					$cachekey,
 					$result,
-					\app\Stash::tags('User', ['change'])
+					\app\Stash::tags(\get_called_class(), ['change'])
 				);
 		}
-
-		if ( ! empty($result))
-		{
-			return $result[0]['id'];
-		}
-		else # empty resultset
-		{
-			return null;
-		}
+		
+		return $result;
 	}
 
 	// -------------------------------------------------------------------------
 	// etc
 
+	/**
+	 * Add secondary email. If a user with the same email already exists, the
+	 * account will be locked.
+	 */
+	static function add_secondary_email($user_id, $email)
+	{
+		static::autolock_for_email($email, $user_id);
+		
+		$entry = \app\Model_SecondaryEmail::find_entry
+			(
+				[
+					'user' => $user_id, 
+					'email' => $email
+				]
+			);
+		
+		// check if entry doesn't exist
+		if ($entry === null)
+		{
+			$errors = \app\Model_SecondaryEmail::push
+				(
+					[
+						'email' => $email,
+						'user' => $user_id,
+					]
+				);
+			
+			if ($errors !== null)
+			{
+				throw new \Exception('Failed to add secondary email.');
+			}
+		}
+	}
+	
+	/**
+	 * Changes the email for the current user. All other users with the same 
+	 * email will have their accounts locked.
+	 */
+	static function change_email($user_id, $email)
+	{
+		static::autolock_for_email($email, $user_id);
+		
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET `email` = :email
+					 WHERE `id` = :id
+				'
+			)
+			->set(':email', $email)
+			->set_int(':id', $user_id)
+			->execute();
+		
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+	}
+	
+	/**
+	 * If a user has the email as a main email or as a secondary email the 
+	 * account will be locked; the context is used to specify an exception user
+	 * for exception (errornous) input.
+	 */
+	protected static function autolock_for_email($email, $context = 0)
+	{
+		// search for main emails
+		$entries = static::statement
+			(
+				__METHOD__,
+				'
+					SELECT id
+					  FROM :table
+					 WHERE `email` = :email
+					   AND NOT id <=> :context
+					   AND `locked` = FALSE
+				'
+			)
+			->set(':email', $email)
+			->set_int(':context', $context)
+			->execute()
+			->fetch_all();
+		
+		foreach ($entries as $entry)
+		{
+			static::lock($entry['id']);
+		}
+		
+		// search for secondary emails
+		$secondary_emails = static::statement
+			(
+				__METHOD__,
+				'
+					SELECT id
+					  FROM `'.\app\Model_SecondaryEmail::table().'`
+					 WHERE `email` = :email
+					   AND NOT user <=> :context
+				'
+			)
+			->set(':email', $email)
+			->set_int(':context', $context)
+			->execute()
+			->fetch_all();
+		
+		foreach ($secondary_emails as $entry)
+		{
+			static::lock($entry['user']);
+		}
+		
+		// reset cache
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+	}
+	
 	/**
 	 * Lock account, prevent access to it. Inspection functions will still work
 	 * but authorization functions will ignore the account.
@@ -619,7 +757,10 @@ class Model_User
 			->set_int(':id', $user_id)
 			->execute();
 		
-		\app\Stash::purge(\app\Stash::tags(__CLASS__, ['change']));
+		// remove all associated secondary emails
+		\app\Model_SecondaryEmail::purge_for($user_id);
+		
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
 	
 	/**
