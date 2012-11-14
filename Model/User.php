@@ -245,7 +245,7 @@ class Model_User
 				)
 				->set_int(':id', $id)
 				->execute()
-				->fetch_array(static::$field_format);
+				->fetch_array(static::field_format());
 
 			if (static::nullentry_for_current_user($entry, $id))
 			{
