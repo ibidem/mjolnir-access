@@ -83,23 +83,38 @@ class AccessChannel_Universal extends \app\Instantiatable
 		catch (\Exception $e)
 		{
 			switch( $e->getCode() ){ 
-				case 0 : echo "Unspecified error."; break;
-				case 1 : echo "Hybridauth configuration error."; break;
-				case 2 : echo "Provider not properly configured."; break;
-				case 3 : echo "Unknown or disabled provider."; break;
-				case 4 : echo "Missing provider application credentials."; break;
-				case 5 : echo "Authentification failed. " 
+				case 0 : $message = "Unspecified error."; 
+						break;
+				case 1 : $message = "Hybridauth configuration error."; 
+						break;
+				case 2 : $message = "Provider not properly configured."; 
+						break;
+				case 3 : $message = "Unknown or disabled provider."; 
+						break;
+				case 4 : $message = "Missing provider application credentials."; 
+						break;
+				case 5 : $message = "Authentification failed. " 
 						  . "The user has canceled the authentication or the provider refused the connection."; 
 					   break;
-				case 6 : echo "User profile request failed. Most likely the user is not connected "
+				case 6 : $message = "User profile request failed. Most likely the user is not connected "
 						  . "to the provider and he should to authenticate again."; 
 					   $handler->logout();
 					   break;
-				case 7 : echo "User not connected to the provider."; 
+				case 7 : $message = "User not connected to the provider."; 
 					   $handler->logout();
 					   break;
-				case 8 : echo "Provider does not support this feature."; break;
-			} 
+				case 8 : $message = "Provider does not support this feature."; 
+					break;
+			}
+			
+			if (\app\Auth::role() === \app\A12n::guest())
+			{
+				throw new \Exception('AccessChannel: '.$message);
+			}
+			else # user is already signed in
+			{
+				\mjolnir\exception_handler($e);
+			}
 		}
 	}
 

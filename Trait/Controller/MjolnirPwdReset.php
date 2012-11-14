@@ -80,7 +80,7 @@ trait Trait_Controller_MjolnirPwdReset
 									'Errors/'
 								);
 
-							$this->pwdreset_view(['form' => [\app\Lang::tr('Failed to sent reset email to account address. Please try again later; if problem persists please contact us.')] ]);
+							$this->pwdreset_view(['form' => [\app\Lang::tr('Failed to send the reset email to account address. Please try again later; if problem persists please contact us.')] ]);
 						}
 						else # succesfully sent emails
 						{

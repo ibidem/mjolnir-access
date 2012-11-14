@@ -11,9 +11,25 @@
 		
 		<ul class="nav nav-pills">
 			<li><a href="<?= $landing_page ?>"><i class="icon-home"></i> <?= $base_config['site:title'] ?></a></li>
+		
+			<? if (\app\A12n::instance()->role() !== \app\A12n::guest()): ?>
+				<li>
+					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url([]) ?>">
+						<i class="icon-key"></i> <?= Lang::tr('Account') ?>
+					</a>
+				</li>
+				
+				<li>
+					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'emails']) ?>">
+						<i class="icon-envelope-alt"></i> <?= Lang::tr('Emails') ?>
+					</a>
+				</li>
+			<? endif; ?>
+				
 			<? if (\app\Access::can('\mjolnir\backend')): ?>
 				<li><a href="<?= \app\URL::route('\mjolnir\backend')->url() ?>"><i class="icon-briefcase"></i> <?= Lang::tr('Backend') ?></a></li>
 			<? endif; ?>
+				
 			<? if (\app\A12n::instance()->role() !== \app\A12n::guest()): ?>
 				<li>
 					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signout']) ?>">
@@ -21,9 +37,12 @@
 					</a>
 				</li>
 			<? endif; ?>
+
 		</ul>
 		
 		<hr/>
+		
+		<?= $theme->partial('components/announcements')->render() ?>
 		
 		<?= $view->render() ?>
 	</div>

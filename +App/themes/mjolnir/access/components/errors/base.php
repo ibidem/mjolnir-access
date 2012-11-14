@@ -16,6 +16,7 @@
 		<hr/>
 		
 		<div class="alert alert-error">
+			
 			<?= $view->render() ?>
 		</div>
 		

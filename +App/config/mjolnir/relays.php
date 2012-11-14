@@ -40,7 +40,7 @@
 						(
 							'access(/<action>)',
 							[
-								'action' => '(signin|signout|signup|lobby|pwdreset)'
+								'action' => '(signin|signout|signup|lobby|pwdreset|emails|add-email|update-mainemail)'
 							]
 						),
 				'enabled' => false,

@@ -211,20 +211,68 @@ class A12n extends \app\Instantiatable
 	}
 	
 	/**
-	 * @param 
+	 * Signs in user, or adds provider to current account.
+	 * 
+	 * Email is used when associating user to account. This function has 
+	 * additional parameters for use when overwriting it.
 	 */
 	static function inferred_signin($identification, $email, $provider, $attributes = null)
 	{
 		// check if user exists
 		$user = \app\Model_User::for_email($email);
+		
+		// handle logged in state
+		if (\app\Auth::role() !== \app\A12n::guest())
+		{
+			if ($user === \app\Auth::id())
+			{
+				// we don't need to do anything since the email is already 
+				// linked to this user
+				
+				return;
+			}
+			
+			\app\SQL::begin();
+			if ($user !== null && $user !== \app\Auth::id())
+			{
+				// close other account
+				\app\Model_User::lock($user);
+			}
+			
+			// add email to current user's secondary emails
+			$errors = \app\Model_SecondaryEmail::push
+				(
+					[
+						'email' => $email, 
+						'user' => \app\Auth::id()
+					]
+				);
+			
+			if ($errors !== null)
+			{
+				\app\SQL::rollback();
+				throw new \Exception('Failed to add secondary email ['.$email.'] to [user] '.\app\Auth::id());
+			}
+			else # success
+			{
+				\app\SQL::commit();
+				\app\Notice::make(\app\Lang::tr('Your :provider account has been linked to your site account.', [':provider' => $provider]))
+					->classes(['alert-info'])
+					->save();
+			}
+			
+			$user = \app\Model_User::entry(\app\Auth::id())['id'];
+		}
+		
+		// continue signin process
 		if ($user !== null)
 		{
 			\app\Session::set('user', $user);
 			\app\Session::set('role', \app\Model_User::role_for($user));
 		}
-		else
+		else # no user exists at the moment
 		{
-			// does not exist; auto-register
+			// auto-signup user
 			try
 			{
 				$default_role = \app\CFS::config('model/User')['signup']['role'];

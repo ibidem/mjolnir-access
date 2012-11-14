@@ -45,7 +45,7 @@
 
 			<? else: ?>
 
-				<?= $f->text(Lang::tr('<b>Name</b> or <b>Email</b>'), 'identity')
+				<?= $f->text(Lang::tr('<b>Username</b> or <b>Email</b>'), 'identity')
 					->attr('autofocus', 'autofocus') ?>
 
 				<div class="control-group">

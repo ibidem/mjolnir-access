@@ -34,6 +34,11 @@
 					(
 						// empty
 					),
+			
+				'emails' => array
+					(
+						// empty
+					),
 
 				'exception-NotFound' => array
 					(

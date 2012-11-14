@@ -31,7 +31,11 @@
 					),
 				'pwdreset' => array
 					(
-						// empty
+						// empty; loads common
+					),
+				'emails' => array
+					(
+						// empty; loads common
 					),
 			),
 	);

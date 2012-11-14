@@ -12,6 +12,7 @@ class Controller_A12n extends \app\Controller_Web
 	use \app\Trait_Controller_MjolnirSignin;
 	use \app\Trait_Controller_MjolnirSignup;
 	use \app\Trait_Controller_MjolnirPwdReset;
+	use \app\Trait_Controller_MjolnirEmails;
 
 	/**
 	 * @var string
@@ -102,7 +103,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', 'Sign Up');
+			\app\GlobalEvent::fire('webpage:title', 'Sign Up · Access');
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')
@@ -139,7 +140,7 @@ class Controller_A12n extends \app\Controller_Web
 
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', 'Password Reset');
+			\app\GlobalEvent::fire('webpage:title', 'Password Reset · Access');
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')
@@ -167,4 +168,41 @@ class Controller_A12n extends \app\Controller_Web
 		$this->body($view->render());
 	}
 
+	/**
+	 * Setup view used when setting up emails.
+	 */
+	function emails_view($errors = null)
+	{
+		$relay = $this->layer->get_relay();
+		
+		if ($relay['target'] === null)
+		{
+			\app\GlobalEvent::fire('webpage:title', \app\Lang::tr('Emails · Access'));
+
+			$view = \app\ThemeView::instance()
+				->theme('mjolnir/access')
+				->style('default')
+				->target('emails')
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
+		}
+		else # target provided
+		{
+			$view = \app\ThemeView::instance()
+				->target($relay['target'])
+				->layer($this->layer)
+				->context($relay['context']::instance())
+				->control($relay['control']::instance());
+		}
+
+		if ($errors !== null)
+		{
+			$errors = ['\mjolnir\a12n\emails' => $errors];
+			$view->errors($errors);
+		}
+
+		$this->body($view->render());
+	}
+	
 } # class

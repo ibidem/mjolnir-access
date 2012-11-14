@@ -26,6 +26,12 @@
 						'components/base',
 						'pwdreset'
 					),
+			
+				'emails' => array
+					(
+						'components/base',
+						'emails'
+					),
 
 			//// Exceptions ////////////////////////////////////////////////////
 
