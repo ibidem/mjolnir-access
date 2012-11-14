@@ -17,7 +17,7 @@ trait Trait_Controller_MjolnirSignin
 		if (\app\A12n::instance()->role() !== \app\A12n::guest())
 		{
 			$base_config = \app\CFS::config('mjolnir/base');
-			\app\Server::redirect($base_config['site:frontend']);			
+			\app\Server::redirect($base_config['site:frontend']);
 		}
 
 		if (\app\Server::request_method() === 'POST')

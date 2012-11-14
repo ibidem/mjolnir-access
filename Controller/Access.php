@@ -58,7 +58,7 @@ class Controller_Access extends \app\Controller_Web
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
-				throw new \app\Exception_NotApplicable('Access Denied.');
+				throw new \app\Exception('Access Denied. Provider is not enabled.');
 			}
 
 			$channel_class = '\app\AccessChannel_'.\ucfirst($provider);

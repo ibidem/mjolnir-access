@@ -233,7 +233,7 @@ class Model_ProfileField
 				)
 				->set_int(':user', $id)
 				->execute()
-				->fetch_all(static::$field_format);
+				->fetch_all(static::field_format());
 			
 			$profile_config = \app\CFS::config('mjolnir/profile-fieldtypes');
 			foreach ($result as & $field)
