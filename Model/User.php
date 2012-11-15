@@ -340,7 +340,7 @@ class Model_User
 		
 		// most providers are pretty bad at passing a sensible username; so we have
 		// to do some really burtish processing on it
-		$fields['nickname'] = \str_replace(' ', '-', \preg_replace('#[^-a-zA-Z0-9_ ]#', '', \trim($fields['nickname'])));
+		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
 
 		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
