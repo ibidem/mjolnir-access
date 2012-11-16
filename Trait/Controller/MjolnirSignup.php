@@ -48,6 +48,7 @@ trait Trait_Controller_MjolnirSignup
 
 				if ($errors === null)
 				{
+					\app\Session::set('notice', \app\Lang::msg('signup.success'));
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
 				else # got errors
