@@ -64,9 +64,12 @@ trait Trait_Controller_MjolnirSignup
 		}
 	}
 	
+	/**
+	 * Hook; called on succesful signup.
+	 */
 	function signup_success()
 	{
-	    #overwrite to do something
+	    // overwrite hook
 	}
 
 } # trait
