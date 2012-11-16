@@ -48,7 +48,7 @@ trait Trait_Controller_MjolnirSignup
 
 				if ($errors === null)
 				{
-					$this->signup_succces();
+					$this->signup_success();
 					
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
