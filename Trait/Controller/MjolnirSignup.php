@@ -38,7 +38,7 @@ trait Trait_Controller_MjolnirSignup
 					$errors['form'] = [];
 				}
 
-				$errors['form'][] = 'You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.';
+				$errors['form'][] = \app\Lang::tr('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
 
 				$this->signup_view($errors);
 			}
