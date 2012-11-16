@@ -74,8 +74,7 @@
 		<?= $f->composite
 			(
 				'Secondary Email',
-				$f->text(null, 'email')
-					->value($control->mainemail()),
+				$f->text(null, 'email'),
 				$f->submit(Lang::tr('Send Authorization Code'))
 					->classes(['btn', 'btn-primary'])
 			)
