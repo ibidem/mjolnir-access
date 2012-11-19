@@ -84,7 +84,13 @@ trait Trait_Controller_MjolnirPwdReset
 						}
 						else # succesfully sent emails
 						{
-							$_POST['notice'] = \app\Lang::msg('mjolnir.access.pwdreset.success');
+							//pass the email obfuscated with *
+							$email_front = \substr($user['email'],0, \strpos($user['email'], '@'));
+							$length = \strlen($email_front);
+							$masked_email = $email_front[0].$email_front[1]. str_repeat('*', $length - 4) . $email_front[$length-2].$email_front[$length-1];
+							$masked_email .= \substr($user['email'],\strpos($user['email'], '@'));
+							
+							$_POST['notice'] = \app\Lang::msg('mjolnir.access.pwdreset.success', ['masked_email' => $masked_email]);
 							$this->pwdreset_view();
 						}
 					}

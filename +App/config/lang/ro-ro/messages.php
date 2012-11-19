@@ -17,8 +17,10 @@
 		'mjolnir.access.signup.title' => 'Inregistrare',
 
 		'mjolnir.access.pwdreset.title' => 'Resetare Parolă',
-		'mjolnir.access.pwdreset.success'
-			=> '<b>Instrucțiuni suplimentare</b> au fost trimise la adresa dumneavoastră de email. Vă rugăm să verificați și <b>secțiunea Spam</b> a căsuței de email.',
+		'mjolnir.access.pwdreset.success' => function ($in)
+			{
+			    return '<b>Instrucțiuni suplimentare</b> au fost trimise la adresa de email: '.$in['masked_email'].'. <br /><br />Vă rugăm să verificați și <b>secțiunea Spam</b> a căsuței de email, în caz că mesajul a ajuns acolo.';
+			},
 		'mjolnir.access.pwdreset.failure'
 			=> 'Procesul de resetare a eșuat. Vă rugăm încercați să resetați din nou de la început.',
 		'mjolnir.access.pwdreset.finished'

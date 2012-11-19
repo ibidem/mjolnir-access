@@ -17,8 +17,10 @@
 		'mjolnir.access.signup.title' => 'Sign Up',
 
 		'mjolnir.access.pwdreset.title'	=> 'Password Reset',
-		'mjolnir.access.pwdreset.success'
-			=> 'An email with further instructions has been mailed to you address.',
+		'mjolnir.access.pwdreset.success' => function ($in)
+			{
+			    return 'An email with further instructions has been mailed to this email address: '.$in['masked_email'].'. Please check you Spam section as well.';
+			},
 		'mjolnir.access.pwdreset.failure'
 			=> 'Failed to reset password. Please try repeating the process from the begining.',
 		'mjolnir.access.pwdreset.finished'
