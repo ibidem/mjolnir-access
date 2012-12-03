@@ -25,6 +25,8 @@ return array
 		'remember_me.timeout' => 60 * 60 * 24 * 14,
 	
 		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
+	
+		'default.signup' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signup'], 'http'),
 
 		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset'], 'http'),
 	
