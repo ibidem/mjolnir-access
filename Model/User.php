@@ -64,6 +64,7 @@ class Model_User
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->test('email', ':valid', \app\Email::valid($fields['email']))
+			->test('email', ':unique', (\app\Model_User::for_email($fields['email']) === null))
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
@@ -648,10 +649,10 @@ class Model_User
 						'mjolnir:email:activate_account', 
 						[
 							':token_url' => $confirm_email_url, 
-							':nickname' => \app\Model_User::entry($user_id),
+							':nickname' => \app\Model_User::entry($user_id)['nickname'],
 						]
 					),
-				true
+				true # is html
 			);
 		
 		return $sent;

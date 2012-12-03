@@ -53,5 +53,9 @@
 					(
 						'equal_to' => 'Passwords do not match',
 					),
+				'email' => array
+					(
+						':unique' => 'User with the same email already exists.',
+					),
 			),
 	);
