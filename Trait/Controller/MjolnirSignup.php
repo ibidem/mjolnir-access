@@ -51,7 +51,7 @@ trait Trait_Controller_MjolnirSignup
 					$this->signup_success();
 					
 					$user = \app\Model_User::last_inserted_id();
-					\app\Model_User::send_activation_email($user['id']);
+					\app\Model_User::send_activation_email($user);
 					
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
