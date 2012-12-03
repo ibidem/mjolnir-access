@@ -342,7 +342,8 @@ class Model_User
 		// to do some really burtish processing on it
 		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
 
-		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
+		$fields['active'] = true;
+		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'], ['active'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 
 		// assign role if set
@@ -627,6 +628,56 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// etc
 
+	/**
+	 * @return boolean success?
+	 */
+	static function send_activation_email($user_id)
+	{
+		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
+		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;		
+		
+		// send code via email
+		$sent = \app\Email::instance()
+			->send
+			(
+				$_POST['email'], 
+				null, 
+				\app\Lang::tr('Confirmation of Email Ownership'),
+				\app\Lang::msg
+					(
+						'mjolnir:email:activate_account', 
+						[
+							':token_url' => $confirm_email_url, 
+							':nickname' => \app\Model_User::entry($user_id),
+						]
+					),
+				true
+			);
+		
+		return $sent;
+	}
+	
+	/**
+	 * Set account to [active] state, allowing user to login. Until account is
+	 * active the user won't be able to login into it.
+	 */
+	static function activate_account($user_id)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE `'.static::table().'`
+					   SET active = TRUE
+					 WHERE id = :user_id
+				'
+			)
+			->set_int(':user_id', $user_id)
+			->execute();
+		
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+	}
+	
 	/**
 	 * Add secondary email. If a user with the same email already exists, the
 	 * account will be locked.

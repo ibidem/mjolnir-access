@@ -40,7 +40,8 @@ class Context_Access extends \app\Instantiatable
 	function can_signup()
 	{
 		return \app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])
-			&& \app\CFS::config('mjolnir/a12n')['standard.signup'];
+			&& \app\CFS::config('mjolnir/a12n')['standard.signup']
+			&& \app\Register::pull(['\mjolnir\access\signup\public'])['\mjolnir\access\signup\public'] === 'on';
 	}
 
 } # class

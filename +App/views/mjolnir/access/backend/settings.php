@@ -32,11 +32,21 @@
 	
 		<fieldset>
 			<legend>Sign Up</legend>
-			<?= $form->select('Public Registration', '\mjolnir\access\signup\public', $switch_format)
-				->value($access_fields['\mjolnir\access\signup\public']) ?> 
+			<? 
+				$public_registration = $form->select('Public Registration', '\mjolnir\access\signup\public', $switch_format)
+					->value($access_fields['\mjolnir\access\signup\public']);
+						
+				if ( ! \app\CFS::config('mjolnir/a12n')['standard.signup'])
+				{
+					$public_registration
+						->help('Disabled at static configuration level by [standard.signup], please check your private [mjolnir/a12n]')
+						->attr('disabled', 'disabled')
+						->value('off');
+				}
+			?> 
 			
-			<?= $form->select('Capcha', '\mjolnir\access\signup\capcha', $switch_format)
-				->value($access_fields['\mjolnir\access\signup\capcha']) ?> 
+			<?= $public_registration ?>
+			
 		</fieldset>
 	
 		<? if ( ! empty($signin_providers)): ?>

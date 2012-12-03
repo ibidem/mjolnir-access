@@ -108,6 +108,15 @@ trait Trait_Controller_MjolnirSignin
 				$this->signin_view($errors); 
 				return;
 			}
+			
+			// check if user is active
+			if ( ! $user['active'])
+			{
+				
+				$errors['form'][] = \app\Lang::msg('mjolnir:your_account_is_inactive');
+				$this->signin_view($errors); 
+				return;
+			}
 
 			// logged in
 			if (isset($_POST['remember_me']) && $_POST['remember_me'] === 'on')

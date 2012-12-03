@@ -47,7 +47,23 @@ this account.',
 		'mjolnir:email:visit_url_to_finish' => function ($in)
 			{
 				return \strtr('Please visit following url to complete the process:'."\n:url", $in);
-			}
+			},
 			
+		'mjolnir:invalid_token' 
+			=> 'Invalid token supplied; please try repeating the process. This error occurs if you copy pasted the incorrect url, or to code in question has expired.',
+					
+		'mjolnir:account_activated'
+			=> 'Your account is now active.',
+					
+		'mjolnir:your_account_is_inactive'
+			=> 'Your account is not active, access defined. A fresh activation code has been send to your email address.',
+					
+		'mjolnir:email:activate_account' => function ($in)
+			{
+				return \app\View::instance('mjolnir/emails/en-us/activate_account')
+					->variable('nickname', $in[':nickname'])
+					->variable('token_url', $in[':token_url']);
+			},
+					
 	);
 	
