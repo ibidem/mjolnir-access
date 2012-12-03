@@ -62,7 +62,8 @@ this account.',
 			{
 				return \app\View::instance('mjolnir/emails/en-us/activate_account')
 					->variable('nickname', $in[':nickname'])
-					->variable('token_url', $in[':token_url']);
+					->variable('token_url', $in[':token_url'])
+					->render();
 			},
 					
 	);

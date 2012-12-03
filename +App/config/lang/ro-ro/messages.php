@@ -57,4 +57,12 @@ emailul respectiv vă va redirecta către contul curent.',
 					
 		'mjolnir:your_account_is_inactive'
 			=> 'Contul dumneavoastră nu este activ. Un cod nou de activare a fost trimis la adresa dumneavoastră de email.',
+					
+		'mjolnir:email:activate_account' => function ($in)
+			{
+				return \app\View::instance('mjolnir/emails/ro-ro/activate_account')
+					->variable('nickname', $in[':nickname'])
+					->variable('token_url', $in[':token_url'])
+					->render();
+			},
 	);
