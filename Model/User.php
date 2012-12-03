@@ -61,10 +61,23 @@ class Model_User
 	static function check(array $fields, $context = null)
 	{
 		$user_config = \app\CFS::config('model/User');
+		
+		
+		$user_for_email = \app\Model_User::for_email($fields['email']);
+		
+		if ($user_for_email === null || $user_for_email === $context)
+		{
+			$unique_email = true;
+		}
+		else # email is taken
+		{
+			$unique_email = false;
+		}
+		
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->test('email', ':valid', \app\Email::valid($fields['email']))
-			->test('email', ':unique', (\app\Model_User::for_email($fields['email']) === null))
+			->test('email', ':unique', $unique_email)
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
@@ -94,6 +107,7 @@ class Model_User
 				'pwdverifier' => $password['verifier'],
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
+				'active' => $fields['active'],
 			);
 
 		static::inserter
@@ -106,6 +120,9 @@ class Model_User
 					'pwdverifier',
 					'pwdsalt',
 					'pwddate',
+				],
+				[
+					'active',
 				]
 			)
 			->run();
@@ -153,7 +170,7 @@ class Model_User
 	{
 		// update role
 		static::assign_role($id, $fields['role']);
-		static::updater($id, $fields, ['nickname', 'email'])->run();
+		static::updater($id, $fields, ['nickname', 'email'], ['active'])->run();
 		static::clear_entry_cache($id);
 	}
 
@@ -183,6 +200,7 @@ class Model_User
 					       user.email,
 						   user.timestamp,
 					       user.ipaddress,
+						   user.active,
 					       role.id role,
 					       role.title roletitle
 

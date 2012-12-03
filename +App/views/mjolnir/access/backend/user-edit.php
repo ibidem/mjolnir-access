@@ -24,6 +24,7 @@
 			<?= $form->text('Nickname', 'nickname')->value($user['nickname']) ?>
 			<?= $form->text('Email', 'email')->value($user['email']) ?>
 			<?= $form->select('Role', 'role')->values($context->roles(), 'id', 'title')->value($user['role']) ?>
+			<?= $form->checkbox('Active', 'active')->check_value($user['active'])->autocomplete(false) ?>
 			<?= $form->password('Password', 'password')->autocomplete(false) ?>
 			<?= $form->password('Password (verify)', 'verifier')->autocomplete(false) ?>
 			<div class="form-actions">

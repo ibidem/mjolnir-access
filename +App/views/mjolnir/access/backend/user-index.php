@@ -110,6 +110,7 @@
 			<?= $form->password('Password', 'password')->autocomplete(false) ?>
 			<?= $form->password('Password (verify)', 'verifier')->autocomplete(false) ?>
 			<?= $form->select('Role', 'role')->values($context->roles(), 'id', 'title') ?>
+			<?= $form->checkbox('Active', 'active')->check_value(true) ?>
 			<div class="form-actions">
 				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Create User</button>
 			</div>
