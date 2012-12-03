@@ -630,7 +630,14 @@ class Model_User
 	// etc
 
 	/**
-	 * @return boolean success?
+	 * Sends the activation email with a token for activating the account; if 
+	 * the account is not activated the user will be blocked on signin, but 
+	 * otherwise the account will behave normally.
+	 * 
+	 * This function logs failed attempts. Status is passed for any additional
+	 * processing.
+	 * 
+	 * @return boolean sent?
 	 */
 	static function send_activation_email($user_id)
 	{
@@ -654,6 +661,11 @@ class Model_User
 					),
 				true # is html
 			);
+		
+		if ( ! $sent)
+		{
+			\mjolnir\log('Error', 'Failed to send activation email for ['.$user_id.']');
+		}
 		
 		return $sent;
 	}
