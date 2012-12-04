@@ -839,12 +839,14 @@ class Model_User
 				__METHOD__,
 				'
 					UPDATE :table
-					   SET `locked` = TRUE
+					   SET `locked` = TRUE,
 					 WHERE `id` = :id
 				'
 			)
 			->set_int(':id', $user_id)
 			->execute();
+		
+		static::purgetoken($user_id);
 		
 		// remove all associated secondary emails
 		\app\Model_SecondaryEmail::purge_for($user_id);
