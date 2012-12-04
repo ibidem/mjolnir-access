@@ -99,6 +99,12 @@ class Model_User
 	{
 		$password = static::generate_password($fields['password']);
 
+		// active might not be passed; such as the case for signup
+		if ( ! isset($fields['active']))
+		{
+			$fields['active'] = false;
+		}
+		
 		$filtered_fields = array
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
