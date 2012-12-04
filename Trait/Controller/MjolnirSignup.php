@@ -68,11 +68,15 @@ trait Trait_Controller_MjolnirSignup
 				if (\app\Model_User::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
 				{
 					\app\Model_User::activate_account($_GET['user']);
-					\app\Notice::make(\app\Lang::msg('mjolnir:account_activated'));
+					\app\Notice::make(\app\Lang::msg('mjolnir:account_activated'))
+						->classes(['alert-warning'])
+						->save();
 				}
 				else # error checking token
 				{
-					\app\Notice::make(\app\Lang::msg('mjolnir:invalid_token'));
+					\app\Notice::make(\app\Lang::msg('mjolnir:invalid_token'))
+						->classes(['alert-warning'])
+						->save();
 					
 				}
 				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
