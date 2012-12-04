@@ -114,6 +114,7 @@ trait Trait_Controller_MjolnirSignin
 			{
 				
 				$errors['form'][] = \app\Lang::msg('mjolnir:your_account_is_inactive');
+				\app\Model_User::send_activation_email($user['id']);
 				$this->signin_view($errors); 
 				return;
 			}
