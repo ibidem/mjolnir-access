@@ -668,11 +668,13 @@ class Model_User
 		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
 		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;		
 		
+		$user = static::entry($user_id);
+		
 		// send code via email
 		$sent = \app\Email::instance()
 			->send
 			(
-				$_POST['email'], 
+				$user['email'], 
 				null, 
 				\app\Lang::tr('Confirmation of Email Ownership'),
 				\app\Lang::msg
@@ -680,7 +682,7 @@ class Model_User
 						'mjolnir:email:activate_account', 
 						[
 							':token_url' => $confirm_email_url, 
-							':nickname' => \app\Model_User::entry($user_id)['nickname'],
+							':nickname' => $user['nickname'],
 						]
 					),
 				true # is html
