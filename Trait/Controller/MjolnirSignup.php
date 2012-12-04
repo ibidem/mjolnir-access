@@ -53,6 +53,10 @@ trait Trait_Controller_MjolnirSignup
 					$user = \app\Model_User::last_inserted_id();
 					\app\Model_User::send_activation_email($user);
 					
+					\app\Notice::make(\app\Lang::msg('mjolnir:sent_activation_email'))
+						->classes(['alert-warning'])
+						->save();
+					
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
 				else # got errors

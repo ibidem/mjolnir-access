@@ -66,5 +66,8 @@ this account.',
 					->render();
 			},
 					
+		'mjolnir:sent_activation_email'
+			=> 'Success! Your account is currently inactive. An email has been sent to your email address with activation instructions.'
+					
 	);
 	

@@ -65,4 +65,7 @@ emailul respectiv vă va redirecta către contul curent.',
 					->variable('token_url', $in[':token_url'])
 					->render();
 			},
+					
+		'mjolnir:sent_activation_email'
+			=> 'Contul dumneavoastră a fost creat dar este inactiv. Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră.'
 	);
