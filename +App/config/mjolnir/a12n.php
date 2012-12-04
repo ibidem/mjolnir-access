@@ -26,11 +26,11 @@ return array
 	
 		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
 	
-		'default.signup' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signup'], 'http'),
+		'default.signup' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signup'], '', 'http'),
 
-		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset'], 'http'),
+		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset'], '', 'http'),
 	
-		'default.emails_manager' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'emails'], 'http'),
+		'default.emails_manager' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'emails'], '', 'http'),
 	
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
 
