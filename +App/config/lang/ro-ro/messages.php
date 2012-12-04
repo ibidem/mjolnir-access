@@ -67,5 +67,5 @@ emailul respectiv vă va redirecta către contul curent.',
 			},
 					
 		'mjolnir:sent_activation_email'
-			=> 'Contul dumneavoastră a fost creat dar este inactiv. Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră.'
+			=> 'Contul dumneavoastră a fost creat dar este inactiv. Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră. Pentru a primi un email nou introduceți datele corecte în formularul de logare.'
 	);
