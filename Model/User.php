@@ -62,7 +62,6 @@ class Model_User
 	{
 		$user_config = \app\CFS::config('model/User');
 		
-		
 		$user_for_email = \app\Model_User::for_email($fields['email']);
 		
 		if ($user_for_email === null || $user_for_email === $context)
@@ -98,12 +97,6 @@ class Model_User
 	static function process(array $fields)
 	{
 		$password = static::generate_password($fields['password']);
-
-		// active might not be passed; such as the case for signup
-		if ( ! isset($fields['active']))
-		{
-			$fields['active'] = false;
-		}
 		
 		$filtered_fields = array
 			(
@@ -613,6 +606,7 @@ class Model_User
 						  FROM :table
 						 WHERE email = :email
 						   AND `locked` = FALSE
+						   AND `active` = TRUE
 						 LIMIT 1
 					',
 					'mysql'
@@ -714,6 +708,11 @@ class Model_User
 			->set_int(':user_id', $user_id)
 			->execute();
 		
+		$user = \app\Model_User::entry($user_id);
+		
+		// close all other accounts with this email
+		static::autolock_for_email($user['email'], $user_id);
+		
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
 	
@@ -780,7 +779,7 @@ class Model_User
 	 * account will be locked; the context is used to specify an exception user
 	 * for exception (errornous) input.
 	 */
-	protected static function autolock_for_email($email, $context = 0)
+	protected static function autolock_for_email($email, $context = null)
 	{
 		// search for main emails
 		$entries = static::statement
