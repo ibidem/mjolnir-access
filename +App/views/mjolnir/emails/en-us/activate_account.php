@@ -52,7 +52,7 @@
 					<div style="text-align: center;">
 						
 						<p>
-							To activate your account, you must verify this email via the following link,<br/>
+							To activate your account, you must authorize this email via the following link,<br/>
 							<br/>
 							&gt;&gt; 
 							<big style="text-align: center; color: orange; text-decoration: none;"> 

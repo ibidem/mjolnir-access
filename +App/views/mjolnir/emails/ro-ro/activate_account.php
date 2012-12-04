@@ -52,7 +52,7 @@
 					<div style="text-align: center;">
 						
 						<p>
-							Pentru a vă activa contul trebuie să authentificați acest email prin vizitarea linkului următor,<br/>
+							Pentru a vă activa contul trebuie să autorizați acest email prin intermediul linkul următor,<br/>
 							<br/>
 							&gt;&gt; 
 							<big style="text-align: center; color: orange; text-decoration: none;"> 
