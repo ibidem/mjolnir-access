@@ -839,7 +839,7 @@ class Model_User
 				__METHOD__,
 				'
 					UPDATE :table
-					   SET `locked` = TRUE,
+					   SET `locked` = TRUE
 					 WHERE `id` = :id
 				'
 			)
