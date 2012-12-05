@@ -65,8 +65,13 @@ class Model_UserSigninToken extends \app\Instantiatable
 				->set_int(':user', $user)
 				->execute();
 		}
+		
+		static::clear_cache();
 	}
 	
+	/**
+	 * ...
+	 */
 	static function purge($user)
 	{
 		static::statement
