@@ -49,5 +49,25 @@ emailul respectiv vă va redirecta către contul curent.',
 		'mjolnir:email:visit_url_to_finish' => function ($in)
 			{
 				return \strtr('Va rugăm sa vizitați url-ul următor pentru a finaliza procesul:'."\n:url", $in);
-			}
+			},
+					
+		'mjolnir:invalid_token' 
+			=> 'Token invalid. Vă rugăm să repetați procesul. Această eroare apare în cazul unui cod expirat or url malformat.',
+					
+		'mjolnir:account_activated'
+			=> 'Contul dumeneavoastră a fost activat.',
+					
+		'mjolnir:your_account_is_inactive'
+			=> 'Contul dumneavoastră nu este activ. Un cod nou de activare a fost trimis la adresa dumneavoastră de email.',
+					
+		'mjolnir:email:activate_account' => function ($in)
+			{
+				return \app\View::instance('mjolnir/emails/ro-ro/activate_account')
+					->variable('nickname', $in[':nickname'])
+					->variable('token_url', $in[':token_url'])
+					->render();
+			},
+					
+		'mjolnir:sent_activation_email'
+			=> 'Contul dumneavoastră a fost creat dar este inactiv. Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră. Pentru a primi un email nou introduceți datele corecte în formularul de logare.'
 	);

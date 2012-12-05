@@ -64,5 +64,23 @@ trait Trait_Model_SecurityToken
 		
 		return \app\SecurityToken::confirm($entry['token'], $token, $purpose, $key);
 	}
+	
+	/**
+	 * @return string token
+	 */
+	static function purgetoken($entry_id)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET `token` = NULL
+					 WHERE `'.static::unique_key().'` = :entry_id
+				'
+			)
+			->set_int(':entry_id', $entry_id)
+			->execute();
+	}
 
 } # trait

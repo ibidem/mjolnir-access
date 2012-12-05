@@ -21,7 +21,7 @@
 			<div class="control-group">
 				<? if (isset($form_errors)): ?>
 					<? foreach ($form_errors as $error): ?>
-						<span class="alert alert-error"><?= $error ?></span>
+						<div class="alert alert-error"><?= $error ?></div>
 					<? endforeach; ?>
 				<? endif; ?>
 			</div>

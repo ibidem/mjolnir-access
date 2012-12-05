@@ -22,6 +22,7 @@ trait Trait_Controller_MjolnirSignup
 		if (\app\Server::request_method() === 'POST')
 		{
 			$_POST['role'] = \app\Model_Role::role_by_name('member');
+			$_POST['active'] = false;
 
 			// check recaptcha
 			$error = \app\ReCaptcha::verify
@@ -45,10 +46,17 @@ trait Trait_Controller_MjolnirSignup
 			else # captcha test passed
 			{
 				$errors = \app\Model_User::push($_POST);
-
+				
 				if ($errors === null)
 				{
 					$this->signup_success();
+					
+					$user = \app\Model_User::last_inserted_id();
+					\app\Model_User::send_activation_email($user);
+					
+					\app\Notice::make(\app\Lang::msg('mjolnir:sent_activation_email'))
+						->classes(['alert-warning'])
+						->save();
 					
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
@@ -60,13 +68,35 @@ trait Trait_Controller_MjolnirSignup
 		}
 		else # treat as GET
 		{
+			if (isset($_GET['key'], $_GET['user']))
+			{
+				if (\app\Model_User::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
+				{
+					\app\Model_User::activate_account($_GET['user']);
+					\app\Notice::make(\app\Lang::msg('mjolnir:account_activated'))
+						->classes(['alert-warning'])
+						->save();
+				}
+				else # error checking token
+				{
+					\app\Notice::make(\app\Lang::msg('mjolnir:invalid_token'))
+						->classes(['alert-warning'])
+						->save();
+					
+				}
+				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+			}
+			
 			$this->signup_view();
 		}
 	}
 	
+	/**
+	 * Hook; called on succesful signup.
+	 */
 	function signup_success()
 	{
-	    #overwrite to do something
+	    // overwrite hook
 	}
 
 } # trait

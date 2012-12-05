@@ -45,6 +45,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`provider`    :titlename DEFAULT NULL,
 					`timestamp`   :timestamp,
 					`locked`      :boolean DEFAULT FALSE,
+					`active`      :boolean DEFAULT FALSE,
 					
 					`pwdreset`         :secure_hash DEFAULT NULL,
 					`pwdreset_expires` :datetime_optional DEFAULT NULL,

@@ -61,9 +61,22 @@ class Model_User
 	static function check(array $fields, $context = null)
 	{
 		$user_config = \app\CFS::config('model/User');
+		
+		$user_for_email = \app\Model_User::for_email($fields['email']);
+		
+		if ($user_for_email === null || $user_for_email === $context)
+		{
+			$unique_email = true;
+		}
+		else # email is taken
+		{
+			$unique_email = false;
+		}
+		
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->test('email', ':valid', \app\Email::valid($fields['email']))
+			->test('email', ':unique', $unique_email)
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
@@ -84,7 +97,7 @@ class Model_User
 	static function process(array $fields)
 	{
 		$password = static::generate_password($fields['password']);
-
+		
 		$filtered_fields = array
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
@@ -93,6 +106,7 @@ class Model_User
 				'pwdverifier' => $password['verifier'],
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
+				'active' => $fields['active'],
 			);
 
 		static::inserter
@@ -105,6 +119,9 @@ class Model_User
 					'pwdverifier',
 					'pwdsalt',
 					'pwddate',
+				],
+				[
+					'active',
 				]
 			)
 			->run();
@@ -152,7 +169,7 @@ class Model_User
 	{
 		// update role
 		static::assign_role($id, $fields['role']);
-		static::updater($id, $fields, ['nickname', 'email'])->run();
+		static::updater($id, $fields, ['nickname', 'email'], ['active'])->run();
 		static::clear_entry_cache($id);
 	}
 
@@ -182,6 +199,7 @@ class Model_User
 					       user.email,
 						   user.timestamp,
 					       user.ipaddress,
+						   user.active,
 					       role.id role,
 					       role.title roletitle
 
@@ -342,7 +360,8 @@ class Model_User
 		// to do some really burtish processing on it
 		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
 
-		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'])->run();
+		$fields['active'] = true;
+		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'], ['active'])->run();
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
 
 		// assign role if set
@@ -587,6 +606,7 @@ class Model_User
 						  FROM :table
 						 WHERE email = :email
 						   AND `locked` = FALSE
+						   AND `active` = TRUE
 						 LIMIT 1
 					',
 					'mysql'
@@ -627,6 +647,75 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// etc
 
+	/**
+	 * Sends the activation email with a token for activating the account; if 
+	 * the account is not activated the user will be blocked on signin, but 
+	 * otherwise the account will behave normally.
+	 * 
+	 * This function logs failed attempts. Status is passed for any additional
+	 * processing.
+	 * 
+	 * @return boolean sent?
+	 */
+	static function send_activation_email($user_id)
+	{
+		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
+		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;		
+		
+		$user = static::entry($user_id);
+		
+		// send code via email
+		$sent = \app\Email::instance()
+			->send
+			(
+				$user['email'], 
+				null, 
+				\app\Lang::tr('Confirmation of Email Ownership'),
+				\app\Lang::msg
+					(
+						'mjolnir:email:activate_account', 
+						[
+							':token_url' => $confirm_email_url, 
+							':nickname' => $user['nickname'],
+						]
+					),
+				true # is html
+			);
+		
+		if ( ! $sent)
+		{
+			\mjolnir\log('Error', 'Failed to send activation email for ['.$user_id.']');
+		}
+		
+		return $sent;
+	}
+	
+	/**
+	 * Set account to [active] state, allowing user to login. Until account is
+	 * active the user won't be able to login into it.
+	 */
+	static function activate_account($user_id)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE `'.static::table().'`
+					   SET active = TRUE
+					 WHERE id = :user_id
+				'
+			)
+			->set_int(':user_id', $user_id)
+			->execute();
+		
+		$user = \app\Model_User::entry($user_id);
+		
+		// close all other accounts with this email
+		static::autolock_for_email($user['email'], $user_id);
+		
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+	}
+	
 	/**
 	 * Add secondary email. If a user with the same email already exists, the
 	 * account will be locked.
@@ -690,7 +779,7 @@ class Model_User
 	 * account will be locked; the context is used to specify an exception user
 	 * for exception (errornous) input.
 	 */
-	protected static function autolock_for_email($email, $context = 0)
+	protected static function autolock_for_email($email, $context = null)
 	{
 		// search for main emails
 		$entries = static::statement
@@ -756,6 +845,8 @@ class Model_User
 			)
 			->set_int(':id', $user_id)
 			->execute();
+		
+		static::purgetoken($user_id);
 		
 		// remove all associated secondary emails
 		\app\Model_SecondaryEmail::purge_for($user_id);
