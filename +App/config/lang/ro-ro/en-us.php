@@ -21,4 +21,9 @@
 				return \strtr('Contul dumneavoastră de :provider a fost contectat de contul dumneavoastră de pe site.', $in);
 			},
 		'Confirmation of Email Ownership' => 'Confirmarea adresei de email',
+					
+		'An email has been sent, at :email, with further instructions.' => function ($in)
+			{
+				return \strtr('Am trimis un email cu detalii pentru pașii următori la adresa de email :email . Vă rugăm să verificați și secțiunea SPAM a căsuței de email.', $in);
+			},
 	);
