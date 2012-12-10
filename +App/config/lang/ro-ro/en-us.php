@@ -26,4 +26,5 @@
 			{
 				return \strtr('Am trimis un email cu detalii pentru pașii următori la adresa de email :email . Vă rugăm să verificați și secțiunea SPAM a căsuței de email.', $in);
 			},
+		'Succesfully added secondary email.' => 'Am adăugat noua adresă de email/cont social la contul curent.',
 	);
