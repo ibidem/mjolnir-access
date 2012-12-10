@@ -48,14 +48,14 @@ emailul respectiv vă va redirecta către contul curent.',
 					
 		'mjolnir:email:visit_url_to_finish' => function ($in)
 			{
-				return \strtr('Va rugăm sa vizitați url-ul următor pentru a finaliza procesul:'."\n:url", $in);
+				return \strtr('Va rugăm să vizitați url-ul următor pentru a finaliza procesul:'."\n:url", $in);
 			},
 					
 		'mjolnir:invalid_token' 
-			=> 'Token invalid. Vă rugăm să repetați procesul. Această eroare apare în cazul unui cod expirat or url malformat.',
+			=> 'Token invalid. Vă rugăm să repetați procesul. Această eroare apare în cazul unui cod expirat sau url malformat.',
 					
 		'mjolnir:account_activated'
-			=> 'Contul dumeneavoastră a fost activat.',
+			=> 'Contul dumneavoastră a fost activat. Acum puteti să vă logati.',
 					
 		'mjolnir:your_account_is_inactive'
 			=> 'Contul dumneavoastră nu este activ. Un cod nou de activare a fost trimis la adresa dumneavoastră de email.',
@@ -69,5 +69,5 @@ emailul respectiv vă va redirecta către contul curent.',
 			},
 					
 		'mjolnir:sent_activation_email'
-			=> 'Contul dumneavoastră a fost creat dar este inactiv. Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră. Pentru a primi un email nou introduceți datele corecte în formularul de logare.'
+			=> 'Contul dumneavoastră a fost creat dar este inactiv.</br >Un email cu instrucțiuni de activare a fost trimis la adresa dumneavoastră de email. <br /><br /> Pentru a primi un email nou introduceți datele corecte de login în formularul de logare.'
 	);
