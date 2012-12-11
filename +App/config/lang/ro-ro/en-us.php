@@ -18,7 +18,7 @@
 	
 		'Your :provider account has been linked to your site account.' => function ($in)
 			{
-				return \strtr('Contul dumneavoastră de :provider a fost contectat de contul dumneavoastră de pe site.', $in);
+				return \strtr('Contul dumneavoastră de :provider a fost conectat la contul curent. Acum vă puteți loga cu oricare.', $in);
 			},
 		'Confirmation of Email Ownership' => 'Confirmarea adresei de email',
 					
