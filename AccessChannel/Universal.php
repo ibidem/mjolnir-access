@@ -20,7 +20,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 		$provider_key = $provider['hybridauth.key'];
 		$config = array
 			(
-				'base_url' => 'http:'.\app\URL::route('\mjolnir\access\endpoint')->url(),
+				'base_url' => \app\URL::route('\mjolnir\access\endpoint')->url(),
 				'providers' => array
 					(
 						$provider_key => array 
