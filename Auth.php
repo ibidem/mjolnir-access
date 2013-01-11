@@ -11,11 +11,17 @@
  */
 class Auth
 {
+	/**
+	 * @return role string
+	 */
 	static function role()
 	{
 		return \app\A12n::instance()->role();
 	}
 	
+	/**
+	 * @return int user id
+	 */
 	static function id()
 	{
 		return \app\A12n::instance()->user();
