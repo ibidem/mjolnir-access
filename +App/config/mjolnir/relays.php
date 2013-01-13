@@ -2,8 +2,8 @@
 	(
 		'\mjolnir\access\channel' => array
 			(
-				'matcher' => \app\Route_Pattern::instance()
-					->standard
+				'matcher' => \app\URLRoute::instance()
+					->urlpattern
 						(
 							'access/channel/<provider>(/<id>)',
 							[
@@ -22,8 +22,8 @@
 
 		'\mjolnir\access\endpoint' => array
 			(
-				'matcher' => \app\Route_Pattern::instance()
-					->standard('access/channel-endpoint', []),
+				'matcher' =>\app\URLRoute::instance()
+					->urlpattern('access/channel-endpoint'),
 				'enabled' => false,
 			// MVC
 				'controller' => '\mjolnir\access\Controller_Access',
@@ -35,8 +35,8 @@
 
 		'\mjolnir\access\a12n' => array
 			(
-				'matcher' => \app\Route_Pattern::instance()
-					->standard
+				'matcher' =>\app\URLRoute::instance()
+					->urlpattern
 						(
 							'access(/<action>)',
 							[

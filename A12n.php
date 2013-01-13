@@ -2,7 +2,7 @@
 
 /**
  * @package    mjolnir
- * @category   Security
+ * @category   Access
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
@@ -13,27 +13,27 @@ class A12n extends \app\Instantiatable
 	 * @var int
 	 */
 	private $user;
-	
+
 	/**
-	 * @var string 
+	 * @var string
 	 */
 	private $role;
-	
+
 	/**
-	 * @param mixed instance 
+	 * @param mixed instance
 	 */
 	protected static function init($instance)
 	{
 		// check session
 		$instance->user = \app\Session::get('user', null);
 		$instance->role = \app\Session::get('role', static::guest());
-		
+
 		if ($instance->user === null)
 		{
 			// verify cookies
 			$user = \app\Cookie::get('user', null);
 			$token = \app\Cookie::get('accesstoken', null);
-			
+
 			if ($user !== null && $token !== null)
 			{
 				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
@@ -44,7 +44,7 @@ class A12n extends \app\Instantiatable
 			}
 		}
 	}
-	
+
 	/**
 	 * Store remember me information.
 	 */
@@ -65,31 +65,31 @@ class A12n extends \app\Instantiatable
 		\app\Model_UserSigninToken::refresh($user, $token);
 
 		$timeout = \app\CFS::config('mjolnir/a12n')['remember_me.timeout'];
-		
+
 		\app\Cookie::set('user', $user, $timeout);
 		\app\Cookie::set('accesstoken', $token, $timeout);
 	}
-	
+
 	/**
 	 * @return \mjolnir\access\A12n
 	 */
 	static function instance()
 	{
 		static $instance = null;
-		
+
 		if ($instance === null)
 		{
 			$instance = parent::instance();
 			static::init($instance);
 		}
-		
+
 		return $instance;
 	}
-	
+
 	function set_role($role)
 	{
 		$base_config = \app\CFS::config('mjolnir/base');
-		
+
 		// allow role manipulation in development for mockup purposes
 		if (isset($base_config['development']) && $base_config['development'])
 		{
@@ -101,51 +101,51 @@ class A12n extends \app\Instantiatable
 				('Role manipulation violation detected. Terminating.');
 		}
 	}
-	
+
 	/**
-	 * @return int 
+	 * @return int
 	 */
 	function user()
 	{
 		return $this->user;
 	}
-	
+
 	/**
-	 * @return int 
+	 * @return int
 	 */
 	static function id()
 	{
 		return static::instance()->user();
 	}
-	
+
 	/**
-	 * @return string 
+	 * @return string
 	 */
 	function role()
-	{		
+	{
 		return $this->role;
 	}
-	
+
 	/**
 	 * @return array|null user information
 	 */
 	function current()
 	{
 		static $current = null;
-		
+
 		if ($this->user === null)
 		{
 			return null;
 		}
 		else # actual id provided
-		{	
+		{
 			if ($current === null)
 			{
 				$current = \app\SQL::prepare
 					(
 						__METHOD__,
 						'
-							SELECT * 
+							SELECT *
 							  FROM `'.\app\Model_User::table().'`
 							 WHERE id = :id
 						',
@@ -155,16 +155,16 @@ class A12n extends \app\Instantiatable
 					->execute()
 					->fetch_array();
 			}
-			
+
 			return $current;
 		}
 	}
-	
+
 	/**
 	 * Retrieves the role name for the abstraction notion of "everybody"
-	 * 
+	 *
 	 * ie. unauthentificated (such as guests and otherwise)
-	 * 
+	 *
 	 * @return string
 	 */
 	static function guest()
@@ -172,12 +172,12 @@ class A12n extends \app\Instantiatable
 		// unique identifier
 		return '\mjolnir\access\A12n::guest';
 	}
-	
+
 	/**
 	 * Retrieves the role name for the abstraction notion of "everybody"
-	 * 
+	 *
 	 * ie. unauthentificated by us
-	 * 
+	 *
 	 * @return string
 	 */
 	static function oauth_guest()
@@ -185,9 +185,9 @@ class A12n extends \app\Instantiatable
 		// unique identifier
 		return '\mjolnir\access\A12n::oauth_guest';
 	}
-	
+
 	/**
-	 * Sign out current user. 
+	 * Sign out current user.
 	 */
 	static function signout()
 	{
@@ -196,58 +196,58 @@ class A12n extends \app\Instantiatable
 		\app\Cookie::delete('user');
 		\app\Cookie::delete('accesstoken');
 	}
-	
+
 	/**
 	 * @param int user
-	 * @param string role 
+	 * @param string role
 	 */
 	static function signin($user, $role)
 	{
 		// reset signin attempts
 		\app\Model_User::reset_pwdattempts($user);
-		
+
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
 	}
-	
+
 	/**
 	 * Signs in user, or adds provider to current account.
-	 * 
-	 * Email is used when associating user to account. This function has 
+	 *
+	 * Email is used when associating user to account. This function has
 	 * additional parameters for use when overwriting it.
 	 */
 	static function inferred_signin($identification, $email, $provider, $attributes = null)
 	{
 		// check if user exists
 		$user = \app\Model_User::for_email($email);
-		
+
 		// handle logged in state
 		if (\app\Auth::role() !== \app\A12n::guest())
 		{
 			if ($user === \app\Auth::id())
 			{
-				// we don't need to do anything since the email is already 
+				// we don't need to do anything since the email is already
 				// linked to this user
-				
+
 				return;
 			}
-			
+
 			\app\SQL::begin();
 			if ($user !== null && $user !== \app\Auth::id())
 			{
 				// close other account
 				\app\Model_User::lock($user);
 			}
-			
+
 			// add email to current user's secondary emails
 			$errors = \app\Model_SecondaryEmail::push
 				(
 					[
-						'email' => $email, 
+						'email' => $email,
 						'user' => \app\Auth::id()
 					]
 				);
-			
+
 			if ($errors !== null)
 			{
 				\app\SQL::rollback();
@@ -260,10 +260,10 @@ class A12n extends \app\Instantiatable
 					->classes(['alert-info'])
 					->save();
 			}
-			
+
 			$user = \app\Model_User::entry(\app\Auth::id())['id'];
 		}
-		
+
 		// continue signin process
 		if ($user !== null)
 		{
@@ -276,7 +276,7 @@ class A12n extends \app\Instantiatable
 			try
 			{
 				$default_role = \app\CFS::config('model/User')['signup']['role'];
-				
+
 				\app\Model_User::inferred_signup
 					(
 						[
@@ -286,12 +286,12 @@ class A12n extends \app\Instantiatable
 							'role' => $default_role,
 						]
 					);
-				
+
 				$user = \app\Model_User::last_inserted_id();
-				
+
 				\app\Session::set('user', $user);
 				\app\Session::set('role', \app\Model_User::role_for($user));
-				
+
 				$base_config = \app\CFS::config('mjolnir/base');
 				if (isset($base_config['site:frontend']))
 				{
@@ -308,7 +308,7 @@ class A12n extends \app\Instantiatable
 				throw new \app\Exception_NotApplicable('Failed automated signup process. Feel free to try again. Sorry for the inconvenience.');
 			}
 		}
-		
+
 	}
 
 } # class

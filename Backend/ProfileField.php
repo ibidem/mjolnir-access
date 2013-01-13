@@ -14,16 +14,16 @@ class Backend_ProfileField extends \app\Backend_Collection
 
 	function fieldtypes()
 	{
-		return \app\Collection::mirror
+		return \app\Arr::mirror
 			(
 				\array_keys(\app\CFS::config('mjolnir/profile-fieldtypes'))
 			);
 	}
-	
+
 	function entries($page, $limit, $offset = 0, array $order = [])
 	{
 		$order['idx'] = 'ASC';
 		return parent::entries($page, $limit, $offset, $order);
 	}
-	
+
 } # class

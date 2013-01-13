@@ -12,25 +12,25 @@ class Backend_Settings extends \app\Instantiatable
 	function action_update()
 	{
 		$signin_providers = \app\CFS::config('mjolnir/a12n')['signin'];
-		$providers = \app\Collection::gather($signin_providers, 'register');
+		$providers = \app\Arr::gather($signin_providers, 'register');
 
 		$access_fields = array
 			(
-				'\mjolnir\access\signup\public', 
+				'\mjolnir\access\signup\public',
 				'\mjolnir\access\signup\capcha',
 			);
-		
-		$fields = \array_merge($providers, $access_fields); 
-		
-		$filtered = \app\Collection::filter
+
+		$fields = \array_merge($providers, $access_fields);
+
+		$filtered = \app\Arr::filter
 			(
 				$_POST, # collection
-				function ($key, $value) use ($fields) 
+				function ($key, $value) use ($fields)
 					{
 						return \in_array($key, $fields);
 					}
 			);
-		
+
 		foreach ($filtered as $register => $value)
 		{
 			\app\Register::push($register, $value);

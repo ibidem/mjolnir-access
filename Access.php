@@ -2,7 +2,7 @@
 
 /**
  * @package    mjolnir
- * @category   Security
+ * @category   Access
  * @author     Ibidem
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
@@ -10,17 +10,17 @@
 final class Access
 {
 	/**
-	 * @var array 
+	 * @var array
 	 */
 	private static $whitelist;
-	
+
 	/**
-	 * @var array 
+	 * @var array
 	 */
 	private static $blacklist;
-	
+
 	/**
-	 * @var array 
+	 * @var array
 	 */
 	private static $aliaslist;
 
@@ -33,7 +33,7 @@ final class Access
 		self::$blacklist = $config['blacklist'];
 		self::$aliaslist = $config['aliaslist'];
 	}
-	
+
 	/**
 	 * @param array permissions
 	 * @param string relay
@@ -48,7 +48,7 @@ final class Access
 			// if we need owner computations we store the user
 			$user = \app\A12n::instance()->user();
 		}
-		
+
 		// check if no exception exists
 		foreach ($permissions as $permission)
 		{
@@ -62,9 +62,9 @@ final class Access
 					// if we didn't get an owner parameter we deny access
 					if ( ! isset($context['owner']) || $context['owner'] == null)
 					{
-						// NOTE: there are objects that have NULL owner, it 
-						// means they were submitted anoynmously (usually) so 
-						// because there is no user access of this kind on them 
+						// NOTE: there are objects that have NULL owner, it
+						// means they were submitted anoynmously (usually) so
+						// because there is no user access of this kind on them
 						// makes no sense and only lead to attack vectors
 						continue;
 					}
@@ -97,11 +97,11 @@ final class Access
 				}
 			}
 		}
-		
+
 		// failed match
 		return false;
 	}
-	
+
 	/**
 	 * @param string relay
 	 * @param array context information (action, etc)
@@ -112,16 +112,16 @@ final class Access
 	{
 		// get role of current user
 		$user_role = $user_role !== null ? $user_role : \app\A12n::instance()->role();
-		
+
 		// initial status
 		$status = false; # unauthorized
-		
+
 		if (isset(self::$whitelist[$user_role]))
 		{
 			// attempt to authorize
 			$status = self::match_check(self::$whitelist[$user_role], $relay, $context, $attribute);
 		}
-		
+
 		// failed authorization? check aliases for addition rules
 		if ( ! $status && isset(self::$aliaslist[$user_role]))
 		{
@@ -140,7 +140,7 @@ final class Access
 		{
 			$status = false; # cancel authorization
 		}
-		
+
 		return $status;
 	}
 
