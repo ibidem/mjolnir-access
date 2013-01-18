@@ -151,9 +151,9 @@ class A12n extends \app\Instantiatable
 						',
 						'mysql'
 					)
-					->set_int(':id', $this->user)
-					->execute()
-					->fetch_array();
+					->num(':id', $this->user)
+					->run()
+					->fetch_entry();
 			}
 
 			return $current;

@@ -38,9 +38,9 @@ trait Trait_Model_SecurityToken
 					 WHERE `'.static::unique_key().'` = :entry_id
 				'
 			)
-			->set_int(':token_id', $token_id)
-			->set_int(':entry_id', $entry_id)
-			->execute();
+			->num(':token_id', $token_id)
+			->num(':entry_id', $entry_id)
+			->run();
 		
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 		
@@ -79,8 +79,8 @@ trait Trait_Model_SecurityToken
 					 WHERE `'.static::unique_key().'` = :entry_id
 				'
 			)
-			->set_int(':entry_id', $entry_id)
-			->execute();
+			->num(':entry_id', $entry_id)
+			->run();
 	}
 
 } # trait

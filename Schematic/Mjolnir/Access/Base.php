@@ -190,8 +190,8 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					',
 					'mysql'
 				)
-				->bind_int(':id', $id)
-				->bind(':title', $title);
+				->bindnum(':id', $id)
+				->bindstr(':title', $title);
 
 			\app\SQL::begin();
 			try
@@ -200,7 +200,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 				{
 					$title = $desired_title;
 					$id = $desired_id;
-					$statement->execute();
+					$statement->run();
 				}
 
 				\app\SQL::commit();

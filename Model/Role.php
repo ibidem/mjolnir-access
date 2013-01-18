@@ -57,9 +57,9 @@ class Model_Role
 					 WHERE title = :name
 				'
 			)
-			->set(':name', $name)
-			->execute()
-			->fetch_array()
+			->str(':name', $name)
+			->run()
+			->fetch_entry()
 			['id'];
 	}
 

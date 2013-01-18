@@ -75,8 +75,8 @@ class Model_SecondaryEmail
 					 WHERE user = :user
 				'
 			)
-			->set_int(':user', $user)
-			->execute();
+			->num(':user', $user)
+			->run();
 		
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}

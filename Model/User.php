@@ -156,9 +156,9 @@ class Model_User
 				',
 				'mysql'
 			)
-			->bind_int(':user', $id)
-			->bind_int(':role', $config['signup']['role'])
-			->execute();
+			->bindnum(':user', $id)
+			->bindnum(':role', $config['signup']['role'])
+			->run();
 	}
 
 	/**
@@ -263,9 +263,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set_int(':id', $id)
-				->execute()
-				->fetch_array(static::field_format());
+				->num(':id', $id)
+				->run()
+				->fetch_entry(static::field_format());
 
 			if (static::nullentry_for_current_user($entry, $id))
 			{
@@ -298,8 +298,8 @@ class Model_User
 				',
 				'mysql'
 			)
-			->set_int(':user', $id)
-			->execute()
+			->num(':user', $id)
+			->run()
 			->fetch_all();
 
 		if (empty($result))
@@ -314,9 +314,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set_int(':user', $id)
-				->set_int(':role', $role)
-				->execute();
+				->num(':user', $id)
+				->num(':role', $role)
+				->run();
 		}
 		else # already exists
 		{
@@ -330,9 +330,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set_int(':role', $role)
-				->set_int(':user', $id)
-				->execute();
+				->num(':role', $role)
+				->num(':user', $id)
+				->run();
 		}
 
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
@@ -480,12 +480,12 @@ class Model_User
 				',
 				'mysql'
 			)
-			->bind(':pwdverifier', $pwdverifier)
-			->bind(':pwdsalt', $pwdsalt)
-			->set(':pwddate', \date('Y-m-d H:i:s'))
-			->bind(':nickname', $fields['nickname'])
-			->set(':ipaddress', \app\Server::client_ip())
-			->execute();
+			->bindstr(':pwdverifier', $pwdverifier)
+			->bindstr(':pwdsalt', $pwdsalt)
+			->str(':pwddate', \date('Y-m-d H:i:s'))
+			->bindstr(':nickname', $fields['nickname'])
+			->str(':ipaddress', \app\Server::client_ip())
+			->run();
 	}
 
 	/**
@@ -508,9 +508,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->bind(':nickname', $fields['identity'])
-				->execute()
-				->fetch_array(static::field_format());
+				->bindstr(':nickname', $fields['identity'])
+				->run()
+				->fetch_entry(static::field_format());
 		}
 		else # email
 		{
@@ -527,9 +527,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->bind(':email', $fields['identity'])
-				->execute()
-				->fetch_array(static::field_format());
+				->bindstr(':email', $fields['identity'])
+				->run()
+				->fetch_entry(static::field_format());
 			
 			if ($user === null)
 			{
@@ -570,8 +570,8 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set_int(':user', $user_id)
-				->execute()
+				->num(':user', $user_id)
+				->run()
 				->fetch_all();
 
 			\app\Stash::store($cachekey, $roles, \app\Stash::tags('User', ['change']));
@@ -611,8 +611,8 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set(':email', $email)
-				->execute()
+				->str(':email', $email)
+				->run()
 				->fetch_all();
 			
 			if (empty($result))
@@ -705,8 +705,8 @@ class Model_User
 					 WHERE id = :user_id
 				'
 			)
-			->set_int(':user_id', $user_id)
-			->execute();
+			->num(':user_id', $user_id)
+			->run();
 		
 		$user = \app\Model_User::entry($user_id);
 		
@@ -767,9 +767,9 @@ class Model_User
 					 WHERE `id` = :id
 				'
 			)
-			->set(':email', $email)
-			->set_int(':id', $user_id)
-			->execute();
+			->str(':email', $email)
+			->num(':id', $user_id)
+			->run();
 		
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
@@ -793,9 +793,9 @@ class Model_User
 					   AND `locked` = FALSE
 				'
 			)
-			->set(':email', $email)
-			->set_int(':context', $context)
-			->execute()
+			->str(':email', $email)
+			->num(':context', $context)
+			->run()
 			->fetch_all();
 		
 		foreach ($entries as $entry)
@@ -814,9 +814,9 @@ class Model_User
 					   AND NOT user <=> :context
 				'
 			)
-			->set(':email', $email)
-			->set_int(':context', $context)
-			->execute()
+			->str(':email', $email)
+			->num(':context', $context)
+			->run()
 			->fetch_all();
 		
 		foreach ($secondary_emails as $entry)
@@ -843,8 +843,8 @@ class Model_User
 					 WHERE `id` = :id
 				'
 			)
-			->set_int(':id', $user_id)
-			->execute();
+			->num(':id', $user_id)
+			->run();
 		
 		static::purgetoken($user_id);
 		
@@ -868,8 +868,8 @@ class Model_User
 					 WHERE id = :user
 				'
 			)
-			->set_int(':user', $user)
-			->execute();
+			->num(':user', $user)
+			->run();
 	}
 
 	/**
@@ -886,8 +886,8 @@ class Model_User
 					 WHERE id = :user
 				'
 			)
-			->set_int(':user', $user)
-			->execute();
+			->num(':user', $user)
+			->run();
 	}
 
 	/**
@@ -914,10 +914,10 @@ class Model_User
 					 WHERE `id` = :user
 				'
 			)
-			->set_int(':user', $user)
-			->set_date(':expires', \date_create('+3 hours')->format('Y-m-d H:i:s'))
-			->set(':key', $pwdreset_key)
-			->execute();
+			->num(':user', $user)
+			->date(':expires', \date_create('+3 hours')->format('Y-m-d H:i:s'))
+			->str(':key', $pwdreset_key)
+			->run();
 
 		// make sure to clear cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
@@ -964,12 +964,12 @@ class Model_User
 				',
 				'mysql'
 			)
-			->set(':pwdverifier', $pwdverifier)
-			->set(':pwdsalt', $pwdsalt)
-			->set(':pwddate', \date('Y-m-d H:i:s'))
-			->set_int(':user', $entry['id'])
-			->set(':ipaddress', \app\Server::client_ip())
-			->execute();
+			->str(':pwdverifier', $pwdverifier)
+			->str(':pwdsalt', $pwdsalt)
+			->str(':pwddate', \date('Y-m-d H:i:s'))
+			->num(':user', $entry['id'])
+			->str(':ipaddress', \app\Server::client_ip())
+			->run();
 
 		\app\Stash::purge(\app\Stash::tags('User', ['change']));
 
@@ -1006,9 +1006,9 @@ class Model_User
 					',
 					'mysql'
 				)
-				->set_int(':user', $user)
-				->execute()
-				->fetch_array();
+				->num(':user', $user)
+				->run()
+				->fetch_entry();
 
 			\app\Stash::store
 				(

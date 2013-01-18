@@ -116,8 +116,8 @@ class Model_ProfileField
 					',
 					'mysql'
 				)
-				->set_int(':id', $id)
-				->execute();
+				->num(':id', $id)
+				->run();
 
 			// load fieldtypes
 			$field_types = \app\CFS::config('mjolnir/profile-fieldtypes');
@@ -144,10 +144,10 @@ class Model_ProfileField
 								',
 								'mysql'
 							)
-							->set_int(':user', $id)
-							->set_int(':field', $key)
-							->set(':value', $field_types[$map[$key]['type']]['store']($value))
-							->execute();
+							->num(':user', $id)
+							->num(':field', $key)
+							->str(':value', $field_types[$map[$key]['type']]['store']($value))
+							->run();
 					}
 				}
 			}
@@ -231,8 +231,8 @@ class Model_ProfileField
 						 ORDER BY field.idx ASC
 					'
 				)
-				->set_int(':user', $id)
-				->execute()
+				->num(':user', $id)
+				->run()
 				->fetch_all(static::field_format());
 			
 			$profile_config = \app\CFS::config('mjolnir/profile-fieldtypes');

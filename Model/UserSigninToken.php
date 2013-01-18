@@ -47,9 +47,9 @@ class Model_UserSigninToken extends \app\Instantiatable
 						 WHERE user = :user
 					'
 				)
-				->set(':token', $token)
-				->set_int(':user', $user)
-				->execute();
+				->str(':token', $token)
+				->num(':user', $user)
+				->run();
 		}
 		else # entry does not exist
 		{
@@ -61,9 +61,9 @@ class Model_UserSigninToken extends \app\Instantiatable
 							VALUES (:user, :token)
 					'
 				)
-				->set(':token', $token)
-				->set_int(':user', $user)
-				->execute();
+				->str(':token', $token)
+				->num(':user', $user)
+				->run();
 		}
 		
 		static::clear_cache();
@@ -82,8 +82,8 @@ class Model_UserSigninToken extends \app\Instantiatable
 					 WHERE `user` = :user
 				'
 			)
-			->set_int(':user', $user)
-			->execute();
+			->num(':user', $user)
+			->run();
 		
 		static::clear_cache();
 	}

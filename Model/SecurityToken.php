@@ -69,7 +69,7 @@ class Model_SecurityToken
 					 WHERE expires < NOW()
 				'
 			)
-			->execute();
+			->run();
 		
 		// clear cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
