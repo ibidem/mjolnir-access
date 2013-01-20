@@ -27,7 +27,8 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 		// build context
 		$relaynode = $channel->get('relaynode');
 		$context = $relaynode->get('matcher')->context();
-		if (isset($relaynode->get('context', null)) && \is_array($relaynode->get('context', null)))
+		$relay_context = $relaynode->get('context', null);
+		if ($relay_context !== null && \is_array($relaynode->get('context', null)))
 		{
 			$context = \array_merge($context, $relaynode->get('context'));
 		}
