@@ -22,7 +22,7 @@ class Model_Role
 	/**
 	 * @var array
 	 */
-	protected static $field_format = [];
+	protected static $fieldformat = [];
 	
 	/**
 	 * @var array

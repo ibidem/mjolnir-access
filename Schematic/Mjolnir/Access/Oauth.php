@@ -2,13 +2,18 @@
 
 /**
  * @package    mjolnir
- * @category   Schematic
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Schematic_Mjolnir_Access_Oauth extends \app\Schematic_Base
+class Schematic_Mjolnir_Access_Oauth extends \app\Instantiatable implements \mjolnir\types\Schematic
 {
+	use \app\Trait_Schematic;
+
+	/**
+	 * ...
+	 */
 	function build()
 	{
 		// inject openid providers

@@ -23,15 +23,15 @@ $validator_unkeyed = function ($config)
 return array
 	(
 		'remember_me.timeout' => 60 * 60 * 24 * 14,
-	
-		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
-	
-		'default.signup' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signup'], '', 'http'),
 
-		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset'], '', 'http'),
-	
-		'default.emails_manager' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'emails'], '', 'http'),
-	
+		'default.signin' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signin']),
+
+		'default.signup' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'signup'], [], 'http'),
+
+		'default.pwdreset' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'pwdreset'], [], 'http'),
+
+		'default.emails_manager' => \app\URL::href('\mjolnir\access\a12n', ['action' => 'emails'], [], 'http'),
+
 		'signin.redirect' => \app\URL::href('\mjolnir\access\a12n'),
 
 		'recaptcha' => array
@@ -55,7 +55,7 @@ return array
 						'icon' => 'facebook',
 						'title' => 'Facebook',
 						'register' => '\mjolnir\access\channel\facebook',
-					
+
 						'scope' => 'email',
 
 						'validator' => function ($config) {
@@ -71,7 +71,7 @@ return array
 
 							return null;
 						},
-						
+
 						'session.token.name' => 'tkbf',
 
 					),

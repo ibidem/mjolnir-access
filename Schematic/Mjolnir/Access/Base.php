@@ -2,13 +2,18 @@
 
 /**
  * @package    mjolnir
- * @category   Schematic
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
+class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjolnir\types\Schematic
 {
+	use \app\Trait_Schematic;
+
+	/**
+	 * ...
+	 */
 	function down()
 	{
 		\app\Schematic::destroy
@@ -24,6 +29,9 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 			);
 	}
 
+	/**
+	 * ...
+	 */
 	function up()
 	{
 		\app\Schematic::table
@@ -36,7 +44,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`nickname`    :username,
 					`email`       :email,
 					`ipaddress`   :ipaddress,
-					
+
 					`pwdverifier` :secure_hash DEFAULT NULL,
 					`pwdsalt`     :secure_hash DEFAULT NULL,
 					`pwddate`     :datetime_optional DEFAULT NULL,
@@ -46,7 +54,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`timestamp`   :timestamp,
 					`locked`      :boolean DEFAULT FALSE,
 					`active`      :boolean DEFAULT FALSE,
-					
+
 					`pwdreset`         :secure_hash DEFAULT NULL,
 					`pwdreset_expires` :datetime_optional DEFAULT NULL,
 
@@ -114,7 +122,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					UNIQUE `user` (`user`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
 				\app\Model_SecurityToken::table(),
@@ -123,11 +131,11 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`token`   :secure_hash,
 					`purpose` varchar(255),
 					`expires` :datetime_required,
-					
+
 					PRIMARY KEY (`id`)
 				'
 			);
-		
+
 		\app\Schematic::table
 			(
 				\app\Model_SecondaryEmail::table(),
@@ -135,12 +143,15 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					`id`    :key_primary,
 					`user`  :key_foreign,
 					`email` :email,
-					
+
 					PRIMARY KEY (`id`)
 				'
 			);
 	}
 
+	/**
+	 * ...
+	 */
 	function bind()
 	{
 		\app\Schematic::constraints
@@ -153,7 +164,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 					\app\Model_User::assoc_roles() => array
 						(
 							'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
-							'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],							
+							'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],
 						),
 					\app\Model_ProfileField::assoc_user() => array
 						(
@@ -172,6 +183,9 @@ class Schematic_Mjolnir_Access_Base extends \app\Schematic_Base
 			);
 	}
 
+	/**
+	 * ...
+	 */
 	function build()
 	{
 		// inject roles

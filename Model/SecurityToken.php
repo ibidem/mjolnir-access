@@ -24,7 +24,7 @@ class Model_SecurityToken
 	/**
 	 * @var array
 	 */
-	protected static $field_format = ['expires' => 'datetime'];
+	protected static $fieldformat = ['expires' => 'datetime'];
 	
 	// ------------------------------------------------------------------------
 	// Factory

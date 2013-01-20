@@ -24,7 +24,7 @@ class Model_UserSigninToken extends \app\Instantiatable
 	/**
 	 * @var array
 	 */
-	protected static $field_format = [];
+	protected static $fieldformat = [];
 	
 	/**
 	 * @var string

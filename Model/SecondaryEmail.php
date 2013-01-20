@@ -27,7 +27,7 @@ class Model_SecondaryEmail
 	/**
 	 * @var array
 	 */
-	protected static $field_format = [];			
+	protected static $fieldformat = [];			
 	
 	// ------------------------------------------------------------------------
 	// Factory
