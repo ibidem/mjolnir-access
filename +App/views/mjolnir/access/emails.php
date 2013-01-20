@@ -11,7 +11,7 @@
 ?>
 
 <?= $f = Form::i('twitter.general', $email_manager)
-	->errors($errors['\mjolnir\access\A12n::update_mainemail']) ?>
+	->errors($errors['\mjolnir\access\Auth::update_mainemail']) ?>
 
 	<fieldset>
 		
@@ -22,7 +22,7 @@
 				'Main Email',
 				$f->text(null, 'email')
 					->value($control->mainemail()),
-				$f->submit(\app\Lang::tr('Update'))
+				$f->submit(\app\Lang::term('Update'))
 					->classes(['btn', 'btn-primary'])
 			)
 			->format('%1 %2')
@@ -34,11 +34,11 @@
 
 <hr/>
 
-<p class="alert alert-info"><?= \app\Lang::msg('\mjolnir\access\user:emails:intructions') ?></p>
+<p class="alert alert-info"><?= \app\Lang::key('mjolnir:access/emails-intructions') ?></p>
 
 <? $secondary_emails = $control->secondaryemails() ?>
 <? if (\count($secondary_emails) > 0): ?>
-	<<?= $h2 ?>><?= Lang::tr('Secondary Emails') ?></<?= $h2 ?>>
+	<<?= $h2 ?>><?= Lang::term('Secondary Emails') ?></<?= $h2 ?>>
 
 	<table class="table">
 		<? foreach ($secondary_emails as $secondary_email): ?>
@@ -47,7 +47,7 @@
 					<?= $f = Form::i('twitter.general', $email_manager) ?>
 						<?= $f->hidden('id')->value($secondary_email['id']) ?>
 						<?= $f->hidden('action')->value('remove-secondary-email') ?>
-						<button type="submit" class="btn btn-warning btn-mini"><?= Lang::tr('Remove') ?></button>
+						<button type="submit" class="btn btn-warning btn-mini"><?= Lang::term('Remove') ?></button>
 					<?= $f->close() ?>
 				</td>
 				<td><?= $secondary_email['email'] ?></td>
@@ -56,16 +56,16 @@
 	</table>
 <? else: # blank state ?>
 	<p class="alert alert-warning">
-		<?= \app\Lang::msg('\mjolnir\access\user:emails:no_secondary_emails') ?>
+		<?= \app\Lang::key('mjolnir:access/emails-no-secondary-emails') ?>
 	</p>
 <? endif; ?>
 
-<<?= $h2 ?>><?= Lang::tr('Add Secondary Email') ?></<?= $h2 ?>>
+<<?= $h2 ?>><?= Lang::term('Add Secondary Email') ?></<?= $h2 ?>>
 
 <br/>
 
 <?= $f = Form::i('twitter.general', $email_manager)
-	->errors($errors['\mjolnir\access\A12n::update_mainemail']) ?>
+	->errors($errors['\mjolnir\access\Auth::update_mainemail']) ?>
 
 	<fieldset>
 
@@ -75,7 +75,7 @@
 			(
 				'Secondary Email',
 				$f->text(null, 'email'),
-				$f->submit(Lang::tr('Send Authorization Code'))
+				$f->submit(Lang::term('Send Authorization Code'))
 					->classes(['btn', 'btn-primary'])
 			)
 			->format('%1 %2')
@@ -85,7 +85,7 @@
 	
 <?= $f->close() ?>
 
-<<?= $h2 ?>><?= Lang::tr('Link Account') ?></<?= $h2 ?>>
+<<?= $h2 ?>><?= Lang::term('Link Account') ?></<?= $h2 ?>>
 
 <?= \app\View::instance()
 	->file('mjolnir/access/auth')

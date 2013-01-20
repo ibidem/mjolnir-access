@@ -18,37 +18,37 @@ class Model_SecondaryEmail
 		{
 			\app\Trait_Model_Collection::delete as protected collection_delete;
 		}
-	
+
 	/**
 	 * @var string
 	 */
 	protected static $table = 'user_secondaryemails';
-	
+
 	/**
 	 * @var array
 	 */
-	protected static $fieldformat = [];			
-	
+	protected static $fieldformat = [];
+
 	// ------------------------------------------------------------------------
 	// Factory
-	
+
 	/**
 	 * @return \app\Validator
 	 */
 	static function check(array $fields, $context = null)
 	{
-		return \app\Validator::instance([], $fields)
-			->test('email', ':valid', \app\Email::valid($fields['email']))
-			->test('email', ':valid', static::unique_email($fields['email'], $fields['user']));
+		return \app\Validator::instance($fields)
+			->test('email', \app\Email::valid($fields['email']))
+			->test('email', static::unique_email($fields['email'], $fields['user']));
 	}
-	
+
 	/**
 	 * ...
 	 */
 	static function process(array $fields)
 	{
 		// @todo HIGH lock accounts if email is presetnt on another
-		
+
 		static::inserter($fields, ['email'], [], ['user'])->run();
 		static::$last_inserted_id = \app\SQL::last_inserted_id();
 
@@ -61,7 +61,7 @@ class Model_SecondaryEmail
 
 	// ------------------------------------------------------------------------
 	// etc
-	
+
 	/**
 	 * Remove all secondary emails for given user; used when loacking accounts.
 	 */
@@ -77,27 +77,27 @@ class Model_SecondaryEmail
 			)
 			->num(':user', $user)
 			->run();
-		
+
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// Validation Helpers
-	
+
 	/**
 	 * @return boolean
 	 */
 	static function unique_email($email, $user)
 	{
 		$detected_user_id = \app\Model_User::for_email($email);
-		
+
 		if ($detected_user_id !== null)
 		{
 			return false;
 		}
 
 		$entry = static::find_entry(['email' => $email]);
-		
+
 		if ($entry !== null)
 		{
 			return false;
@@ -107,7 +107,7 @@ class Model_SecondaryEmail
 			return true;
 		}
 	}
-	
+
 	/**
 	 * ...
 	 */
@@ -116,5 +116,5 @@ class Model_SecondaryEmail
 		static::collection_delete($entries);
 		\app\Stash::purge(\app\Stash::tags('\app\Model_User', ['change']));
 	}
-	
+
 } # class

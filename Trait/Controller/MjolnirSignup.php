@@ -2,8 +2,8 @@
 
 /**
  * @package    mjolnir
- * @category   Library
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
@@ -39,25 +39,25 @@ trait Trait_Controller_MjolnirSignup
 					$errors['form'] = [];
 				}
 
-				$errors['form'][] = \app\Lang::tr('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
+				$errors['form'][] = \app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
 
 				$this->signup_view($errors);
 			}
 			else # captcha test passed
 			{
 				$errors = \app\Model_User::push($_POST);
-				
+
 				if ($errors === null)
 				{
 					$this->signup_success();
-					
+
 					$user = \app\Model_User::last_inserted_id();
 					\app\Model_User::send_activation_email($user);
-					
-					\app\Notice::make(\app\Lang::msg('mjolnir:sent_activation_email'))
+
+					\app\Notice::make(\app\Lang::key('mjolnir:access/sent-activation-email'))
 						->classes(['alert-warning'])
 						->save();
-					
+
 					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 				}
 				else # got errors
@@ -73,24 +73,24 @@ trait Trait_Controller_MjolnirSignup
 				if (\app\Model_User::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
 				{
 					\app\Model_User::activate_account($_GET['user']);
-					\app\Notice::make(\app\Lang::msg('mjolnir:account_activated'))
+					\app\Notice::make(\app\Lang::key('mjolnir:access/account-activated'))
 						->classes(['alert-warning'])
 						->save();
 				}
 				else # error checking token
 				{
-					\app\Notice::make(\app\Lang::msg('mjolnir:invalid_token'))
+					\app\Notice::make(\app\Lang::key('mjolnir:access/invalid-token'))
 						->classes(['alert-warning'])
 						->save();
-					
+
 				}
 				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 			}
-			
+
 			$this->signup_view();
 		}
 	}
-	
+
 	/**
 	 * Hook; called on succesful signup.
 	 */

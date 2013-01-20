@@ -46,7 +46,7 @@ final class Access
 		if (isset($context['owner']))
 		{
 			// if we need owner computations we store the user
-			$user = \app\A12n::instance()->user();
+			$user = \app\Auth::instance()->user();
 		}
 
 		// check if no exception exists
@@ -111,7 +111,7 @@ final class Access
 	static function can($relay, array $context = null, $attribute = null, $user_role = null)
 	{
 		// get role of current user
-		$user_role = $user_role !== null ? $user_role : \app\A12n::instance()->role();
+		$user_role = $user_role !== null ? $user_role : \app\Auth::role();
 
 		// initial status
 		$status = false; # unauthorized

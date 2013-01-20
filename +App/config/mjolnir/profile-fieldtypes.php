@@ -38,11 +38,11 @@ return array
 			(
 				'form' => function ($form, $title, $name, $value) 
 					{
-						return $form->select($title, $name, [\app\Lang::tr('male') => 'm', \app\Lang::tr('female') => 'f'])->value($value);
+						return $form->select($title, $name, [\app\Lang::term('male') => 'm', \app\Lang::term('female') => 'f'])->value($value);
 					},
 				'render' => function ($value) 
 					{
-						return $value == 'm' ? \app\Lang::tr('male') : \app\Lang::tr('female');
+						return $value == 'm' ? \app\Lang::term('male') : \app\Lang::term('female');
 					},
 				'store' => function ($value)
 					{

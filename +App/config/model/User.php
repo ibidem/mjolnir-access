@@ -6,7 +6,7 @@
 			),
 		'dependencies' => array
 			(
-			
+
 			),
 		'fields' => array
 			(
@@ -41,6 +41,7 @@
 				'nickname' => array
 					(
 						'not_empty' => 'You must type in a nickname.',
+						'max_length' => 'Please choose a shorter account name.',
 						':unique' => 'User with same name already exists.',
 					),
 				'password' => array

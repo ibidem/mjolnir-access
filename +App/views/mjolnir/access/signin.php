@@ -27,18 +27,18 @@
 			</div>
 		<? endif; ?>
 
-		<?= $f->text(Lang::msg('mjolnir.access.signin.username_or_email'), 'identity')
+		<?= $f->text(Lang::key('mjolnir:access/username-or-email'), 'identity')
 			->attr('autofocus', 'autofocus') ?>
 
-		<?= $f->password(Lang::tr('Password'), 'password') ?>
+		<?= $f->password(Lang::term('Password'), 'password') ?>
 
 		<?= $f->select
 			(
 				null,
 				'remember_me',
 				[
-					Lang::msg('mjolnir.access.signin.remember_me') => 'on',
-					Lang::msg('mjolnir.access.signin.dont_remember_me') => 'off'
+					Lang::key('mjolnir:access/remember-me') => 'on',
+					Lang::key('mjolnir:access/dont-remember-me') => 'off'
 				]
 			)
 			->value('off') ?>
@@ -49,12 +49,12 @@
 
 		<div class="form-actions">
 			<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
-				<i class="icon-signin"></i> <?= Lang::tr('Sign In') ?>
+				<i class="icon-signin"></i> <?= Lang::term('Sign In') ?>
 			</button>
 
 			&nbsp;
 			<a href="<?= \app\CFS::config('mjolnir/a12n')['default.pwdreset'] ?>">
-				<?= \app\Lang::tr('Reset Password') ?>
+				<?= \app\Lang::term('Reset Password') ?>
 			</a>
 		</div>
 

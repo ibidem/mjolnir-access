@@ -2,8 +2,8 @@
 
 /**
  * @package    mjolnir
- * @category   Trait
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
@@ -16,7 +16,7 @@ trait Trait_Controller_MjolnirEmails
 	{
 		return \app\Model_User::entry(\app\Auth::id())['email'];
 	}
-	
+
 	/**
 	 * @return array emails
 	 */
@@ -24,26 +24,26 @@ trait Trait_Controller_MjolnirEmails
 	{
 		return \app\Model_SecondaryEmail::entries($page, $limit, $offset, [], ['user' => \app\Auth::id()]);
 	}
-	
+
 	/**
 	 * Email manager for handlign main email changes along with adding aditional
 	 * email addresses for authorization purposes.
 	 */
 	function action_emails()
 	{
-		if (\app\Auth::role() === \app\A12n::guest())
+		if (\app\Auth::role() === \app\Auth::guest())
 		{
 			throw new \app\Exception_NotAllowed
 				('Page is only available when you are signed in.');
 		}
-		
+
 		if (\app\Server::request_method() === 'POST')
 		{
 			if ( ! isset($_POST['action']))
 			{
 				throw new \Exception('Undefined action when using emails manager.');
 			}
-			
+
 			if ($_POST['action'] === 'add-secondary-email')
 			{
 				$this->add_secondary_email();
@@ -60,7 +60,7 @@ trait Trait_Controller_MjolnirEmails
 			{
 				throw new \Exception('Undefined action when using emails manager: '.$_POST['action']);
 			}
-			
+
 			$this->emails_view();
 		}
 		else # treat as GET
@@ -80,11 +80,11 @@ trait Trait_Controller_MjolnirEmails
 					throw new \Exception('Unknown action: '.$_GET['action']);
 				}
 			}
-			
+
 			$this->emails_view();
 		}
 	}
-	
+
 	/**
 	 * ...
 	 */
@@ -95,7 +95,7 @@ trait Trait_Controller_MjolnirEmails
 			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'add-secondary-email');
 
 			$change_email_url = \app\CFS::config('mjolnir/a12n')['default.emails_manager'].'?action=add_secondary_email&code='.$token;
-			
+
 			\app\Session::set('mjolnir:add-secondary-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:add-secondary-email:user', \app\Auth::id());
 
@@ -103,21 +103,21 @@ trait Trait_Controller_MjolnirEmails
 			$sent = \app\Email::instance()
 				->send
 				(
-					$_POST['email'], 
-					null, 
-					\app\Lang::tr('Confirmation of Email ownership'),
-					\app\Lang::msg('mjolnir:email:visit_url_to_finish', [':url' => $change_email_url])
+					$_POST['email'],
+					null,
+					\app\Lang::term('Confirmation of Email ownership'),
+					\app\Lang::key('mjolnir:access/email-visit-url-to-finish', [':url' => $change_email_url])
 				);
-			
+
 			if ($sent)
 			{
-				\app\Notice::make(\app\Lang::tr('An email has been sent, at :email, with further instructions.', [':email' => $_POST['email']]))
+				\app\Notice::make(\app\Lang::term('An email has been sent, at :email, with further instructions.', [':email' => $_POST['email']]))
 					->classes(['alert-warning'])
 					->save();
 			}
 			else # sent = 0
 			{
-				\app\Notice::make(\app\Lang::tr('Failed to send confirmation email.'))
+				\app\Notice::make(\app\Lang::term('Failed to send confirmation email.'))
 					->classes(['alert-error'])
 					->save();
 			}
@@ -126,19 +126,19 @@ trait Trait_Controller_MjolnirEmails
 		{
 			$email = \app\Session::get('mjolnir:add-secondary-email:email', null);
 			$user  = \app\Session::get('mjolnir:add-secondary-email:user', null);
-			
+
 			if ($email === null || $user === null || $user !== \app\Auth::id())
 			{
 				throw new \app\Exception_NotApplicable
-					(\app\Lang::tr('Potential security violation. Operation terminated.'));
+					(\app\Lang::term('Potential security violation. Operation terminated.'));
 			}
-			
+
 			// verify
 			if (\app\Model_User::confirm_token(\app\Auth::id(), $code, 'add-secondary-email'))
 			{
 				\app\Model_User::add_secondary_email(\app\Auth::id(), $email);
-				
-				\app\Notice::make(\app\Lang::tr('Succesfully added secondary email.'))
+
+				\app\Notice::make(\app\Lang::term('Succesfully added secondary email.'))
 					->classes(['alert-info'])
 					->save();
 			}
@@ -146,13 +146,13 @@ trait Trait_Controller_MjolnirEmails
 			{
 				throw new \app\Exception_NotAllowed('Invalid token provided.');
 			}
-			
+
 			// clear session variables
 			\app\Session::set('mjolnir:add-secondary-email:email', null);
 			\app\Session::set('mjolnir:add-secondary-email:user', null);
 		}
 	}
-	
+
 	/**
 	 * ...
 	 */
@@ -163,7 +163,7 @@ trait Trait_Controller_MjolnirEmails
 			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'change-main-email');
 
 			$change_email_url = \app\CFS::config('mjolnir/a12n')['default.emails_manager'].'?action=change_main_email&code='.$token;
-			
+
 			\app\Session::set('mjolnir:change-main-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:change-main-email:user', \app\Auth::id());
 
@@ -171,21 +171,21 @@ trait Trait_Controller_MjolnirEmails
 			$sent = \app\Email::instance()
 				->send
 				(
-					$_POST['email'], 
-					null, 
-					\app\Lang::tr('Confirmation of Email ownership'),
-					\app\Lang::msg('mjolnir:email:visit_url_to_finish', [':url' => $change_email_url])
+					$_POST['email'],
+					null,
+					\app\Lang::term('Confirmation of Email ownership'),
+					\app\Lang::key('mjolnir:access/email-visit-url-to-finish', [':url' => $change_email_url])
 				);
-			
+
 			if ($sent)
 			{
-				\app\Notice::make(\app\Lang::tr('An email has been sent, at :email, with further instructions.', [':email' => $_POST['email']]))
+				\app\Notice::make(\app\Lang::term('An email has been sent, at :email, with further instructions.', [':email' => $_POST['email']]))
 					->classes(['alert-warning'])
 					->save();
 			}
 			else # sent = 0
 			{
-				\app\Notice::make(\app\Lang::tr('Failed to send confirmation email.'))
+				\app\Notice::make(\app\Lang::term('Failed to send confirmation email.'))
 					->classes(['alert-error'])
 					->save();
 			}
@@ -194,18 +194,18 @@ trait Trait_Controller_MjolnirEmails
 		{
 			$email = \app\Session::get('mjolnir:change-main-email:email', null);
 			$user  = \app\Session::get('mjolnir:change-main-email:user', null);
-			
+
 			if ($email === null || $user === null || $user !== \app\Auth::id())
 			{
 				throw new \app\Exception_NotApplicable
-					(\app\Lang::tr('Potential security violation. Operation terminated.'));
+					(\app\Lang::term('Potential security violation. Operation terminated.'));
 			}
-			
+
 			// verify
 			if (\app\Model_User::confirm_token(\app\Auth::id(), $code, 'change-main-email'))
 			{
 				\app\Model_User::change_email(\app\Auth::id(), $email);
-				\app\Notice::make(\app\Lang::tr('Main Email updated succesfully.'))
+				\app\Notice::make(\app\Lang::term('Main Email updated succesfully.'))
 					->classes(['alert-info'])
 					->save();
 			}
@@ -213,18 +213,18 @@ trait Trait_Controller_MjolnirEmails
 			{
 				throw new \app\Exception_NotAllowed('Invalid token provided.');
 			}
-			
+
 			// clear session variables
 			\app\Session::set('mjolnir:change-main-email:email', null);
 			\app\Session::set('mjolnir:change-main-email:user', null);
 		}
 	}
-	
+
 	protected function remove_secondary_email()
 	{
 		// verify secondary email belongs to user
 		$entry = \app\Model_SecondaryEmail::entry($_POST['id']);
-		
+
 		if ($entry['user'] == \app\Auth::id())
 		{
 			\app\Model_SecondaryEmail::delete([$_POST['id']]);

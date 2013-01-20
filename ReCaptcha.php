@@ -22,7 +22,7 @@ class ReCaptcha
 
 		if ( ! isset($recaptcha_config['public_key'], $recaptcha_config['private_key']))
 		{
-			throw new \Exception('ReCaptcha keys not set.');
+			throw new \app\Exception('ReCaptcha keys not set.');
 		}
 
 		return \recaptcha_get_html($recaptcha_config['public_key']);

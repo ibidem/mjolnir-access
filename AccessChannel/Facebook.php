@@ -46,7 +46,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				// save in session the access token for later use
 				\app\Session::set(\app\CFS::config('mjolnir/a12n')['signin']['facebook']['session.token.name'], $params['access_token']);
 				
-				\app\A12n::inferred_signin($user->username, $user->email, 'facebook', $user);
+				\app\Auth::inferred_signin($user->username, $user->email, 'facebook', $user);
 				
 				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
 			}

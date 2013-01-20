@@ -72,7 +72,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 				$email = $user_profile->email;
 			}
 			
-			\app\A12n::inferred_signin($display_name, $email, $provider_name);
+			\app\Auth::inferred_signin($display_name, $email, $provider_name);
 			
 			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
 		}
@@ -107,7 +107,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 					break;
 			}
 			
-			if (\app\Auth::role() === \app\A12n::guest())
+			if (\app\Auth::role() === \app\Auth::guest())
 			{
 				throw new \Exception('AccessChannel: '.$message);
 			}

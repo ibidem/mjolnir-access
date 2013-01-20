@@ -46,9 +46,10 @@ class Model_ProfileField
 	static function check(array $fields, $context = null)
 	{
 		$errors = ['name' => ['unique' => 'Field with the same name already exists.']];
-		return \app\Validator::instance($errors, $fields)
-			->ruleset('not_empty', ['title', 'name', 'idx', 'type', 'required'])
-			->test('name', 'unique', ! static::exists($fields['name'], 'name', $context));
+		return \app\Validator::instance($fields)
+			->adderrormessages($errors)
+			->rule(['title', 'name', 'idx', 'type', 'required'], 'not_empty')
+			->rule('name', 'unique', ! static::exists($fields['name'], 'name', $context));
 	}
 
 	/**

@@ -1,29 +1,29 @@
 <?php return array
 	(
-		'mjolnir.access.sign_up_now' => 'Sign Up now!',
+		'mjolnir:access/sign-up-now' => 'Sign Up now!',
 
-		'mjolnir.access.signin.username_or_email' => '<b>Username</b> or <b>Email</b>',
-		'mjolnir.access.signin.title' => 'Sign In',
-		'mjolnir.access.signin.remember_me' => 'Private area. Remember Me...',
-		'mjolnir.access.signin.not_yet_a_member' => 'Not yet a member?',
-		'mjolnir.access.signin.dont_remember_me' => 'Public area; temporary login.',
+		'mjolnir:access/username-or-email' => '<b>Username</b> or <b>Email</b>',
+		'mjolnir:access/signin-title' => 'Sign In',
+		'mjolnir:access/remember-me' => 'Private area. Remember Me...',
+		'mjolnir:access/not-yet-a-member' => 'Not yet a member?',
+		'mjolnir:access/dont-remember-me' => 'Public area; temporary login.',
 
-		'mjolnir.access.stats.title' => 'Welcome back!',
-		'mjolnir.access.stats.currently_logged_as' => function ($in)
+		'mjolnir:access/stats-title' => 'Welcome back!',
+		'mjolnir:access/currently-logged-in-as' => function ($in)
 			{
 				return \strtr('Currently logged in as:<br> <strong>:username</strong>', $in);
 			},
 
-		'mjolnir.access.signup.title' => 'Sign Up',
+		'mjolnir:access/signup-title' => 'Sign Up',
 
-		'mjolnir.access.pwdreset.title'	=> 'Password Reset',
-		'mjolnir.access.pwdreset.success'
+		'mjolnir:access/pwdreset-title'	=> 'Password Reset',
+		'mjolnir:access/pwdreset-success'
 			=> 'An email with further instructions has been mailed to you address.',
-		'mjolnir.access.pwdreset.failure'
+		'mjolnir:access/pwdreset-failure'
 			=> 'Failed to reset password. Please try repeating the process from the begining.',
-		'mjolnir.access.pwdreset.finished'
+		'mjolnir:access/pwdreset-finished'
 			=> 'Your password has been reset.',
-		'mjolnir.access.pwdreset.password_reset_url' => function ($in)
+		'mjolnir:access/pwdreset-reset-url' => function ($in)
 			{
 				return \strtr
 					(
@@ -33,32 +33,32 @@
 					);
 			},
 					
-		'\mjolnir\access\user:emails:title' => 'Emails',
+		'mjolnir:access/emails-title' => 'Emails',
 					
-		'\mjolnir\access\user:emails:intructions' => 
+		'mjolnir:access/emails-intructions' => 
 'To sign in via additional providers please link the emails by which those 
 providers know you as to this account. If an account already exists on our end 
 with the given email it will be locked and using said email will sign you into 
 this account.',
 					
-		'\mjolnir\access\user:emails:no_secondary_emails' 
+		'mjolnir:access/emails-no-secondary-emails' 
 			=> 'You currently have no secondary emails.',
 					
-		'mjolnir:email:visit_url_to_finish' => function ($in)
+		'mjolnir:access/email-visit-url-to-finish' => function ($in)
 			{
 				return \strtr('Please visit following url to complete the process:'."\n:url", $in);
 			},
 			
-		'mjolnir:invalid_token' 
+		'mjolnir:access/invalid-token' 
 			=> 'Invalid token supplied; please try repeating the process. This error occurs if you copy pasted the incorrect url, or to code in question has expired.',
 					
-		'mjolnir:account_activated'
+		'mjolnir:access/account-activated'
 			=> 'Your account is now active.',
 					
-		'mjolnir:your_account_is_inactive'
+		'mjolnir:access/your-account-is-inactive'
 			=> 'Your account is not active, access defined. A fresh activation code has been send to your email address.',
 					
-		'mjolnir:email:activate_account' => function ($in)
+		'mjolnir:access/email-activate-account' => function ($in)
 			{
 				return \app\View::instance('mjolnir/emails/en-us/activate_account')
 					->variable('nickname', $in[':nickname'])
@@ -66,7 +66,7 @@ this account.',
 					->render();
 			},
 					
-		'mjolnir:sent_activation_email'
+		'mjolnir:access/sent-activation-email'
 			=> 'Success! But your account is currently inactive. An email has been sent to your email address with activation instructions. Attempting to signin will re-issue a new activation email.'
 					
 	);

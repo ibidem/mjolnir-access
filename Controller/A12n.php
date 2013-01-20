@@ -34,7 +34,7 @@ class Controller_A12n extends \app\Controller_Web
 	{
 		$relay = $this->layer->get_relay();
 
-		if (\app\A12n::instance()->role() === \app\A12n::guest())
+		if (\app\Auth::role() === \app\Auth::guest())
 		{
 			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
 		}
@@ -174,10 +174,10 @@ class Controller_A12n extends \app\Controller_Web
 	function emails_view($errors = null)
 	{
 		$relay = $this->layer->get_relay();
-		
+
 		if ($relay['target'] === null)
 		{
-			\app\GlobalEvent::fire('webpage:title', \app\Lang::tr('Emails · Access'));
+			\app\GlobalEvent::fire('webpage:title', \app\Lang::term('Emails · Access'));
 
 			$view = \app\ThemeView::instance()
 				->theme('mjolnir/access')
@@ -204,5 +204,5 @@ class Controller_A12n extends \app\Controller_Web
 
 		$this->body($view->render());
 	}
-	
+
 } # class

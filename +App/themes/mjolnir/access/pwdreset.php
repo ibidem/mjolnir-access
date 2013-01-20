@@ -6,7 +6,7 @@
 
 <div class="row">
 	<div class="span12">
-		<h1><?= Lang::msg('mjolnir.access.pwdreset.title') ?></h1>
+		<h1><?= Lang::key('mjolnir:access/pwdreset-title') ?></h1>
 		<br/>
 	</div>
 </div>

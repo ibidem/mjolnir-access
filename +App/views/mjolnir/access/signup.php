@@ -29,14 +29,14 @@
 			</div>
 		<? endif; ?>
 
-		<?= $f->text(Lang::tr('Name'), 'nickname')
+		<?= $f->text(Lang::term('Name'), 'nickname')
 			->attr('autofocus', 'autofocus') ?>
 
-		<?= $f->text(Lang::tr('Email'), 'email') ?>
+		<?= $f->text(Lang::term('Email'), 'email') ?>
 
-		<?= $f->password(Lang::tr('Password'), 'password') ?>
+		<?= $f->password(Lang::term('Password'), 'password') ?>
 
-		<?= $f->password(Lang::tr('Password (again)'), 'verifier') ?>
+		<?= $f->password(Lang::term('Password (again)'), 'verifier') ?>
 
 		<hr/>
 
@@ -44,7 +44,7 @@
 
 		<div class="form-actions">
 			<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
-				<i class="icon-signin"></i> <?= Lang::tr('Sign Up') ?>
+				<i class="icon-signin"></i> <?= Lang::term('Sign Up') ?>
 			</button>
 		</div>
 	</fieldset>

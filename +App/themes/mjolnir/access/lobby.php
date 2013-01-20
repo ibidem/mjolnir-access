@@ -3,7 +3,7 @@
 
 	/* @var $theme ThemeView */
 
-	$user = \app\Model_User::entry(\app\A12n::instance()->user());
+	$user = \app\Model_User::entry(\app\Auth::instance()->user());
 ?>
 
 <div class="content">

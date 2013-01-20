@@ -73,19 +73,20 @@ class Model_User
 			$unique_email = false;
 		}
 
-		$validator = \app\Validator::instance($user_config['errors'], $fields)
-			->ruleset('not_empty', ['nickname', 'email', 'role'])
-			->test('email', ':valid', \app\Email::valid($fields['email']))
-			->test('email', ':unique', $unique_email)
-			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
+		$validator = \app\Validator::instance($fields)
+			->adderrormessages($user_config['errors'])
+			->rule(['nickname', 'email', 'role'], 'not_empty')
+			->test('email', \app\Email::valid($fields['email']))
+			->rule('email', ':unique', $unique_email)
+			->rule('nickname', 'max_length', \strlen($fields['nickname']) <= $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
 		if ($context === null)
 		{
 			$validator
 				->rule('password', 'not_empty')
-				->rule('password', 'min_length', $user_config['fields']['password']['minlength'])
-				->rule('verifier', 'equal_to', $fields['password']);
+				->rule('password', 'min_length', \strlen($fields['nickname']) >= $user_config['fields']['password']['minlength'])
+				->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
 		}
 
 		return $validator;
@@ -150,9 +151,7 @@ class Model_User
 				__METHOD__,
 				'
 					INSERT INTO `'.static::assoc_roles().'`
-						(user, role)
-					VALUES
-						(:user, :role)
+					(user, role) VALUES (:user, :role)
 				',
 				'mysql'
 			)
@@ -224,8 +223,8 @@ class Model_User
 	protected static function nullentry_for_current_user( & $entry, $id)
 	{
 		return $entry === null
-			&& \app\A12n::instance()->role() !== \app\A12n::guest()
-			&& $id === \app\A12n::instance()->user();
+			&& \app\Auth::role() !== \app\Auth::guest()
+			&& $id === \app\Auth::instance()->user();
 	}
 
 	/**
@@ -269,7 +268,7 @@ class Model_User
 
 			if (static::nullentry_for_current_user($entry, $id))
 			{
-				\app\Controller_A12n::instance()->action_signout();
+				\app\Controller_Auth::instance()->action_signout();
 				exit(1);
 			}
 
@@ -344,8 +343,8 @@ class Model_User
 	 */
 	static function inferred_signup_check(array $fields)
 	{
-		return \app\Validator::instance([], $fields)
-			->ruleset('not_empty', ['identification', 'email', 'role', 'provider']);
+		return \app\Validator::instance($fields)
+			->rule(['identification', 'email', 'role', 'provider'], 'not_empty');
 	}
 
 	/**
@@ -410,9 +409,10 @@ class Model_User
 	{
 		$user_config = \app\CFS::config('model/User');
 
-		return \app\Validator::instance($user_config['errors'], $fields)
+		return \app\Validator::instance($fields)
+			->adderrormessages($user_config['errors'])
 			->rule('password', 'not_empty')
-			->rule('verifier', 'equal_to', $fields['password']);
+			->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
 	}
 
 	/**
@@ -670,10 +670,10 @@ class Model_User
 			(
 				$user['email'],
 				null,
-				\app\Lang::tr('Confirmation of Email Ownership'),
-				\app\Lang::msg
+				\app\Lang::term('Confirmation of Email Ownership'),
+				\app\Lang::key
 					(
-						'mjolnir:email:activate_account',
+						'mjolnir:access/email-activate-account',
 						[
 							':token_url' => $confirm_email_url,
 							':nickname' => $user['nickname'],
@@ -935,11 +935,11 @@ class Model_User
 		// verify pwd reset key and that reset has not expired
 		if ($entry['pwdreset'] !== $key)
 		{
-			return [ \app\Lang::tr('Invalid password reset key. Please repeat the process.') ];
+			return [ \app\Lang::term('Invalid password reset key. Please repeat the process.') ];
 		}
 		elseif ($entry['pwdreset_expires'] < \date_create('now'))
 		{
-			return [ \app\Lang::tr('Password reset has expired. Please repeat the process.') ];
+			return [ \app\Lang::term('Password reset has expired. Please repeat the process.') ];
 		}
 
 		// load configuration

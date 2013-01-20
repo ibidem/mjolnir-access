@@ -15,29 +15,29 @@ class Model_SecurityToken
 	use \app\Trait_Model_Utilities;
 	# entries, entry, find, find_entry, clear_entry_cache, delete, count, exists
 	use \app\Trait_Model_Collection;
-	
+
 	/**
 	 * @var string
 	 */
 	protected static $table = 'securitytokens';
-	
+
 	/**
 	 * @var array
 	 */
 	protected static $fieldformat = ['expires' => 'datetime'];
-	
+
 	// ------------------------------------------------------------------------
 	// Factory
-	
+
 	/**
 	 * @return \app\Validator
 	 */
 	static function check(array $fields)
 	{
-		return \app\Validator::instance([], $fields)
-			->ruleset('not_empty', ['purpose']);
+		return \app\Validator::instance($fields)
+			->rule('purpose', 'not_empty');
 	}
-	
+
 	/**
 	 * ...
 	 */
@@ -52,10 +52,10 @@ class Model_SecurityToken
 			\app\Stash::purge(\app\Stash::tags($related_cache[0], $related_cache[1]));
 		}
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// etc
-	
+
 	/**
 	 * Remove all expired tokens.
 	 */
@@ -70,9 +70,9 @@ class Model_SecurityToken
 				'
 			)
 			->run();
-		
+
 		// clear cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 } # class

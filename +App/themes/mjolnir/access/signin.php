@@ -6,7 +6,7 @@
 
 <div class="row">
 	<div class="span12">
-		<h1><?= Lang::msg('mjolnir.access.signin.title') ?></h1>
+		<h1><?= Lang::key('mjolnir:access/signin-title') ?></h1>
 		<br/>
 	</div>
 </div>
@@ -37,11 +37,11 @@
 	<? if ($context->can_signup()): ?>
 		<div class="span3">
 			<p>
-				<span class="label label-info"><?= Lang::tr('Help') ?></span>
+				<span class="label label-info"><?= Lang::term('Help') ?></span>
 				<small>
-					<?= Lang::msg('mjolnir.access.signin.not_yet_a_member') ?>
+					<?= Lang::key('mjolnir:access/not-yet-a-member') ?>
 					<a class="nowrap" href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signup']) ?>">
-						<?= Lang::msg('mjolnir.access.sign_up_now') ?>
+						<?= Lang::key('mjolnir:access/sign-up-now') ?>
 					</a>
 				</small>
 			</p>

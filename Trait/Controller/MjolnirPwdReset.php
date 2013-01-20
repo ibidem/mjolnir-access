@@ -2,8 +2,8 @@
 
 /**
  * @package    mjolnir
- * @category   Library
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
@@ -23,7 +23,7 @@ trait Trait_Controller_MjolnirPwdReset
 				$errors = \app\Model_User::pwdreset($_POST['user'], $_POST['key'], $_POST['password']);
 				if ($errors === null)
 				{
-					$_POST['notice'] = \app\Lang::msg('mjolnir.access.pwdreset.finished');
+					$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-finished');
 					$this->pwdreset_view();
 				}
 				else # got errors
@@ -43,7 +43,7 @@ trait Trait_Controller_MjolnirPwdReset
 
 				if ($error !== null)
 				{
-					$errors = ['form' => [\app\Lang::tr('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.')] ];
+					$errors = ['form' => [\app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.')] ];
 
 					$this->pwdreset_view($errors);
 				}
@@ -53,7 +53,7 @@ trait Trait_Controller_MjolnirPwdReset
 
 					if ($user === null)
 					{
-						$errors = [ 'identity' => [\app\Lang::tr('We do not know of any such user or email.')] ];
+						$errors = [ 'identity' => [\app\Lang::term('We do not know of any such user or email.')] ];
 					}
 
 					if ($errors === null)
@@ -67,8 +67,8 @@ trait Trait_Controller_MjolnirPwdReset
 							(
 								$user['email'],
 								'no-reply@'.\app\CFS::config('mjolnir/base')['domain'],
-								\app\Lang::tr('Password Reset'), # subject
-								\app\Lang::msg('mjolnir.access.pwdreset.password_reset_url', [':url' => $pwdreset_url]) # message
+								\app\Lang::term('Password Reset'), # subject
+								\app\Lang::key('mjolnir:access/pwdreset-reset-url', [':url' => $pwdreset_url]) # message
 							);
 
 						if ($emails_sent === 0)
@@ -80,11 +80,11 @@ trait Trait_Controller_MjolnirPwdReset
 									'Errors/'
 								);
 
-							$this->pwdreset_view(['form' => [\app\Lang::tr('Failed to send the reset email to account address. Please try again later; if problem persists please contact us.')] ]);
+							$this->pwdreset_view(['form' => [\app\Lang::term('Failed to send the reset email to account address. Please try again later; if problem persists please contact us.')] ]);
 						}
 						else # succesfully sent emails
 						{
-							$_POST['notice'] = \app\Lang::msg('mjolnir.access.pwdreset.success');
+							$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success');
 							$this->pwdreset_view();
 						}
 					}

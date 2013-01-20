@@ -41,11 +41,11 @@
 
 				<?= $f->hidden('key')->value($_GET['key']) ?>
 
-				<?= $f->password(Lang::tr('New Password'), 'password') ?>
+				<?= $f->password(Lang::term('New Password'), 'password') ?>
 
 			<? else: ?>
 
-				<?= $f->text(Lang::tr('<b>Username</b> or <b>Email</b>'), 'identity')
+				<?= $f->text(Lang::term('<b>Username</b> or <b>Email</b>'), 'identity')
 					->attr('autofocus', 'autofocus') ?>
 
 				<div class="control-group">
@@ -58,7 +58,7 @@
 
 			<div class="form-actions">
 				<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
-					<i class="icon-unlock"></i> <?= Lang::tr('Reset Password') ?>
+					<i class="icon-unlock"></i> <?= Lang::term('Reset Password') ?>
 				</button>
 			</div>
 
