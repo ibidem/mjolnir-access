@@ -90,15 +90,26 @@ class Model_User
 
 		return $validator;
 	}
-
+	
 	/**
-	 * @param array (nickname, email, password, verifier)
+	 * @return array
 	 */
-	static function process(array $fields)
+	static function filter_fields(array $fields)
 	{
 		$password = static::generate_password($fields['password']);
 		
-		$filtered_fields = array
+		$filtered_fields = [];
+		
+		if (isset($fields['active']))
+		{
+			$active_state = $fields['active'] === 'on' ? true : $active_state;
+		}
+		else # active not set
+		{
+			$active_state = true;
+		}
+		
+		$filtered_fields['fields'] = array
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
 				'email' => \htmlspecialchars($fields['email']),
@@ -106,23 +117,45 @@ class Model_User
 				'pwdverifier' => $password['verifier'],
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
-				'active' => $fields['active'],
+				'active' => $active_state
 			);
+		
+		$filtered_fields['string'] = array
+			(
+				'nickname',
+				'email',
+				'ipaddress',
+				'pwdverifier',
+				'pwdsalt',
+				'pwddate',
+			);
+		
+		$filtered_fields['int'] = array
+			(
+				// empty
+			);
+		
+		$filtered_fields['bool'] = array
+			(
+				'active',
+			);
+		
+		return $filtered_fields;
+	}
+
+	/**
+	 * @param array (nickname, email, password, verifier)
+	 */
+	static function process(array $fields)
+	{
+		$filtered_fields = static::filter_fields($fields);
 
 		static::inserter
 			(
-				$filtered_fields,
-				[
-					'nickname',
-					'email',
-					'ipaddress',
-					'pwdverifier',
-					'pwdsalt',
-					'pwddate',
-				],
-				[
-					'active',
-				]
+				$filtered_fields['fields'],
+				$filtered_fields['string'],
+				$filtered_fields['int'],
+				$filtered_fields['bool']
 			)
 			->run();
 

@@ -56,7 +56,7 @@ this account.',
 			=> 'Your account is now active.',
 					
 		'mjolnir:your_account_is_inactive'
-			=> 'Your account is not active, access defined. A fresh activation code has been send to your email address.',
+			=> 'Your account is not active. Access Denied. A fresh activation code has been send to your email address.',
 					
 		'mjolnir:email:activate_account' => function ($in)
 			{
