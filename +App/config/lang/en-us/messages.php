@@ -67,7 +67,11 @@ this account.',
 			},
 					
 		'mjolnir:sent_activation_email'
-			=> 'Success! But your account is currently inactive. An email has been sent to your email address with activation instructions. Attempting to signin will re-issue a new activation email.'
-					
+			=> 'Success! But your account is currently inactive. An email has been sent to your email address with activation instructions. Attempting to signin will re-issue a new activation email.',
+				
+		'login.passwordattemps' => function ($in)
+			{
+				return \strtr('You\'ve entered the wrong password :number times.', $in);
+			},
 	);
 	
