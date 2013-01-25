@@ -102,7 +102,7 @@ class Model_User
 		
 		if (isset($fields['active']))
 		{
-			$active_state = $fields['active'] === 'on' ? true : $active_state;
+			$active_state = $fields['active'] === 'on' ? true : $fields['active'];
 		}
 		else # active not set
 		{
