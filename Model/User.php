@@ -200,9 +200,19 @@ class Model_User
 	 */
 	static function update_process($id, array $fields)
 	{
+		$filtered_fields = static::filter_fields($fields);
+		
 		// update role
 		static::assign_role($id, $fields['role']);
-		static::updater($id, $fields, ['nickname', 'email'], ['active'])->run();
+		static::updater
+			(
+				$id, 
+				$filtered_fields['fields'],
+				$filtered_fields['string'],
+				$filtered_fields['int'],
+				$filtered_fields['bool']
+			)->run();
+		
 		static::clear_entry_cache($id);
 	}
 
