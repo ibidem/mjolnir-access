@@ -237,7 +237,7 @@ class Model_ProfileField
 				->fetch_all(static::fieldformat());
 
 			$profile_config = \app\CFS::config('mjolnir/profile-fieldtypes');
-			foreach ($result as & $field)
+			foreach ($result as &$field)
 			{
 				$field['render'] = $profile_config[$field['type']]['render']($field['value']);
 			}
@@ -252,7 +252,7 @@ class Model_ProfileField
 	{
 		$profile_info = static::profile_info($user);
 
-		foreach ($profile_info as & $profile_field)
+		foreach ($profile_info as &$profile_field)
 		{
 			if ($profile_field['name'] === $field)
 			{

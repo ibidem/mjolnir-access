@@ -220,7 +220,7 @@ class Model_User
 	/**
 	 * @return boolean
 	 */
-	protected static function nullentry_for_current_user( & $entry, $id)
+	protected static function nullentry_for_current_user(&$entry, $id)
 	{
 		return $entry === null
 			&& \app\Auth::role() !== \app\Auth::guest()
