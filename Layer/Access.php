@@ -17,6 +17,11 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 	function run()
 	{
 		$channel = $this->channel();
+		
+		if ($channel->status() === \app\Channel::error)
+		{
+			return; # allow all error processing
+		}
 
 		// setup security protocols
 		\app\Access::protocols(\app\CFS::config('mjolnir/access'));
@@ -26,7 +31,20 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 
 		// build context
 		$relaynode = $channel->get('relaynode');
-		$context = $relaynode->get('matcher')->context();
+		
+		$relaymatcher = $relaynode->get('matcher', null);
+		
+		// we can potentially not have a route matcher when the routing is a 
+		// hardcoded code path and not actual routing from outside input
+		if ($relaymatcher)
+		{
+			$context = $relaymatcher->context();
+		}
+		else # no relaymatcher
+		{
+			$context = [];
+		}
+		
 		$relay_context = $relaynode->get('context', null);
 		if ($relay_context !== null && \is_array($relaynode->get('context', null)))
 		{
