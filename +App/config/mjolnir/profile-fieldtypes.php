@@ -49,6 +49,38 @@ return array
 						return $value;
 					},
 			),
+		'only_friends_comment' => array
+			(
+				'form' => function ($form, $title, $name, $value = 'n') 
+					{
+						if (empty($value)) $value = 'n';
+						return $form->select($title, $name, [\app\Lang::tr('Yes, block all the other users from commenting') => 'y', \app\Lang::tr('No, allow all the users to comment') => 'n'])->value($value);
+					},
+				'render' => function ($value) 
+					{
+						return $value == 'y' ? \app\Lang::tr('Yes, block all the other users from commenting') : \app\Lang::tr('No, allow all the users to comment');
+					},
+				'store' => function ($value)
+					{
+						return $value;
+					},
+			),
+		'checkbox' => array
+			(
+				'form' => function ($form, $title, $name, $value) 
+					{
+						$realval = $value == 'on' ? 'on' : 'off';
+						return $form->checkbox($title, $name)->check_value($realval);
+					},
+				'render' => function ($value) 
+					{
+						return $value == 'on' ? 'checked="checked"' : '';
+					},
+				'store' => function ($value)
+					{
+						return $value;
+					},
+			),
 		'datetime' => array
 			(
 				'form' => function (\app\Form $form, $title, $name, $value) 
