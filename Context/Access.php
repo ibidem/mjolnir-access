@@ -3,7 +3,7 @@
 /**
  * @package    mjolnir
  * @category   Context
- * @author     Ibidem
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
