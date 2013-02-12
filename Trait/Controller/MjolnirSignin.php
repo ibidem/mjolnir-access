@@ -11,8 +11,10 @@ trait Trait_Controller_MjolnirSignin
 {
 	/**
 	 * Action: Sign In user
+	 * 
+	 * @return \mjolnir\types\Renderable
 	 */
-	function action_signin()
+	function public_signin()
 	{
 		if (\app\Auth::role() !== \app\Auth::guest())
 		{
@@ -22,7 +24,7 @@ trait Trait_Controller_MjolnirSignin
 
 		if (\app\Server::request_method() === 'POST')
 		{
-			$errors = ['form' => []];
+			$errors = [ 'form' => [] ];
 
 			$a12n_config = \app\CFS::config('mjolnir/a12n');
 
@@ -38,8 +40,7 @@ trait Trait_Controller_MjolnirSignin
 			if ( ! $user)
 			{
 				$errors['form'][] = \app\Lang::term('Sign in failed. We do not know of any such user or email.');
-				$this->signin_view($errors);
-				return;
+				return $this->signin_view($errors);
 			}
 
 			// check password attempts
@@ -51,8 +52,7 @@ trait Trait_Controller_MjolnirSignin
 				{
 
 					$errors['form'][] = \app\Lang::key('login.passwordattemps', [':number' => $user['pwdattempts']]);
-					$this->signin_view($errors);
-					return;
+					return $this->signin_view($errors);
 				}
 
 				// we've got 5 failed attempts, captcha checks must pass to avoid
@@ -73,8 +73,7 @@ trait Trait_Controller_MjolnirSignin
 					$errors['form'][] = \app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
 					\app\Model_User::bump_pwdattempts($user['id']);
 
-					$this->signin_view($errors);
-					return;
+					return $this->signin_view($errors);
 				}
 			}
 
@@ -105,8 +104,7 @@ trait Trait_Controller_MjolnirSignin
 			{
 				$errors['password'] = [\app\Lang::term('The password you have entered is incorect.')];
 				\app\Model_User::bump_pwdattempts($user['id']);
-				$this->signin_view($errors);
-				return;
+				return $this->signin_view($errors);
 			}
 
 			// check if user is active
@@ -115,8 +113,7 @@ trait Trait_Controller_MjolnirSignin
 
 				$errors['form'][] = \app\Lang::key('mjolnir:access/your-account-is-inactive');
 				\app\Model_User::send_activation_email($user['id']);
-				$this->signin_view($errors);
-				return;
+				return $this->signin_view($errors);
 			}
 
 			// logged in
@@ -159,18 +156,65 @@ trait Trait_Controller_MjolnirSignin
 		}
 		else # user === null
 		{
-			$this->signin_view();
+			return $this->signin_view();
 		}
 	}
 
 	/**
 	 * Action: Sign Out user out of system.
 	 */
-	function action_signout()
+	function public_signout()
 	{
 		\app\Auth::signout();
 		$a12n_config = \app\CFS::config('mjolnir/a12n');
 		\app\Server::redirect($a12n_config['default.signin']);
 	}
+	
+	/**
+	 * Setup view used when signing in.
+	 * 
+	 * @return \mjolnir\types\Renderable
+	 */
+	function signin_view($errors = null)
+	{		
+		$view = $this->public_index()
+			->pass('context', $this);
 
+		if ($errors !== null)
+		{
+			$errors = [ 'mjolnir:access/signin.errors' => $errors ];
+			$view->bind('errors', $errors);
+		}
+		else # no errors
+		{
+			$view->pass('errors', []);
+		}
+
+		return $view;
+	}
+
+	/**
+	 * Setup view used when signing up.
+	 * 
+	 * @return \mjolnir\types\Renderable
+	 */
+	function pwdreset_view($errors = null)
+	{
+		$view = \app\ThemeView::fortarget('pwdreset')
+			->pass('control', $this)
+			->pass('context', $this);
+
+		if ($errors !== null)
+		{
+			$errors = [ 'mjolnir:access/pwdreset.errors' => $errors ];
+			$view->pass('errors', $errors);
+		}
+		else # no errors
+		{
+			$view->pass('errors', []);
+		}
+
+		return $view;
+	}
+	
 } # trait

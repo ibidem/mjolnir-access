@@ -36,7 +36,7 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 		
 		// we can potentially not have a route matcher when the routing is a 
 		// hardcoded code path and not actual routing from outside input
-		if ($relaymatcher)
+		if ($relaymatcher !== null && ! \is_bool($relaymatcher))
 		{
 			$context = $relaymatcher->context();
 		}

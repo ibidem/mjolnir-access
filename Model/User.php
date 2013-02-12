@@ -54,6 +54,12 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// factory interface
 
+	static function cleanup(array &$fields)
+	{
+		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
+		isset($fields['active']) or $fields['active'] = true;
+	}
+	
 	/**
 	 * @param array fields
 	 * @return Validator
@@ -79,13 +85,13 @@ class Model_User
 			->test('email', \app\Email::valid($fields['email']))
 			->rule('email', ':unique', $unique_email)
 			->rule('nickname', 'max_length', \strlen($fields['nickname']) <= $user_config['fields']['nickname']['maxlength'])
-			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
+			->rule('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
 		if ($context === null)
 		{
 			$validator
 				->rule('password', 'not_empty')
-				->rule('password', 'min_length', \strlen($fields['nickname']) >= $user_config['fields']['password']['minlength'])
+				->rule('password', 'min_length', \strlen($fields['password']) >= $user_config['fields']['password']['minlength'])
 				->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
 		}
 
