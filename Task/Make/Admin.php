@@ -18,7 +18,7 @@ class Task_Make_Admin extends \app\Instantiatable implements \mjolnir\types\Task
 	{
 		\app\Task::consolewriter($this->writer);
 
-		$username = $this->get('name', null);
+		$username = $this->get('username', null);
 		$password = $this->get('password', null);
 		$email = $this->get('email', null);
 		
