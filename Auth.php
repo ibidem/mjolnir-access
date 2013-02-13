@@ -215,6 +215,7 @@ class Auth extends \app\Instantiatable
 	{
 		// reset signin attempts
 		\app\Model_User::reset_pwdattempts($user);
+		\app\Model_User::update_last_singin($user);
 
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
@@ -314,11 +315,19 @@ class Auth extends \app\Instantiatable
 	}
 	
 	/**
+	 * @return array
+	 */
+	static function userinfo()
+	{
+		return \app\Model_User::entry(\app\Auth::id());
+	}
+	
+	/**
 	 * @return string
 	 */
 	static function nickname()
 	{
-		return \app\Model_User::entry(\app\Auth::id())['nickname'];
+		return static::userinfo()['nickname'];
 	}
 
 } # class

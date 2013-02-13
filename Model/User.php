@@ -27,6 +27,7 @@ class Model_User
 			'pwddate' => 'datetime',
 			'pwdreset_expires' => 'datetime',
 			'timestamp' => 'datetime',
+			'last_signin' => 'datetime',
 		);
 
 	/**
@@ -114,6 +115,7 @@ class Model_User
 				'pwdsalt' => $password['salt'],
 				'pwddate' => \date('Y-m-d H:i:s'),
 				'active' => $fields['active'],
+				'last_signin' => \date('Y-m-d H:i:s'),
 			);
 
 		static::inserter
@@ -126,6 +128,7 @@ class Model_User
 					'pwdverifier',
 					'pwdsalt',
 					'pwddate',
+					'last_signin'
 				],
 				[
 					'active',
@@ -287,6 +290,26 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// Extended
 
+	/**
+	 * Update last_signin field to current time or specified time (string) if 
+	 * provided.
+	 */
+	static function update_last_singin($id, \DateTime $datetime = null)
+	{
+		static::statement
+			(
+				__METHOD__,
+				'
+					UPDATE :table
+					   SET last_signin = :date
+					 WHERE id = :id
+				'
+			)
+			->date(':date', $datetime === null ? \date('Y-m-d H:i:s') : $datetime->format('Y-m-d H:i:s'))
+			->num(':id', $id)
+			->run();
+	}
+	
 	/**
 	 * @param int user id
 	 * @param int role

@@ -57,6 +57,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 
 					`pwdreset`         :secure_hash DEFAULT NULL,
 					`pwdreset_expires` :datetime_optional DEFAULT NULL,
+					`last_signin`      :datetime_optional DEFAULT NULL,
 
 					PRIMARY KEY (`id`)
 				'
