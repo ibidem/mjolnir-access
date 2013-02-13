@@ -505,11 +505,20 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT *
-						  FROM :table
-						 WHERE nickname = :nickname
-						   AND provider IS NULL
-						   AND `locked` = FALSE
+						SELECT user.*,
+							   assoc.role role,
+							   role.title roletitle
+						  FROM :table user
+
+						  JOIN `'.static::assoc_roles().'` assoc
+							ON user.id = assoc.user
+
+						  JOIN `'.static::roles_table().'` role
+							ON role.id = assoc.role
+
+						 WHERE user.nickname = :nickname
+						   AND user.provider IS NULL
+						   AND user.`locked` = FALSE
 						 LIMIT 1
 					',
 					'mysql'
@@ -524,8 +533,17 @@ class Model_User
 				(
 					__METHOD__.':email_signin_check',
 					'
-						SELECT *
-						  FROM :table
+						SELECT user.*,
+							   assoc.role role,
+							   role.title roletitle
+						  FROM :table user
+
+						  JOIN `'.static::assoc_roles().'` assoc
+							ON user.id = assoc.user
+
+						  JOIN `'.static::roles_table().'` role
+							ON role.id = assoc.role
+
 						 WHERE email = :email
 						   AND provider IS NULL
 						   AND `locked` = FALSE
@@ -608,8 +626,17 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT id
-						  FROM :table
+						SELECT user.*,
+							   assoc.role role,
+							   role.title roletitle
+						  FROM :table user
+
+						  JOIN `'.static::assoc_roles().'` assoc
+							ON user.id = assoc.user
+
+						  JOIN `'.static::roles_table().'` role
+							ON role.id = assoc.role						
+
 						 WHERE email = :email
 						   AND `locked` = FALSE
 						   AND `active` = TRUE

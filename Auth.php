@@ -309,6 +309,8 @@ class Auth extends \app\Instantiatable
 				throw new \app\Exception_NotApplicable('Failed automated signup process. Feel free to try again. Sorry for the inconvenience.');
 			}
 		}
+		
+		return \app\Model_User::entry($user);
 	}
 	
 	/**

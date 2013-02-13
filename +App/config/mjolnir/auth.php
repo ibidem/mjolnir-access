@@ -32,8 +32,6 @@ return array
 
 		'default.emails_manager' => \app\URL::href('mjolnir:access/auth.route', ['action' => 'emails'], [], 'http'),
 
-		'signin.redirect' => \app\Server::url_frontpage(),
-
 		'recaptcha' => array
 			(
 				'public_key' => null,

@@ -72,9 +72,9 @@ class AccessChannel_Universal extends \app\Instantiatable
 				$email = $user_profile->email;
 			}
 			
-			\app\Auth::inferred_signin($display_name, $email, $provider_name);
+			$signedin_user = \app\Auth::inferred_signin($display_name, $email, $provider_name);
 			
-			\app\Server::redirect(\app\CFS::config('mjolnir/auth')['signin.redirect']);
+			\app\Server::redirect(\app\Server::url_dashboard($signedin_user));
 		}
 		catch (\app\Exception_NotApplicable $e)
 		{

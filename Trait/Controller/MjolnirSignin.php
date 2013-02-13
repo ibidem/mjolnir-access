@@ -125,26 +125,8 @@ trait Trait_Controller_MjolnirSignin
 				\app\Auth::signin($user['id'], \app\Model_User::role_for($user['id']));
 			}
 
-			// redirect
-			if (isset($auth_config['signin.redirect']))
-			{
-				if (\is_string($auth_config['signin.redirect']))
-				{
-					\app\Server::redirect($auth_config['signin.redirect']);
-				}
-				else # assume function
-				{
-					\app\Server::redirect
-						(
-							$auth_config['signin.redirect']($user)
-						);
-				}
-			}
-			else # redirect to frontpage
-			{
-				\app\Server::redirect(\app\Server::url_frontpage());
-			}
-
+			\app\Server::redirect(\app\Server::url_dashboard($user));
+			
 			// no default frontend
 			$this->forward('mjolnir:access/auth.route', ['action' => 'lobby']);
 		}
