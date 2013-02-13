@@ -19,7 +19,7 @@ class Model_UserSigninToken extends \app\Instantiatable
 	/**
 	 * @var string
 	 */
-	protected static $table = 'tokens_user_signin';
+	protected static $table = '_mj_tokens_user_signin';
 	
 	/**
 	 * @var array

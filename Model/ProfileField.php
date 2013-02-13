@@ -16,12 +16,12 @@ class Model_ProfileField
 	/**
 	 * @var string table
 	 */
-	protected static $table = 'profilefields';
+	protected static $table = '_mj_profilefields';
 
 	/**
 	 * @var string table
 	 */
-	protected static $table_user_field = 'user_field';
+	protected static $table_user_field = '_mj_user_field';
 
 	/**
 	 * @var array

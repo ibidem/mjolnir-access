@@ -17,7 +17,7 @@ class Model_Role
 	/**
 	 * @var array
 	 */
-	protected static $table = 'roles';
+	protected static $table = '_mj_roles';
 		
 	/**
 	 * @var array
