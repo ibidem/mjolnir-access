@@ -36,7 +36,7 @@ class Controller_A12n extends \app\Controller_Contextual
 
 		if (\app\Auth::role() === \app\Auth::guest())
 		{
-			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+			\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 		}
 
 		\app\GlobalEvent::fire('webpage:title', 'Lobby · Access');

@@ -18,12 +18,12 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		if($session_state && ($session_state === $state)) 
 		{
 			\app\Session::set('facebook_state', null);
-			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
+			$provider = \app\CFS::config('mjolnir/auth')['signin']['facebook'];
 			
 			$appid = $provider['AppID'];
 			$appsecret = $provider['AppSecret'];
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
-			$redirect = $protocol.':'.\app\URL::route('\mjolnir\access\channel')
+			$redirect = $protocol.':'.\app\URL::route('mjolnir:access/channel.route')
 				->url(['provider' => 'facebook']);
 			
 			$token_url = "https://graph.facebook.com/oauth/access_token?"
@@ -44,11 +44,11 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				$user = \json_decode(\file_get_contents($graph_url));
 				
 				// save in session the access token for later use
-				\app\Session::set(\app\CFS::config('mjolnir/a12n')['signin']['facebook']['session.token.name'], $params['access_token']);
+				\app\Session::set(\app\CFS::config('mjolnir/auth')['signin']['facebook']['session.token.name'], $params['access_token']);
 				
 				\app\Auth::inferred_signin($user->username, $user->email, 'facebook', $user);
 				
-				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['signin.redirect']);
+				\app\Server::redirect(\app\CFS::config('mjolnir/auth')['signin.redirect']);
 			}
 			else # error in `code` to `token` excahnge
 			{
@@ -76,12 +76,12 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
 			}
 		
-			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
+			$provider = \app\CFS::config('mjolnir/auth')['signin']['facebook'];
 			$appid = $provider['AppID'];
-			$redirect = \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'facebook']);
+			$redirect = \app\URL::route('mjolnir:access/channel.route')->url(['provider' => 'facebook']);
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 	
-			$permissions = \app\CFS::config('mjolnir/a12n')['signin']['facebook']['scope'];
+			$permissions = \app\CFS::config('mjolnir/auth')['signin']['facebook']['scope'];
 			
 			self::$signin_url = 'https://www.facebook.com/dialog/oauth?client_id='
 				. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope='.$permissions.'&amp;state='.$state;

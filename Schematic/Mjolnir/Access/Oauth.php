@@ -17,7 +17,7 @@ class Schematic_Mjolnir_Access_Oauth extends \app\Instantiatable implements \mjo
 	function build()
 	{
 		// inject openid providers
-		$providers = \app\CFS::config('mjolnir/a12n')['signin'];
+		$providers = \app\CFS::config('mjolnir/auth')['signin'];
 		foreach ($providers as $provider)
 		{
 			\app\Register::inject($provider['register'], 'off');

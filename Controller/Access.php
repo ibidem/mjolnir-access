@@ -40,7 +40,7 @@ class Controller_Access extends \app\Controller_Contextual
 			}
 
 			// this hard coded security test is intentional
-			$register = \app\CFS::config('mjolnir/a12n')['signin'][$id]['register'];
+			$register = \app\CFS::config('mjolnir/auth')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
@@ -54,7 +54,7 @@ class Controller_Access extends \app\Controller_Contextual
 		else # non-universal
 		{
 			// this hard coded security test is intentional
-			$register = \app\CFS::config('mjolnir/a12n')['signin'][$provider]['register'];
+			$register = \app\CFS::config('mjolnir/auth')['signin'][$provider]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
 				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');

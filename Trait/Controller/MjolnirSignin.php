@@ -18,21 +18,20 @@ trait Trait_Controller_MjolnirSignin
 	{
 		if (\app\Auth::role() !== \app\Auth::guest())
 		{
-			$base_config = \app\CFS::config('mjolnir/base');
-			\app\Server::redirect($base_config['site:frontend']);
+			\app\Server::redirect(\app\Server::url_frontpage());
 		}
 
 		if (\app\Server::request_method() === 'POST')
 		{
 			$errors = [ 'form' => [] ];
 
-			$a12n_config = \app\CFS::config('mjolnir/a12n');
+			$auth_config = \app\CFS::config('mjolnir/auth');
 
 			// got required fields
 			if ( ! isset($_POST['identity']) || ! isset($_POST['password']))
 			{
 				$errors['identity'] = ['Field is required.'];
-				$errors['password'] = ['Field is required'];
+				$errors['password'] = ['Field is required.'];
 			}
 
 			$user = \app\Model_User::detect_identity($_POST);
@@ -44,7 +43,7 @@ trait Trait_Controller_MjolnirSignin
 			}
 
 			// check password attempts
-			if ($user['pwdattempts'] > $a12n_config['catptcha.signin.attempts'])
+			if ($user['pwdattempts'] > $auth_config['catptcha.signin.attempts'])
 			{
 				$_POST['show_captcha'] = true;
 
@@ -127,32 +126,27 @@ trait Trait_Controller_MjolnirSignin
 			}
 
 			// redirect
-			$base_config = \app\CFS::config('mjolnir/base');
-			if (isset($a12n_config['signin.redirect']))
+			if (isset($auth_config['signin.redirect']))
 			{
-				if (\is_string($a12n_config['signin.redirect']))
+				if (\is_string($auth_config['signin.redirect']))
 				{
-					\app\Server::redirect($a12n_config['signin.redirect']);
+					\app\Server::redirect($auth_config['signin.redirect']);
 				}
 				else # assume function
 				{
 					\app\Server::redirect
 						(
-							$a12n_config['signin.redirect']($user)
+							$auth_config['signin.redirect']($user)
 						);
 				}
 			}
-			else if (isset($base_config['site:frontend']))
+			else # redirect to frontpage
 			{
-				\app\Server::redirect
-					(
-						'//'.$base_config['domain'].$base_config['path'].
-						$base_config['site:frontend']
-					);
+				\app\Server::redirect(\app\Server::url_frontpage());
 			}
 
 			// no default frontend
-			$this->forward('\mjolnir\access\a12n', ['action' => 'lobby']);
+			$this->forward('mjolnir:access/auth.route', ['action' => 'lobby']);
 		}
 		else # user === null
 		{
@@ -166,7 +160,7 @@ trait Trait_Controller_MjolnirSignin
 	function public_signout()
 	{
 		\app\Auth::signout();
-		$a12n_config = \app\CFS::config('mjolnir/a12n');
+		$a12n_config = \app\CFS::config('mjolnir/auth');
 		\app\Server::redirect($a12n_config['default.signin']);
 	}
 	

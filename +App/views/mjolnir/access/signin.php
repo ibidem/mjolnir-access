@@ -1,7 +1,7 @@
 <?
 	namespace app;
 
-	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
+	$route_matcher = \app\URL::route('mjolnir:access/auth.route');
 
 	if (isset($errors, $errors['\mjolnir\a12n\signin'], $errors['\mjolnir\a12n\signin']['form']))
 	{
@@ -53,7 +53,7 @@
 			</button>
 
 			&nbsp;
-			<a href="<?= \app\CFS::config('mjolnir/a12n')['default.pwdreset'] ?>">
+			<a href="<?= \app\CFS::config('mjolnir/auth')['default.pwdreset'] ?>">
 				<?= \app\Lang::term('Reset Password') ?>
 			</a>
 		</div>

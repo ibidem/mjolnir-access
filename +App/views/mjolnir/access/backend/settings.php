@@ -4,13 +4,13 @@
 
 	namespace app;
 
-	$signin_providers = \app\CFS::config('mjolnir/a12n')['signin'];
+	$signin_providers = \app\CFS::config('mjolnir/auth')['signin'];
 
 	$providers = \app\Arr::gather($signin_providers, 'register');
 
 	$access_fields = array
 		(
-			'\mjolnir\access\signup\public',
+			'mjolnir:access/signup/public.reg',
 			'\mjolnir\access\signup\capcha',
 		);
 
@@ -33,10 +33,10 @@
 		<fieldset>
 			<legend>Sign Up</legend>
 			<?
-				$public_registration = $form->select('Public Registration', '\mjolnir\access\signup\public', $switch_format)
-					->value($access_fields['\mjolnir\access\signup\public']);
+				$public_registration = $form->select('Public Registration', 'mjolnir:access/signup/public.reg', $switch_format)
+					->value($access_fields['mjolnir:access/signup/public.reg']);
 
-				if ( ! \app\CFS::config('mjolnir/a12n')['standard.signup'])
+				if ( ! \app\CFS::config('mjolnir/auth')['standard.signup'])
 				{
 					$public_registration
 						->help('Disabled at static configuration level by [standard.signup], please check your private [mjolnir/a12n]')

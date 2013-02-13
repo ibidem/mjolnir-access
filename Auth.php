@@ -64,7 +64,7 @@ class Auth extends \app\Instantiatable
 
 		\app\Model_UserSigninToken::refresh($user, $token);
 
-		$timeout = \app\CFS::config('mjolnir/a12n')['remember_me.timeout'];
+		$timeout = \app\CFS::config('mjolnir/auth')['remember_me.timeout'];
 
 		\app\Cookie::set('user', $user, $timeout);
 		\app\Cookie::set('accesstoken', $token, $timeout);
@@ -301,24 +301,22 @@ class Auth extends \app\Instantiatable
 
 				\app\Session::set('user', $user);
 				\app\Session::set('role', \app\Model_User::role_for($user));
-
-				$base_config = \app\CFS::config('mjolnir/base');
-				if (isset($base_config['site:frontend']))
-				{
-					\app\Server::redirect('//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend']);
-				}
-				else # no frontend
-				{
-					// redirect to access page
-					\app\Server::redirect(\app\CFS::config('mjolnir/access')['default.signin']);
-				}
+				
+				\app\Server::redirect(\app\Server::url_frontpage());
 			}
 			catch (\Exception $e)
 			{
 				throw new \app\Exception_NotApplicable('Failed automated signup process. Feel free to try again. Sorry for the inconvenience.');
 			}
 		}
-
+	}
+	
+	/**
+	 * @return string
+	 */
+	static function nickname()
+	{
+		return \app\Model_User::entry(\app\Auth::id())['nickname'];
 	}
 
 } # class

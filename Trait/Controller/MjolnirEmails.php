@@ -94,7 +94,7 @@ trait Trait_Controller_MjolnirEmails
 		{
 			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'add-secondary-email');
 
-			$change_email_url = \app\CFS::config('mjolnir/a12n')['default.emails_manager'].'?action=add_secondary_email&code='.$token;
+			$change_email_url = \app\CFS::config('mjolnir/auth')['default.emails_manager'].'?action=add_secondary_email&code='.$token;
 
 			\app\Session::set('mjolnir:add-secondary-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:add-secondary-email:user', \app\Auth::id());
@@ -162,7 +162,7 @@ trait Trait_Controller_MjolnirEmails
 		{
 			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'change-main-email');
 
-			$change_email_url = \app\CFS::config('mjolnir/a12n')['default.emails_manager'].'?action=change_main_email&code='.$token;
+			$change_email_url = \app\CFS::config('mjolnir/auth')['default.emails_manager'].'?action=change_main_email&code='.$token;
 
 			\app\Session::set('mjolnir:change-main-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:change-main-email:user', \app\Auth::id());

@@ -7,9 +7,9 @@
 				(
 					Allow::relays
 						(
-							'\mjolnir\access\a12n',
-							'\mjolnir\access\channel',
-							'\mjolnir\access\endpoint'
+							'mjolnir:access/auth.route',
+							'mjolnir:access/channel.route',
+							'mjolnir:access/endpoint.route'
 						)
 						->all_parameters(),
 				),

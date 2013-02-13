@@ -60,7 +60,7 @@ trait Trait_Controller_MjolnirPwdReset
 					{
 						$key = \app\Model_User::pwdreset_key($user['id']);
 
-						$pwdreset_url = \app\CFS::config('mjolnir/a12n')['default.pwdreset'].'?user='.$user['id'].'&key='.$key;
+						$pwdreset_url = \app\CFS::config('mjolnir/auth')['default.pwdreset'].'?user='.$user['id'].'&key='.$key;
 
 						// send email
 						$emails_sent = \app\Email::instance()->send

@@ -11,12 +11,12 @@ class Backend_Settings extends \app\Instantiatable
 {
 	function action_update()
 	{
-		$signin_providers = \app\CFS::config('mjolnir/a12n')['signin'];
+		$signin_providers = \app\CFS::config('mjolnir/auth')['signin'];
 		$providers = \app\Arr::gather($signin_providers, 'register');
 
 		$access_fields = array
 			(
-				'\mjolnir\access\signup\public',
+				'mjolnir:access/signup/public.reg',
 				'\mjolnir\access\signup\capcha',
 			);
 

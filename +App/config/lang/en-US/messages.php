@@ -60,7 +60,7 @@ this account.',
 					
 		'mjolnir:access/email-activate-account' => function ($in)
 			{
-				return \app\View::instance('mjolnir/emails/en-us/activate_account')
+				return \app\View::instance('mjolnir/emails/en-US/activate_account')
 					->variable('nickname', $in[':nickname'])
 					->variable('token_url', $in[':token_url'])
 					->render();

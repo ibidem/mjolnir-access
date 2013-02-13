@@ -3,7 +3,7 @@
 
 	/* @var $theme ThemeView */
 
-	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
+	$route_matcher = \app\URL::route('mjolnir:access/auth.route');
 
 	if (isset($errors, $errors['\mjolnir\a12n\signup'], $errors['\mjolnir\a12n\signup']['form']) && ! empty($errors['\mjolnir\a12n\signup']['form']))
 	{

@@ -40,7 +40,7 @@
 				<span class="label label-info"><?= Lang::term('Help') ?></span>
 				<small>
 					<?= Lang::key('mjolnir:access/not-yet-a-member') ?>
-					<a class="nowrap" href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signup']) ?>">
+					<a class="nowrap" href="<?= \app\URL::route('mjolnir:access/auth.route')->url(['action' => 'signup']) ?>">
 						<?= Lang::key('mjolnir:access/sign-up-now') ?>
 					</a>
 				</small>

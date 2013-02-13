@@ -7,7 +7,7 @@
 	$h1 = $h;
 	$h2 = H::up($h1);
 	
-	$email_manager = \app\CFS::config('mjolnir/a12n')['default.emails_manager'];
+	$email_manager = \app\CFS::config('mjolnir/auth')['default.emails_manager'];
 ?>
 
 <?= $f = Form::i('twitter.general', $email_manager)

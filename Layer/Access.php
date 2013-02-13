@@ -59,7 +59,7 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 			if ($http_layer)
 			{
 				// redirect to the access route
-				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+				\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 			}
 
 			// else; or if the redirect fails

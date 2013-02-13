@@ -1,6 +1,6 @@
 <?php return array
 	(
-		'\mjolnir\access\channel' => array
+		'mjolnir:access/channel.route' => array
 			(
 				'matcher' => \app\URLRoute::instance()
 					->urlpattern
@@ -20,7 +20,7 @@
 				'context' => '\mjolnir\access\Context_Access',
 			),
 
-		'\mjolnir\access\endpoint' => array
+		'mjolnir:access/endpoint.route' => array
 			(
 				'matcher' =>\app\URLRoute::instance()
 					->urlpattern('access/channel-endpoint'),
@@ -33,7 +33,7 @@
 				'context' => '\mjolnir\access\Context_Access',
 			),
 
-		'\mjolnir\access\a12n' => array
+		'mjolnir:access/auth.route' => array
 			(
 				'matcher' =>\app\URLRoute::instance()
 					->urlpattern

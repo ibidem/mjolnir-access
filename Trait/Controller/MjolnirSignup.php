@@ -14,9 +14,9 @@ trait Trait_Controller_MjolnirSignup
 	 */
 	function action_signup()
 	{
-		if ( ! \app\CFS::config('mjolnir/a12n')['standard.signup'])
+		if ( ! \app\CFS::config('mjolnir/auth')['standard.signup'])
 		{
-			\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+			\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 		}
 
 		if (\app\Server::request_method() === 'POST')
@@ -58,7 +58,7 @@ trait Trait_Controller_MjolnirSignup
 						->classes(['alert-warning'])
 						->save();
 
-					\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+					\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 				}
 				else # got errors
 				{
@@ -84,7 +84,7 @@ trait Trait_Controller_MjolnirSignup
 						->save();
 
 				}
-				\app\Server::redirect(\app\CFS::config('mjolnir/a12n')['default.signin']);
+				\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 			}
 
 			$this->signup_view();

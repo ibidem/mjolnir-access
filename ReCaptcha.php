@@ -18,7 +18,7 @@ class ReCaptcha
 	 */
 	static function html()
 	{
-		$recaptcha_config = \app\CFS::config('mjolnir/a12n')['recaptcha'];
+		$recaptcha_config = \app\CFS::config('mjolnir/auth')['recaptcha'];
 
 		if ( ! isset($recaptcha_config['public_key'], $recaptcha_config['private_key']))
 		{
@@ -35,7 +35,7 @@ class ReCaptcha
 	 */
 	static function verify($recaptcha_challenge_field, $recaptcha_response_field)
 	{
-		$recaptcha_config = \app\CFS::config('mjolnir/a12n')['recaptcha'];
+		$recaptcha_config = \app\CFS::config('mjolnir/auth')['recaptcha'];
 
 		$response = \recaptcha_check_answer
 			(

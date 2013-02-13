@@ -15,7 +15,7 @@ class Context_Access extends \app\Instantiatable
 	function authorized_a12n_providers()
 	{
 		// get all supported providers
-		$providers = \app\CFS::config('mjolnir/a12n')['signin'];
+		$providers = \app\CFS::config('mjolnir/auth')['signin'];
 
 		// filter to enabled providers
 		$enabled_providers = [];
@@ -39,9 +39,9 @@ class Context_Access extends \app\Instantiatable
 	 */
 	function can_signup()
 	{
-		return \app\Access::can('\mjolnir\access\a12n', ['action' => 'signup'])
-			&& \app\CFS::config('mjolnir/a12n')['standard.signup']
-			&& \app\Register::pull(['\mjolnir\access\signup\public'])['\mjolnir\access\signup\public'] === 'on';
+		return \app\Access::can('mjolnir:access/auth.route', ['action' => 'signup'])
+			&& \app\CFS::config('mjolnir/auth')['standard.signup']
+			&& \app\Register::pull(['mjolnir:access/signup/public.reg'])['mjolnir:access/signup/public.reg'] === 'on';
 	}
 
 } # class

@@ -3,9 +3,9 @@
 	
 	$provider_id = 'live';
 	
-	$provider = \app\CFS::config('mjolnir/a12n')['signin'][$provider_id];
+	$provider = \app\CFS::config('mjolnir/auth')['signin'][$provider_id];
 ?>
 
-<a rel="nofollow" href="<?= \app\URL::route('\mjolnir\access\channel')->url(['provider' => 'universal', 'id' => $provider_id]) ?>">
+<a rel="nofollow" href="<?= \app\URL::route('mjolnir:access/channel.route')->url(['provider' => 'universal', 'id' => $provider_id]) ?>">
 	<i class="icon-<?= $provider['icon'] ?>"></i> <?= $provider['title'] ?>
 </a>

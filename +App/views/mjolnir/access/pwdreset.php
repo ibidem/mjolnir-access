@@ -3,7 +3,7 @@
 
 	/* @var $theme ThemeView */
 
-	$route_matcher = \app\URL::route('\mjolnir\access\a12n');
+	$route_matcher = \app\URL::route('mjolnir:access/auth.route');
 
 	if (isset($errors, $errors['\mjolnir\a12n\pwdreset'], $errors['\mjolnir\a12n\pwdreset']['form']) && ! empty($errors['\mjolnir\a12n\pwdreset']['form']))
 	{
@@ -18,7 +18,7 @@
 
 <? else: # pwdreset form ?>
 
-	<?= $f = Form::i('twitter.general', \app\CFS::config('mjolnir/a12n')['default.pwdreset'])
+	<?= $f = Form::i('twitter.general', \app\CFS::config('mjolnir/auth')['default.pwdreset'])
 		->errors($errors['\mjolnir\a12n\pwdreset'])
 		->classes(['marginless'])
 		->secure() ?>

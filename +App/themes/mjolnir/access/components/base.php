@@ -2,7 +2,7 @@
 	namespace app;
 
 	$base_config = \app\CFS::config('mjolnir/base');
-	$landing_page = '//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend'];
+	$landing_page = \app\Server::url_frontpage();
 ?>
 
 <div id="page" role="main">
@@ -14,13 +14,13 @@
 
 			<? if (\app\Auth::role() !== \app\Auth::guest()): ?>
 				<li>
-					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url([]) ?>">
+					<a href="<?= \app\URL::route('mjolnir:access/auth.route')->url([]) ?>">
 						<i class="icon-key"></i> <?= Lang::term('Account') ?>
 					</a>
 				</li>
 
 				<li>
-					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'emails']) ?>">
+					<a href="<?= \app\URL::route('mjolnir:access/auth.route')->url(['action' => 'emails']) ?>">
 						<i class="icon-envelope-alt"></i> <?= Lang::term('Emails') ?>
 					</a>
 				</li>
@@ -32,7 +32,7 @@
 
 			<? if (\app\Auth::role() !== \app\Auth::guest()): ?>
 				<li>
-					<a href="<?= \app\URL::route('\mjolnir\access\a12n')->url(['action' => 'signout']) ?>">
+					<a href="<?= \app\URL::route('mjolnir:access/auth.route')->url(['action' => 'signout']) ?>">
 						<i class="icon-signout"></i> <?= Lang::term('Sign Out') ?>
 					</a>
 				</li>

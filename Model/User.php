@@ -666,7 +666,7 @@ class Model_User
 	static function send_activation_email($user_id)
 	{
 		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
-		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;
+		$confirm_email_url = \app\CFS::config('mjolnir/auth')['default.signup'].'?user='.$user_id.'&key='.$key;
 
 		$user = static::entry($user_id);
 

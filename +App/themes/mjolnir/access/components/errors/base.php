@@ -2,7 +2,7 @@
 	namespace app; 
 	
 	$base_config = \app\CFS::config('mjolnir/base');
-	$landing_page = '//'.$base_config['domain'].$base_config['path'].$base_config['site:frontend'];
+	$landing_page = \app\Server::url_frontpage();
 ?>
 
 <div id="page" role="main">
