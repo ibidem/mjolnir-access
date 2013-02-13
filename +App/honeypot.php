@@ -30,6 +30,8 @@ class ReCaptcha extends \mjolnir\access\ReCaptcha {}
 class Schematic_Mjolnir_Access_Base extends \mjolnir\access\Schematic_Mjolnir_Access_Base { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Base */ static function instance() { return parent::instance(); } }
 class Schematic_Mjolnir_Access_Oauth extends \mjolnir\access\Schematic_Mjolnir_Access_Oauth { /** @return \mjolnir\access\Schematic_Mjolnir_Access_Oauth */ static function instance() { return parent::instance(); } }
 class SecurityToken extends \mjolnir\access\SecurityToken {}
+class Task_Make_Admin extends \mjolnir\access\Task_Make_Admin { /** @return \mjolnir\access\Task_Make_Admin */ static function instance() { return parent::instance(); } }
+class Task_Make_User extends \mjolnir\access\Task_Make_User { /** @return \mjolnir\access\Task_Make_User */ static function instance() { return parent::instance(); } }
 trait Trait_Controller_MjolnirEmails { use \mjolnir\access\Trait_Controller_MjolnirEmails; }
 trait Trait_Controller_MjolnirPwdReset { use \mjolnir\access\Trait_Controller_MjolnirPwdReset; }
 trait Trait_Controller_MjolnirSignin { use \mjolnir\access\Trait_Controller_MjolnirSignin; }
