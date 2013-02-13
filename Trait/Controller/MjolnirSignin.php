@@ -125,7 +125,7 @@ trait Trait_Controller_MjolnirSignin
 				\app\Auth::signin($user['id'], \app\Model_User::role_for($user['id']));
 			}
 
-			\app\Server::redirect(\app\Server::url_dashboard($user));
+			\app\Server::redirect(\app\Server::url_homepage($user));
 			
 			// no default frontend
 			$this->forward('mjolnir:access/auth.route', ['action' => 'lobby']);

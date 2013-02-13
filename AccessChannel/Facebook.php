@@ -48,7 +48,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				
 				$signedin_user = \app\Auth::inferred_signin($user->username, $user->email, 'facebook', $user);
 				
-				\app\Server::redirect(\app\Server::url_dashboard($signedin_user));
+				\app\Server::redirect(\app\Server::url_homepage($signedin_user));
 			}
 			else # error in `code` to `token` excahnge
 			{
