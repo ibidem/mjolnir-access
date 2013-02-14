@@ -22,7 +22,7 @@ class Model_SecondaryEmail
 	/**
 	 * @var string
 	 */
-	protected static $table = '_mj_user_secondaryemails';
+	protected static $table = 'mjolnir__user_secondaryemails';
 
 	/**
 	 * @var array

@@ -17,7 +17,7 @@ class Model_User
 	/**
 	 * @var string
 	 */
-	protected static $table = '_mj_users';
+	protected static $table = 'mjolnir__users';
 
 	/**
 	 * @var array
@@ -33,7 +33,7 @@ class Model_User
 	/**
 	 * @var string
 	 */
-	protected static $user_role_table = '_mj_user_role';
+	protected static $user_role_table = 'mjolnir__user_role';
 
 	/**
 	 * @return string table name

@@ -16,12 +16,12 @@ class Model_ProfileField
 	/**
 	 * @var string table
 	 */
-	protected static $table = '_mj_profilefields';
+	protected static $table = 'mjolnir__profilefields';
 
 	/**
 	 * @var string table
 	 */
-	protected static $table_user_field = '_mj_user_field';
+	protected static $table_user_field = 'mjolnir__user_field';
 
 	/**
 	 * @var array

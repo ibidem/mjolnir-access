@@ -19,7 +19,7 @@ class Model_SecurityToken
 	/**
 	 * @var string
 	 */
-	protected static $table = '_mj_securitytokens';
+	protected static $table = 'mjolnir__securitytokens';
 
 	/**
 	 * @var array
