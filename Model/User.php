@@ -233,7 +233,7 @@ class Model_User
 	{
 		return $entry === null
 			&& \app\Auth::role() !== \app\Auth::guest()
-			&& $id === \app\Auth::instance()->user();
+			&& $id === \app\Auth::id();
 	}
 
 	/**
@@ -277,7 +277,8 @@ class Model_User
 
 			if (static::nullentry_for_current_user($entry, $id))
 			{
-				\app\Controller_Auth::instance()->action_signout();
+				\app\Auth::signout();
+				\app\Server::redirect(\app\Server::url_frontpage());
 				exit(1);
 			}
 
