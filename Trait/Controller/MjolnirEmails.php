@@ -31,7 +31,7 @@ trait Trait_Controller_MjolnirEmails
 	 */
 	function action_emails()
 	{
-		if (\app\Auth::role() === \app\Auth::guest())
+		if (\app\Auth::role() === \app\Auth::Guest)
 		{
 			throw new \app\Exception_NotAllowed
 				('Page is only available when you are signed in.');

@@ -34,7 +34,7 @@ class Controller_A12n extends \app\Controller_Contextual
 	{
 		$relay = $this->layer->get_relay();
 
-		if (\app\Auth::role() === \app\Auth::guest())
+		if (\app\Auth::role() === \app\Auth::Guest)
 		{
 			\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 		}

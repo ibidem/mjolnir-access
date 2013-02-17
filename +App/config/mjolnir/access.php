@@ -3,7 +3,7 @@
 (
 	'whitelist' => array # allow
 		(
-			Auth::guest() => array
+			Auth::Guest => array
 				(
 					Allow::relays
 						(
@@ -46,8 +46,8 @@
 			 */
 
 			// examples
-			# 'member' => [ Auth::guest() ],
-			# 'admin'  => [ Auth::guest(), 'member' ],
+			# 'member' => [ Auth::Guest ],
+			# 'admin'  => [ Auth::Guest, 'member' ],
 		),
 	'roles' => array # roles in system
 		(

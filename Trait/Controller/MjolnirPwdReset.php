@@ -12,7 +12,7 @@ trait Trait_Controller_MjolnirPwdReset
 	/**
 	 * Action: Reset user's password
 	 */
-	function action_pwdreset()
+	function public_pwdreset()
 	{
 		if (\app\Server::request_method() === 'POST')
 		{
@@ -29,7 +29,7 @@ trait Trait_Controller_MjolnirPwdReset
 				else # got errors
 				{
 					$_POST['notice'] = $errors[0];
-					$this->pwdreset_view();
+					return $this->pwdreset_view();
 				}
 			}
 			else # send email phase
@@ -44,8 +44,7 @@ trait Trait_Controller_MjolnirPwdReset
 				if ($error !== null)
 				{
 					$errors = ['form' => [\app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.')] ];
-
-					$this->pwdreset_view($errors);
+					return $this->pwdreset_view($errors);
 				}
 				else # captcha test passed
 				{
@@ -85,20 +84,45 @@ trait Trait_Controller_MjolnirPwdReset
 						else # succesfully sent emails
 						{
 							$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success');
-							$this->pwdreset_view();
+							return $this->pwdreset_view();
 						}
 					}
 					else # got errors
 					{
-						$this->pwdreset_view($errors);
+						return $this->pwdreset_view($errors);
 					}
 				}
 			}
 		}
 		else # treat as GET
 		{
-			$this->pwdreset_view();
+			return $this->pwdreset_view();
 		}
+	}
+
+	/**
+	 * Setup view used when signing up.
+	 *
+	 * @return \mjolnir\types\Renderable
+	 */
+	function pwdreset_view($errors = null)
+	{
+		$target = $this->public_index()->viewtarget().'.pwdreset';
+
+		$view = $this->public_index()
+			->viewtarget_is($target);
+
+		if ($errors !== null)
+		{
+			$errors = [ 'mjolnir:access/pwdreset.errors' => $errors ];
+			$view->pass('errors', $errors);
+		}
+		else # no errors
+		{
+			$view->pass('errors', []);
+		}
+
+		return $view;
 	}
 
 } # trait

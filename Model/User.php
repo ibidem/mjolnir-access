@@ -232,7 +232,7 @@ class Model_User
 	protected static function nullentry_for_current_user(&$entry, $id)
 	{
 		return $entry === null
-			&& \app\Auth::role() !== \app\Auth::guest()
+			&& \app\Auth::role() !== \app\Auth::Guest
 			&& $id === \app\Auth::id();
 	}
 

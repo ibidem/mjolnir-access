@@ -11,12 +11,12 @@ trait Trait_Controller_MjolnirSignin
 {
 	/**
 	 * Action: Sign In user
-	 * 
+	 *
 	 * @return \mjolnir\types\Renderable
 	 */
 	function public_signin()
 	{
-		if (\app\Auth::role() !== \app\Auth::guest())
+		if (\app\Auth::role() !== \app\Auth::Guest)
 		{
 			\app\Server::redirect(\app\Server::url_frontpage());
 		}
@@ -126,7 +126,7 @@ trait Trait_Controller_MjolnirSignin
 			}
 
 			\app\Server::redirect(\app\Server::url_homepage($user));
-			
+
 			// no default frontend
 			$this->forward('mjolnir:access/auth.route', ['action' => 'lobby']);
 		}
@@ -145,14 +145,14 @@ trait Trait_Controller_MjolnirSignin
 		$a12n_config = \app\CFS::config('mjolnir/auth');
 		\app\Server::redirect($a12n_config['default.signin']);
 	}
-	
+
 	/**
 	 * Setup view used when signing in.
-	 * 
+	 *
 	 * @return \mjolnir\types\Renderable
 	 */
 	function signin_view($errors = null)
-	{		
+	{
 		$view = $this->public_index()
 			->pass('context', $this);
 
@@ -169,28 +169,4 @@ trait Trait_Controller_MjolnirSignin
 		return $view;
 	}
 
-	/**
-	 * Setup view used when signing up.
-	 * 
-	 * @return \mjolnir\types\Renderable
-	 */
-	function pwdreset_view($errors = null)
-	{
-		$view = \app\ThemeView::fortarget('pwdreset')
-			->pass('control', $this)
-			->pass('context', $this);
-
-		if ($errors !== null)
-		{
-			$errors = [ 'mjolnir:access/pwdreset.errors' => $errors ];
-			$view->pass('errors', $errors);
-		}
-		else # no errors
-		{
-			$view->pass('errors', []);
-		}
-
-		return $view;
-	}
-	
 } # trait

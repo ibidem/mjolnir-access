@@ -9,6 +9,8 @@
  */
 class Auth extends \app\Instantiatable
 {
+	const Guest = '\mjolnir\access\Auth::guest';
+
 	/**
 	 * @var int
 	 */
@@ -181,7 +183,7 @@ class Auth extends \app\Instantiatable
 	static function guest()
 	{
 		// unique identifier
-		return '\mjolnir\access\Auth::guest';
+		return static::Guest;
 	}
 
 	/**
@@ -233,7 +235,7 @@ class Auth extends \app\Instantiatable
 		$user = \app\Model_User::for_email($email);
 
 		// handle logged in state
-		if (\app\Auth::role() !== \app\Auth::guest())
+		if (\app\Auth::role() !== \app\Auth::Guest)
 		{
 			if ($user === \app\Auth::id())
 			{
@@ -302,7 +304,7 @@ class Auth extends \app\Instantiatable
 
 				\app\Session::set('user', $user);
 				\app\Session::set('role', \app\Model_User::role_for($user));
-				
+
 				\app\Server::redirect(\app\Server::url_frontpage());
 			}
 			catch (\Exception $e)
@@ -310,10 +312,10 @@ class Auth extends \app\Instantiatable
 				throw new \app\Exception_NotApplicable('Failed automated signup process. Feel free to try again. Sorry for the inconvenience.');
 			}
 		}
-		
+
 		return \app\Model_User::entry($user);
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -321,7 +323,7 @@ class Auth extends \app\Instantiatable
 	{
 		return \app\Model_User::entry(\app\Auth::id());
 	}
-	
+
 	/**
 	 * @return string
 	 */

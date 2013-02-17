@@ -107,7 +107,7 @@ class AccessChannel_Universal extends \app\Instantiatable
 					break;
 			}
 			
-			if (\app\Auth::role() === \app\Auth::guest())
+			if (\app\Auth::role() === \app\Auth::Guest)
 			{
 				throw new \Exception('AccessChannel: '.$message);
 			}

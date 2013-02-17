@@ -12,7 +12,7 @@
 		<ul class="nav nav-pills">
 			<li><a href="<?= $landing_page ?>"><i class="icon-home"></i> <?= $base_config['site:title'] ?></a></li>
 
-			<? if (\app\Auth::role() !== \app\Auth::guest()): ?>
+			<? if (\app\Auth::role() !== \app\Auth::Guest): ?>
 				<li>
 					<a href="<?= \app\URL::route('mjolnir:access/auth.route')->url([]) ?>">
 						<i class="icon-key"></i> <?= Lang::term('Account') ?>
@@ -30,7 +30,7 @@
 				<li><a href="<?= \app\URL::route('\mjolnir\backend')->url() ?>"><i class="icon-briefcase"></i> <?= Lang::term('Backend') ?></a></li>
 			<? endif; ?>
 
-			<? if (\app\Auth::role() !== \app\Auth::guest()): ?>
+			<? if (\app\Auth::role() !== \app\Auth::Guest): ?>
 				<li>
 					<a href="<?= \app\URL::route('mjolnir:access/auth.route')->url(['action' => 'signout']) ?>">
 						<i class="icon-signout"></i> <?= Lang::term('Sign Out') ?>
