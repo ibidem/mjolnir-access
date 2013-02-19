@@ -80,7 +80,7 @@ class Model_User
 			->rule('nickname', 'max_length', $user_config['fields']['nickname']['maxlength'])
 			->test('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
-		if ($context === null)
+		if ($context === null || \strlen($fields['password']) > 1)
 		{
 			$validator
 				->rule('password', 'not_empty')
@@ -96,7 +96,14 @@ class Model_User
 	 */
 	static function filter_fields(array $fields)
 	{
-		$password = static::generate_password($fields['password']);
+		if (\strlen($fields['password']) > 1)
+		{
+			$password = static::generate_password($fields['password']);
+		}
+		else
+		{
+			$password = null;
+		}
 		
 		$filtered_fields = [];
 		
@@ -109,36 +116,66 @@ class Model_User
 			$active_state = true;
 		}
 		
-		$filtered_fields['fields'] = array
-			(
-				'nickname' => \htmlspecialchars($fields['nickname']),
-				'email' => \htmlspecialchars($fields['email']),
-				'ipaddress' => \app\Server::client_ip(),
-				'pwdverifier' => $password['verifier'],
-				'pwdsalt' => $password['salt'],
-				'pwddate' => \date('Y-m-d H:i:s'),
-				'active' => $active_state
-			);
-		
-		$filtered_fields['string'] = array
-			(
-				'nickname',
-				'email',
-				'ipaddress',
-				'pwdverifier',
-				'pwdsalt',
-				'pwddate',
-			);
-		
-		$filtered_fields['int'] = array
-			(
-				// empty
-			);
-		
-		$filtered_fields['bool'] = array
-			(
-				'active',
-			);
+		if ($password)
+		{
+			$filtered_fields['fields'] = array
+				(
+					'nickname' => \htmlspecialchars($fields['nickname']),
+					'email' => \htmlspecialchars($fields['email']),
+					'ipaddress' => \app\Server::client_ip(),
+					'pwdverifier' => $password['verifier'],
+					'pwdsalt' => $password['salt'],
+					'pwddate' => \date('Y-m-d H:i:s'),
+					'active' => $active_state
+				);
+
+			$filtered_fields['string'] = array
+				(
+					'nickname',
+					'email',
+					'ipaddress',
+					'pwdverifier',
+					'pwdsalt',
+					'pwddate',
+				);
+
+			$filtered_fields['int'] = array
+				(
+					// empty
+				);
+
+			$filtered_fields['bool'] = array
+				(
+					'active',
+				);
+		}
+		else # no password
+		{
+			$filtered_fields['fields'] = array
+				(
+					'nickname' => \htmlspecialchars($fields['nickname']),
+					'email' => \htmlspecialchars($fields['email']),
+					'ipaddress' => \app\Server::client_ip(),
+					'active' => $active_state
+				);
+
+			$filtered_fields['string'] = array
+				(
+					'nickname',
+					'email',
+					'ipaddress',
+				);
+
+			$filtered_fields['int'] = array
+				(
+					// empty
+				);
+
+			$filtered_fields['bool'] = array
+				(
+					'active',
+				);
+		}
 		
 		return $filtered_fields;
 	}
