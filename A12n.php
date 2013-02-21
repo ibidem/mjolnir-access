@@ -48,7 +48,7 @@ class A12n extends \app\Instantiatable
 	/**
 	 * Store remember me information.
 	 */
-	static function remember_user($user)
+	static function remember_user($user, $customtime = null)
 	{
 		$role = \app\Model_User::role_for($user);
 
@@ -64,7 +64,7 @@ class A12n extends \app\Instantiatable
 
 		\app\Model_UserSigninToken::refresh($user, $token);
 
-		$timeout = \app\CFS::config('mjolnir/a12n')['remember_me.timeout'];
+		$timeout = (empty($customtime)) ? \app\CFS::config('mjolnir/a12n')['remember_me.timeout'] : $customtime;
 		
 		\app\Cookie::set('user', $user, $timeout);
 		\app\Cookie::set('accesstoken', $token, $timeout);
