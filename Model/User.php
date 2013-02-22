@@ -100,6 +100,42 @@ class Model_User
 	}
 
 	/**
+	 * Add additional fields for processing
+	 */
+	static function injectfields(array &$filtered_fields, array &$fields)
+	{
+		// empty
+	}
+	
+	/**
+	 * @return array
+	 */
+	static function filteredfieldnames()
+	{
+		return array
+			(
+				'strs' => array
+					(
+						'nickname',
+						'email',
+						'ipaddress',
+						'pwdverifier',
+						'pwdsalt',
+						'pwddate',
+						'last_signin'
+					),
+				'nums' => array
+					(
+						// empty
+					),
+				'bools' => array
+					(
+						'active'
+					),
+			);
+	}
+	
+	/**
 	 * @param array (nickname, email, password, verifier)
 	 */
 	static function process(array $fields)
@@ -117,22 +153,17 @@ class Model_User
 				'active' => $fields['active'],
 				'last_signin' => \date('Y-m-d H:i:s'),
 			);
+		
+		static::injectfields($filtered_fields, $fields);
 
+		$fieldnames = static::filteredfieldnames();
+		
 		static::inserter
 			(
 				$filtered_fields,
-				[
-					'nickname',
-					'email',
-					'ipaddress',
-					'pwdverifier',
-					'pwdsalt',
-					'pwddate',
-					'last_signin'
-				],
-				[
-					'active',
-				]
+				$fieldnames['strs'],
+				$fieldnames['bools'],
+				$fieldnames['nums']
 			)
 			->run();
 
@@ -170,8 +201,7 @@ class Model_User
 	}
 
 	/**
-	 * @param int id
-	 * @param array fields
+	 * ...
 	 */
 	static function update_process($id, array $fields)
 	{
