@@ -44,6 +44,9 @@ class A12n extends \app\Instantiatable
 				if ( ! empty($entry) && $entry['token'] === $token)
 				{
 					static::remember_user($user);
+					
+					\var_dump('weve remembered the user');
+					\var_dump($_SESSION);
 				}
 			}
 		}
