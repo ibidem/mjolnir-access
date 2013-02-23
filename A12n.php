@@ -33,6 +33,8 @@ class A12n extends \app\Instantiatable
 			// verify cookies
 			$user = \app\Cookie::get('user', null);
 			$token = \app\Cookie::get('accesstoken', null);
+			\var_dump($user);
+			\var_dump($token);
 			
 			if ($user !== null && $token !== null)
 			{
