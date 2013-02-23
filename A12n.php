@@ -33,20 +33,13 @@ class A12n extends \app\Instantiatable
 			// verify cookies
 			$user = \app\Cookie::get('user', null);
 			$token = \app\Cookie::get('accesstoken', null);
-			\var_dump($user);
-			\var_dump($token);
 			
 			if ($user !== null && $token !== null)
 			{
-				\var_dump('ok user and token');
 				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
-				\var_dump($entry);
 				if ( ! empty($entry) && $entry['token'] === $token)
 				{
 					static::remember_user($user);
-					
-					\var_dump('weve remembered the user');
-					\var_dump($_SESSION);
 				}
 			}
 		}
