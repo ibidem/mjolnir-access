@@ -522,6 +522,8 @@ class Model_User
 	 */
 	static function change_password($user, array $fields)
 	{
+		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
+		
 		$errors = static::change_passwords_check($user, $fields)->errors();
 
 		if (empty($errors))
