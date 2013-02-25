@@ -24,7 +24,7 @@
 		<tr>
 			<th>last sign in</th>
 			<td>
-				<?= \app\Auth::userinfo()['last_signin'] !== null ? \app\Auth::userinfo()['last_signin']->format('Y-m-d H:i') : 'an unspecified date' ?>
+				<?= \app\Auth::userinfo()['last_signin'] !== null ? \app\Auth::userinfo()['last_signin']->format('Y-m-d @ H:i') : 'an unspecified date' ?>
 			</td>
 		<tr>
 		<tr>
