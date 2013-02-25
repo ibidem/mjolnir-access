@@ -15,7 +15,10 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		$state = isset($_REQUEST['state']) ? $_REQUEST['state'] : null;
 		$session_state = \app\Session::get('facebook_state');
 		
-		if($session_state && ($session_state === $state)) 
+		//disable state check for now
+		
+//		if($session_state && ($session_state === $state))
+		if(true)
 		{
 			\app\Session::set('facebook_state', null);
 			$provider = \app\CFS::config('mjolnir/a12n')['signin']['facebook'];
