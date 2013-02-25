@@ -51,7 +51,7 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 			$context = \array_merge($context, $relaynode->get('context'));
 		}
 
-		if ( ! \app\Access::can($relaynode->get('target'), $context))
+		if ( ! \app\Access::can($relaynode->get('relaykey'), $context))
 		{
 			$http_layer = $channel->get('layer:http');
 
