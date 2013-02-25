@@ -1,8 +1,8 @@
-<? 
-	/* @var $context \app\Backend_Role */
-	/* @var $control \app\Controller_Backend */
+<?
+	namespace app;
 
-	namespace app; 
+	/* @var $context Backend_Role */
+	/* @var $control Controller_Backend */
 
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 	$pagelimit = 10;
@@ -14,12 +14,8 @@
 
 <? if ( ! empty($roles)): ?>
 
-	<?= $form = Form::instance()
-		->method(\mjolnir\types\HTTP::POST)
-		->action($control->action('delete'))
-		->field_template(':field') ?>
-
-	<?= $form->close() ?>
+	<?= $form = HTML::form($control->action('delete'))
+		->addfieldtemplate(':field') ?>
 
 	<table class="table table-striped marginless">
 		<thead>
@@ -34,48 +30,42 @@
 				<tr>
 					<td>
 						<?= $form->checkbox(null, 'selected[]')
-							->attribute('form', $form->form_id())
-							->value($role['id']) ?>
+							->value_is($role['id']) ?>
 					</td>
 					<td><?= $role['title'] ?></td>
 					<td class="table-controls">
-						
+
 						<a href="<?= $control->backend('user-role-edit') ?>?id=<?= $role['id'] ?>"
 						   class="btn btn-mini btn-warning">
 							Edit
 						</a>
 
-						<?= $delete_form = \app\Form::instance() 
-							->standard('twitter.table-controls')
-							->action($control->action('erase')) ?>
+						<?= $delete_form = HTML::form($control->action('erase'), 'mjolnir:inline') ?>
+						<?= $delete_form->hidden('id')->value_is($role['id']) ?>
+						<button class="btn btn-mini btn-danger" <?= $delete_form->mark() ?>>
+							Delete
+						</button>
 
-							<fieldset>
-								<?= $delete_form->hidden('id')->value($role['id']) ?>
-								<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
-							</fieldset>
-
-						<?= $delete_form->close() ?>
-						
 					</td>
 				</tr>
 			<? endforeach; ?>
 		</tbody>
 	</table>
-	
-	<div class="row">
-		
-		<div class="span9">
-			<br/>
-			<div class="pull-right marginless-pagination">
-				<?= $context->pager()
-					->pagelimit($pagelimit)
-					->currentpage($page)
-					->standard('twitter')
-					->render() ?>
-			</div>
-			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
+
+	<div class="row-fluid">
+
+		<br/>
+		<div class="pull-right marginless-pagination">
+			<?= $context->pager()
+				->pagelimit_is($pagelimit)
+				->page_is($page)
+				->apply('twitter') ?>
 		</div>
 		
+		<button class="btn btn-danger btn-mini" <?= $form->mark() ?>>
+			<i class="icon-trash"></i> Delete Selected
+		</button>
+
 	</div>
 
 <? else: # no users in system ?>
@@ -84,23 +74,24 @@
 <? endif; ?>
 
 <hr/>
-	
-<section role="application">
+
+<div role="application">
 	<h2>New Role</h2>
 	<br/>
-	<?= $form = Form::instance()
-		->standard('twitter.general')
-		->errors($errors['role-new'])
-		->action($control->action('new')) ?>
+	<?= $form = HTML::form($control->action('new'), 'mjolnir:twitter')
+		->errors_are($errors['role-new']) ?>
 
+	<div class="form-horizontal">
 		<fieldset>
-			<?= $form->text('Title', 'title')->autocomplete(false) ?>
+
+			<?= $form->text('Title', 'title')
+				->set('autocomplete', 'off') ?>
+
 			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Create Role</button>
+				<button class="btn btn-primary" <?= $form->mark() ?>>
+					Create Role
+				</button>
 			</div>
 		</fieldset>
-	
-		
-
-	<?= $form->close() ?>
-</section>
+	</div>
+</div>

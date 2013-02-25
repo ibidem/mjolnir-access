@@ -61,7 +61,7 @@ trait Trait_Controller_MjolnirEmails
 				throw new \Exception('Undefined action when using emails manager: '.$_POST['action']);
 			}
 
-			$this->emails_view();
+			return $this->emails_view();
 		}
 		else # treat as GET
 		{
@@ -81,7 +81,7 @@ trait Trait_Controller_MjolnirEmails
 				}
 			}
 
-			$this->emails_view();
+			return $this->emails_view();
 		}
 	}
 
@@ -220,6 +220,9 @@ trait Trait_Controller_MjolnirEmails
 		}
 	}
 
+	/**
+	 * ...
+	 */
 	protected function remove_secondary_email()
 	{
 		// verify secondary email belongs to user

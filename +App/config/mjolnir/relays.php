@@ -14,7 +14,7 @@
 				'enabled' => false,
 			// MVC
 				'controller' => '\mjolnir\access\Controller_Access',
-				'action'  => 'action_channel',
+				'action'  => 'channel',
 				'target'  => null, # theme targeting
 				'control' => '\mjolnir\access\Controller_Access',
 				'context' => '\mjolnir\access\Context_Access',
@@ -27,7 +27,7 @@
 				'enabled' => false,
 			// MVC
 				'controller' => '\mjolnir\access\Controller_Access',
-				'action'  => 'action_endpoint',
+				'action'  => 'endpoint',
 				'target'  => null, # theme targeting
 				'control' => '\mjolnir\access\Controller_Access',
 				'context' => '\mjolnir\access\Context_Access',
@@ -45,10 +45,7 @@
 						),
 				'enabled' => false,
 			// MVC
-				'controller' => '\mjolnir\access\Controller_A12n',
-				'action'  => 'action_index',
-				'target'  => null, # theme targeting
-				'control' => '\mjolnir\access\Controller_A12n',
-				'context' => '\mjolnir\access\Context_Access',
+				'controller' => '\mjolnir\access\Controller_Access',
+				'action'  => 'index',
 			),
 	);

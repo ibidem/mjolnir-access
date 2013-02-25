@@ -1,20 +1,20 @@
-<?  
+<?
 	/* @var $context \app\Backend_User */
 	/* @var $control \app\Controller_Backend */
 
 	namespace app;
-	
+
 	$id = $_GET['id'];
 	$user = $context->entry($id);
 ?>
 
-<section>
-	
+<div>
+
 	<h1><small>User:</small> <?= $user['nickname'] ?></h1>
 
 	<br/>
-	
-	<section>
+
+	<div>
 		<h2>Account Information</h2>
 		<dl class="dl-horizontal">
 			<dt>Role</dt>
@@ -26,12 +26,12 @@
 			<dt>ipaddress</dt>
 				<dd><?= $user['ipaddress'] ?></dd>
 		</dl>
-	</section>
-	
+	</div>
+
 	<? $profile_info = $context->profile_info($id) ?>
-	
+
 	<? if ($profile_info !== null): ?>
-		<section>
+		<div>
 			<h2>Profile Information</h2>
 			<dl class="dl-horizontal">
 				<? foreach ($profile_info as $field): ?>
@@ -39,10 +39,10 @@
 					<dd><?= $field['render'] ?></dd>
 				<? endforeach; ?>
 			</dl>
-		</section>
+		</div>
 	<? endif; ?>
-	
-</section>
+
+</div>
 
 <hr/>
 
@@ -56,7 +56,7 @@
 	Edit Profile
 </a>
 
-<a class="btn btn-small pull-right" 
-   href="<?= \app\URL::route('\mjolnir\backend')->url(['slug' => 'user-index']) ?>">
+<a class="btn btn-small pull-right"
+   href="<?= \app\URL::href('mjolnir:backend.route', ['slug' => 'user-index']) ?>">
 	Back to Index
 </a>

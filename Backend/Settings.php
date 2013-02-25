@@ -16,8 +16,8 @@ class Backend_Settings extends \app\Instantiatable
 
 		$access_fields = array
 			(
-				'mjolnir:access/signup/public.reg',
-				'\mjolnir\access\signup\capcha',
+				'mjolnir:access/signup/public',
+				'mjolnir:access/signup/captcha',
 			);
 
 		$fields = \array_merge($providers, $access_fields);

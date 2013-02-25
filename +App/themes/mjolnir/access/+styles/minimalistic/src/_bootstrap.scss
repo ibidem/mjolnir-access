@@ -1,0 +1,86 @@
+// == Compass ==================================================================
+
+// -- Browser Support ----------------------------------------------------------
+
+// Hacks
+$legacy-support-for-ie6 : true;
+$legacy-support-for-ie7 : true;
+$legacy-support-for-ie8 : true;
+
+// Vendor extentions
+// http://www.w3.org/TR/css3-syntax/#vendor-specific
+$experimental-support-for-mozilla   : true;
+$experimental-support-for-webkit    : true;
+$experimental-support-for-opera     : true;
+$experimental-support-for-microsoft : true;
+$experimental-support-for-khtml     : true;
+
+// Additonal settings
+$support-for-original-webkit-gradients : false;
+$experimental-support-for-svg          : true;
+$experimental-support-for-pie          : false;
+
+@import "compass/support";
+
+// -- Utilities ----------------------------------------------------------------
+
+// CSS3
+
+@import "compass/css3/images";
+
+@import "compass/css3/transition";
+
+@import "compass/css3/inline-block";
+
+$default-text-shadow-color    : #aaaaaa;
+$default-text-shadow-h-offset : 0px;
+$default-text-shadow-v-offset : 0px;
+$default-text-shadow-blur     : 1px;
+@import "compass/css3/text-shadow";
+
+$default-border-radius : 5px;
+@import "compass/css3/border-radius";
+
+$default-box-shadow-color    : #333333;
+$default-box-shadow-h-offset : 0px;
+$default-box-shadow-v-offset : 0px;
+$default-box-shadow-blur     : 5px;
+@import "compass/css3/box-shadow";
+
+// etc
+
+@import "compass/utilities/sprites/base";
+
+@import "compass/layout/stretching";
+
+$contrasted-dark-default        : black;
+$contrasted-light-default       : white;
+$contrasted-lightness-threshold : 30%;
+@import "compass/utilities/color/contrast";
+
+@import "compass/utilities/general/min";
+
+// -- Quick API Reference ------------------------------------------------------
+// Image:
+//   image-width($image), image-height($image)
+// Embedding:
+//   inline-image($image, [$mime-type])
+//   inline-font-files([$font, $format]*)
+// Math:
+//   pi(), sin($number), cos($number), tan($number)
+// Contrast:
+//   contrast-color($color, [$dark], [$light], [$threshold]),
+//   contrasted($background-color, [$dark], [$light], [$threshold])
+//
+
+// == etc ======================================================================
+
+// default image folder; relative to output
+$images-dir : "images/" !default;
+
+// variables
+
+$fg_color : #222;
+$bg_color : #eee;
+
+

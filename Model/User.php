@@ -60,7 +60,7 @@ class Model_User
 		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
 		isset($fields['active']) or $fields['active'] = true;
 	}
-	
+
 	/**
 	 * @param array fields
 	 * @return Validator
@@ -106,7 +106,7 @@ class Model_User
 	{
 		// empty
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -134,7 +134,7 @@ class Model_User
 					),
 			);
 	}
-	
+
 	/**
 	 * @param array (nickname, email, password, verifier)
 	 */
@@ -153,11 +153,11 @@ class Model_User
 				'active' => $fields['active'],
 				'last_signin' => \date('Y-m-d H:i:s'),
 			);
-		
+
 		static::injectfields($filtered_fields, $fields);
 
 		$fieldnames = static::filteredfieldnames();
-		
+
 		static::inserter
 			(
 				$filtered_fields,
@@ -215,6 +215,47 @@ class Model_User
 	// Collection interface
 
 	/**
+	 * @return array
+	 */
+	static function select_entries(array $entries = null)
+	{
+		if (empty($entries))
+		{
+			return [];
+		}
+
+		$cache_key = __FUNCTION__.'__entries'.\implode(',', $entries);
+
+		return static::stash
+			(
+				__METHOD__,
+				'
+					SELECT user.id,
+					       user.nickname,
+					       user.email,
+						   user.last_signin,
+						   user.timestamp,
+					       user.ipaddress,
+						   user.active,
+					       role.id role,
+					       role.title roletitle
+
+					  FROM :table user
+
+					  JOIN `'.static::assoc_roles().'` assoc_roles
+						ON assoc_roles.user = user.id
+
+					  JOIN `'.static::roles_table().'` role
+						ON assoc_roles.role = role.id
+
+					 WHERE user.`'.static::unique_key().'` IN ('.\implode(', ', $entries).')
+				'
+			)
+			->key($cache_key)
+			->fetch_all(static::fieldformat());
+	}
+
+	/**
 	 * @param int page
 	 * @param int limit
 	 * @param int offset
@@ -235,6 +276,7 @@ class Model_User
 					SELECT user.id,
 					       user.nickname,
 					       user.email,
+						   user.last_signin,
 						   user.timestamp,
 					       user.ipaddress,
 						   user.active,
@@ -253,7 +295,7 @@ class Model_User
 			->key(__FUNCTION__)
 			->page($page, $limit, $offset)
 			->order($order)
-			->fetch_all();
+			->fetch_all(static::fieldformat());
 	}
 
 	/**
@@ -322,7 +364,7 @@ class Model_User
 	// Extended
 
 	/**
-	 * Update last_signin field to current time or specified time (string) if 
+	 * Update last_signin field to current time or specified time (string) if
 	 * provided.
 	 */
 	static function update_last_singin($id, \DateTime $datetime = null)
@@ -340,7 +382,7 @@ class Model_User
 			->num(':id', $id)
 			->run();
 	}
-	
+
 	/**
 	 * @param int user id
 	 * @param int role
@@ -689,7 +731,7 @@ class Model_User
 							ON user.id = assoc.user
 
 						  JOIN `'.static::roles_table().'` role
-							ON role.id = assoc.role						
+							ON role.id = assoc.role
 
 						 WHERE email = :email
 						   AND `locked` = FALSE

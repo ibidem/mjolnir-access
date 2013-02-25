@@ -1,0 +1,9 @@
+@import 'bootstrap';
+
+// bootstrap
+@import '+vendor/bootstrap-sass/lib/bootstrap';
+//@import '+vendor/bootstrap-sass/lib/responsive';
+
+// font awesome
+$fontAwesomePath: '+vendor/fontawesome/font';
+@import '+vendor/fontawesome/sass/font-awesome';

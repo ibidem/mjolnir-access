@@ -15,10 +15,10 @@ class Allow
 	static function relays()
 	{
 		$args = \func_get_args();
-		
+
 		return \app\Protocol::instance()->relays($args);
 	}
-	
+
 	/**
 	 * @return \app\Protocol
 	 */
@@ -29,16 +29,16 @@ class Allow
 			->attributes($args)
 			->all_parameters();
 	}
-	
+
 	/**
 	 * @return \app\Protocol
 	 */
 	static function backend()
 	{
 		$args = \func_get_args();
-		
+
 		return \app\Protocol::instance()
-			->relays(['\mjolnir\backend'])
+			->relays(['mjolnir:backend.route'])
 			->attributes($args)
 			->all_parameters();
 	}

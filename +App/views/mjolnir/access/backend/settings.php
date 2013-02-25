@@ -1,8 +1,8 @@
 <?
-	/* @var $context \app\Backend_Registration */
-	/* @var $control \app\Controller_Backend */
-
 	namespace app;
+
+	/* @var $context Backend_Registration */
+	/* @var $control Controller_Backend */
 
 	$signin_providers = \app\CFS::config('mjolnir/auth')['signin'];
 
@@ -10,42 +10,49 @@
 
 	$access_fields = array
 		(
-			'mjolnir:access/signup/public.reg',
-			'\mjolnir\access\signup\capcha',
+			'mjolnir:access/signup/public',
+			'mjolnir:access/signup/captcha',
 		);
 
 	$access_fields = \app\Register::pull($access_fields);
 	$providers = \app\Register::pull($providers);
 
-	$switch_format = ['Enabled' => 'on', 'Disabled' => 'off'];
+	$switch_format = ['on' => 'Enabled', 'off' => 'Disabled'];
 ?>
 
-<section role="application">
+<div role="application">
 
 	<h1>Access Settings</h1>
 
 	<br/>
 
-	<?= $form = Form::instance()->standard('twitter.general')
-		->errors($errors['registration-update'])
-		->action($control->action('update')) ?>
+	<?= $form = HTML::form($control->action('update'), 'mjolnir:access/twitter')
+		->errors_are($errors['registration-update']) ?>
+
+	<div class="form-horizontal">
 
 		<fieldset>
 			<legend>Sign Up</legend>
+
 			<?
-				$public_registration = $form->select('Public Registration', 'mjolnir:access/signup/public.reg', $switch_format)
-					->value($access_fields['mjolnir:access/signup/public.reg']);
+				$public_registration = $form->select('Public Sign Up', 'mjolnir:access/signup/public')
+					->options_array($switch_format)
+					->value_is($access_fields['mjolnir:access/signup/public']);
 
 				if ( ! \app\CFS::config('mjolnir/auth')['standard.signup'])
 				{
 					$public_registration
-						->help('Disabled at static configuration level by [standard.signup], please check your private [mjolnir/a12n]')
-						->attr('disabled', 'disabled')
-						->value('off');
+						->hint('Disabled at static configuration level by [standard.signup], please check your private [mjolnir/auth]')
+						->set('disabled', 'disabled')
+						->value_is('off');
 				}
 			?>
 
 			<?= $public_registration ?>
+
+			<?= $form->select('CAPTCHA Check', 'mjolnir:access/signup/captcha')
+				->options_array($switch_format)
+				->value_is($access_fields['mjolnir:access/signup/captcha']) ?>
 
 		</fieldset>
 
@@ -55,8 +62,9 @@
 
 				<? foreach ($signin_providers as $provider): ?>
 
-					<?= $form->select($provider['title'], $provider['register'], $switch_format)
-						->value($providers[$provider['register']]) ?>
+					<?= $form->select($provider['title'], $provider['register'])
+						->options_array($switch_format)
+						->value_is($providers[$provider['register']]) ?>
 
 				<? endforeach; ?>
 
@@ -64,9 +72,9 @@
 		<? endif; ?>
 
 		<div class="form-actions">
-			<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
+			<button class="btn btn-primary" <?= $form->mark() ?>>Update</button>
 		</div>
 
-	<?= $form->close() ?>
+	</div>
 
-</section>
+</div>

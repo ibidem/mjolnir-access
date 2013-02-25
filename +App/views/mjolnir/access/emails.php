@@ -1,36 +1,39 @@
 <?
 	namespace app;
-	
+
 	/* @var $theme ThemeView */
-	
-	$h = isset($h) ? $h : H::up();
+
+	$h = isset($h) ? $h : HH::next();
 	$h1 = $h;
-	$h2 = H::up($h1);
-	
-	$email_manager = \app\CFS::config('mjolnir/auth')['default.emails_manager'];
+	$h2 = HH::raise($h1);
+
+	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:access/twitter';
+	$email_manager = isset($route) ? $route : \app\CFS::config('mjolnir/auth')['default.emails_manager'];
 ?>
 
-<?= $f = Form::i('twitter.general', $email_manager)
-	->errors($errors['\mjolnir\access\Auth::update_mainemail']) ?>
+<?= $f = HTML::form($email_manager, $form_standard)
+	->errors_are($errors['\mjolnir\access\Auth::update_mainemail']) ?>
+
+<div class="form-horizontal">
 
 	<fieldset>
-		
-		<?= $f->hidden('action')->value('change-main-email') ?>
-		
+
+		<?= $f->hidden('action')->value_is('change-main-email') ?>
+
 		<?= $f->composite
 			(
 				'Main Email',
 				$f->text(null, 'email')
-					->value($control->mainemail()),
+					->value_is($control->mainemail()),
 				$f->submit(\app\Lang::term('Update'))
-					->classes(['btn', 'btn-primary'])
+					->set('class', ['btn', 'btn-primary'])
 			)
-			->format('%1 %2')
-			->help('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
-		
+			->fieldmix('%1 %2')
+			->hint('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
+
 	</fieldset>
 
-<?= $f->close() ?>
+</div>
 
 <hr/>
 
@@ -44,11 +47,12 @@
 		<? foreach ($secondary_emails as $secondary_email): ?>
 			<tr>
 				<td style="width: 1%;">
-					<?= $f = Form::i('twitter.general', $email_manager) ?>
-						<?= $f->hidden('id')->value($secondary_email['id']) ?>
-						<?= $f->hidden('action')->value('remove-secondary-email') ?>
-						<button type="submit" class="btn btn-warning btn-mini"><?= Lang::term('Remove') ?></button>
-					<?= $f->close() ?>
+					<?= $f = HTML::form('twitter.general', $email_manager) ?>
+					<?= $f->hidden('id')->value_is($secondary_email['id']) ?>
+					<?= $f->hidden('action')->value_is('remove-secondary-email') ?>
+					<button type="submit" class="btn btn-warning btn-mini" <?= $f->mark() ?>>
+						<?= Lang::term('Remove') ?>
+					</button>
 				</td>
 				<td><?= $secondary_email['email'] ?></td>
 			</tr>
@@ -62,32 +66,36 @@
 
 <<?= $h2 ?>><?= Lang::term('Add Secondary Email') ?></<?= $h2 ?>>
 
-<br/>
+<?= $f = HTML::form($email_manager, $form_standard)
+	->errors_are($errors['\mjolnir\access\Auth::update_mainemail']) ?>
 
-<?= $f = Form::i('twitter.general', $email_manager)
-	->errors($errors['\mjolnir\access\Auth::update_mainemail']) ?>
+<div class="form-horizontal">
 
 	<fieldset>
 
-		<?= $f->hidden('action')->value('add-secondary-email') ?>
-		
+		<?= $f->hidden('action')->value_is('add-secondary-email') ?>
+
 		<?= $f->composite
 			(
 				'Secondary Email',
 				$f->text(null, 'email'),
 				$f->submit(Lang::term('Send Authorization Code'))
-					->classes(['btn', 'btn-primary'])
+					->set('class', ['btn', 'btn-primary'])
 			)
-			->format('%1 %2')
-			->help('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
-		
+			->fieldmix('%1 %2')
+			->hint('<i class="icon-warning-sign"></i> If the email belongs to another account, once verified, that account will be locked.') ?>
+
 	</fieldset>
-	
-<?= $f->close() ?>
 
-<<?= $h2 ?>><?= Lang::term('Link Account') ?></<?= $h2 ?>>
+</div>
 
-<?= \app\View::instance()
-	->file('mjolnir/access/auth')
-	->variable('context', $context)
-	->render() ?>
+<? $providers = $context->authorized_a12n_providers() ?>
+<? if ( ! empty($providers)): ?>
+
+	<<?= $h2 ?>><?= Lang::term('Link Account') ?></<?= $h2 ?>>
+
+	<?= \app\View::instance('mjolnir/access/auth')
+		->pass('context', $context)
+		->render() ?>
+
+<? endif; ?>

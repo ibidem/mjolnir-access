@@ -1,0 +1,6 @@
+{
+	"dependencies" : {
+		"fontawesome": "git://github.com/FortAwesome/Font-Awesome.git",
+		"bootstrap-sass": "git://github.com/jlong/sass-twitter-bootstrap.git"
+	}
+}

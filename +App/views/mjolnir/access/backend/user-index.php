@@ -1,121 +1,92 @@
-<?  
-	/* @var $context \app\Backend_User */
-	/* @var $control \app\Controller_Backend */
-	 
+<?
 	namespace app;
 
-	$page = isset($_GET['page']) ? $_GET['page'] : 1;
-	$pagelimit = 10;
+	/* @var $context Backend_User */
+	/* @var $control Controller_Backend */
+
+	$columns = array
+		(
+			'nickname' => 'Nickname',
+			'roletitle' => 'Role',
+			'email' => 'Email',
+			'ipaddress' => 'IP Address',
+			'last_signin' => 'Last Signin',
+		);
+
+	$renderers = array
+		(
+			'roletitle' => function (array &$entry)
+				{
+					return "<em>{$entry['roletitle']}</em>";
+				},
+			'last_signin' => function (array &$entry)
+				{
+					return $entry['last_signin']->format('Y-m-d @ H:i');
+				}
+		);
+
+	$actions = array
+		(
+			'user-profile' => array
+				(
+					'title' => 'View Profile',
+				),
+			'user-edit' => array
+				(
+					'title' => 'Edit',
+					'class' => 'btn-warning',
+				)
+		);
 ?>
 
 <h1>Users</h1>
 
-<? $users = $context->entries($page, $pagelimit, 0, ['role' => 'asc', 'nickname' => 'asc']) ?>
+<?= \app\View::instance('mjolnir/backend/template/indexer')
+	->inherit($this) # inject context, control, etc
+	->pass('search_columns', ['nickname', 'email', 'ipaddress'])
+	->pass('default_order', ['role' => 'asc', 'nickname' => 'asc'])
+	->pass('columns', $columns)
+	->pass('renderers', $renderers)
+	->pass('actions', $actions)
+	->pass('plural', 'users')
+	->pass('singular', 'user')
+	->render() ?>
 
-<? if ( ! empty($users)): ?>
+<div role="application">
 
-	<?= $form = Form::instance()
-		->method(\mjolnir\types\HTTP::POST)
-		->action($control->action('delete'))
-		->field_template(':field') ?>
-
-	<?= $form->close() ?>
-
-	<table class="table table-striped marginless">
-		<thead>
-			<tr>
-				<th class="micro-col">&nbsp;</th>
-				<th>nickname</th>
-				<th>role</th>
-				<th>email</th>
-				<th>ipaddress</th>
-				<th>&nbsp;</th>
-			</tr>
-		</thead>
-		<tbody>
-			<? foreach ($users as $user): ?>
-				<tr>
-					<td>
-						<?= $form->checkbox(null, 'selected[]')
-							->attribute('form', $form->form_id())
-							->value($user['id']) ?>
-					</td>
-					<td><?= $user['nickname'] ?></td>
-					<td><em><?= $user['roletitle'] ?></em></td>
-					<td><?= $user['email'] ?></td>
-					<td><?= $user['ipaddress'] ?></td>
-					<td class="table-controls">
-						
-						<a href="<?= $control->backend('user-profile') ?>?id=<?= $user['id'] ?>"
-						   class="btn btn-mini">
-							View Profile
-						</a>
-						
-						<a href="<?= $control->backend('user-edit') ?>?id=<?= $user['id'] ?>"
-						   class="btn btn-mini btn-warning">
-							Edit
-						</a>
-						
-						<?= $delete_form = \app\Form::instance() 
-							->standard('twitter.table-controls')
-							->action($control->action('erase')) ?>
-
-							<?= $delete_form->hidden('id')->value($user['id']) ?>
-							<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
-
-						<?= $delete_form->close() ?>
-						
-					</td>
-				</tr>
-			<? endforeach; ?>
-		</tbody>
-	</table>
-
-	<div class="row">
-		
-		<div class="span9">
-			<br/>
-			<div class="pull-right marginless-pagination">
-				<?= $context->pager()
-					->pagelimit($pagelimit)
-					->currentpage($page)
-					->standard('twitter')
-					->render() ?>
-			</div>
-			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
-		</div>
-
-	</div>
-	
-<? else: # no users in system ?>
-	<br/>
-	<p class="alert alert-info">There are currently <strong>no users</strong> in the system.</p>
-<? endif; ?>
-
-<hr/>
-	
-<section role="application">
-	
 	<h2>New User</h2>
 	<br>
-	<?= $form = Form::instance()
-		->standard('twitter.general')
-		->errors($errors['user-new'])
-		->auto_complete($_POST)
-		->action($control->action('new')) ?>
+	<?= $form = HTML::form($control->action('new'), 'mjolnir:twitter')
+		->autocomplete($_POST)
+		->errors_are($errors['user-new']) ?>
 
+	<div class="form-horizontal">
 		<fieldset>
-			<?= $form->text('Nickname', 'nickname')->autocomplete(false) ?>
-			<?= $form->text('Email', 'email')->autocomplete(false) ?>
-			<?= $form->password('Password', 'password')->autocomplete(false) ?>
-			<?= $form->password('Password (verify)', 'verifier')->autocomplete(false) ?>
-			<?= $form->select('Role', 'role')->values($context->roles(), 'id', 'title') ?>
-			<?= $form->checkbox('Active', 'active')->check_value(true) ?>
+
+			<?= $form->text('Nickname', 'nickname')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->text('Email', 'email')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->password('Password', 'password')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->password('Password (verify)', 'verifier')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->select('Role', 'role')
+				->options_table($context->roles(), 'id', 'title')
+				->render()?>
+
+			<?= $form->select('Active', 'active')
+				->options_array(['yes' => 'Yes', 'no' => 'No'])
+				->value_is('yes') ?>
+
 			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Create User</button>
+				<button class="btn btn-primary" <?= $form->mark() ?>>Create User</button>
 			</div>
 		</fieldset>
+	</div>
 
-	<?= $form->close() ?>
-	
-</section>
+</div>

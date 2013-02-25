@@ -45,7 +45,7 @@ class Backend_User extends \app\Backend_Collection
 				(
 					\app\URL::href
 						(
-							'\mjolnir\backend',
+							'mjolnir:backend.route',
 							['slug' => 'user-profile'],
 							['id' => $id]
 						)

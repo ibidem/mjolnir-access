@@ -1,8 +1,8 @@
-<? 
+<?
 	/* @var $context \app\Backend_Profile */
 	/* @var $control \app\Controller_Backend */
 
-	namespace app; 
+	namespace app;
 
 	$page = isset($_GET['page']) ? $_GET['page'] : 1;
 	$pagelimit = 10;
@@ -14,12 +14,8 @@
 
 <? if ( ! empty($fields)): ?>
 
-	<?= $form = Form::instance()
-		->method(\mjolnir\types\HTTP::POST)
-		->action($control->action('delete'))
-		->field_template(':field') ?>
-
-	<?= $form->close() ?>
+	<?= $form = HTML::form($control->action('delete'))
+		->addfieldtemplate(':field') ?>
 
 	<table class="table table-striped marginless">
 		<thead>
@@ -38,10 +34,9 @@
 				<tr>
 					<td>
 						<?= $form->checkbox(null, 'selected[]')
-							->attribute('form', $form->form_id())
-							->value($field['id']) ?>
+							->value_is($field['id']) ?>
 					</td>
-					
+
 					<td><?= $field['idx'] ?></td>
 					<td>
 						<? if ( ! $field['required']): ?>
@@ -60,37 +55,33 @@
 							 Edit
 						</a>
 
-						<?= $delete_form = \app\Form::instance() 
-							->standard('twitter.table-controls')
-							->action($control->action('erase')) ?>
-
-							<fieldset>
-								<?= $delete_form->hidden('id')->value($field['id']) ?>
-								<?= $delete_form->submit('Delete')->classes(['btn', 'btn-mini', 'btn-danger']) ?>
-							</fieldset>
-
-						<?= $delete_form->close() ?>
+						<?= $delete_form = HTML::form($control->action('erase'), 'mjolnir:inline') ?>
+						<?= $delete_form->hidden('id')->value_is($field['id']) ?>
+						<button class="btn btn-mini btn-danger" <?= $delete_form->mark() ?>>
+							Delete
+						</button>
 
 					</td>
 				</tr>
 			<? endforeach; ?>
 		</tbody>
 	</table>
-	
-	<div class="row">
-		
-		<div class="span9">
-			<br/>
-			<div class="pull-right marginless-pagination">
-				<?= $context->pager()
-					->pagelimit($pagelimit)
-					->currentpage($page)
-					->standard('twitter')
-					->render() ?>
-			</div>
-			<button class="btn btn-danger btn-mini" form="<?= $form->form_id() ?>"><i class="icon-trash"></i> Delete Selected</button>
+
+	<div class="row-fluid">
+
+		<br/>
+
+		<div class="pull-right marginless-pagination">
+			<?= $context->pager()
+				->pagelimit_is($pagelimit)
+				->page_is($page)
+				->apply('twitter') ?>
 		</div>
-		
+
+		<button class="btn btn-danger btn-mini" <?= $form->mark() ?>>
+			<i class="icon-trash"></i> Delete Selected
+		</button>
+
 	</div>
 
 <? else: # no users in system ?>
@@ -99,27 +90,39 @@
 <? endif; ?>
 
 <hr/>
-	
-<section role="application">
+
+<div role="application">
 	<h2>New Profile Field</h2>
 	<br/>
-	<?= $form = Form::instance()
-		->standard('twitter.general')
-		->errors($errors['profilefield-new'])
-		->action($control->action('new')) ?>
+	<?= $form = HTML::form($control->action('new'), 'mjolnir:twitter')
+		->errors_are($errors['profilefield-new']) ?>
 
+	<div class="form-horizontal">
 		<fieldset>
-			<?= $form->text('Field Title', 'title')->autocomplete(false) ?>
-			<?= $form->text('Name', 'name')->autocomplete(false) ?>
-			<?= $form->text('Order Index', 'idx')->value(10)->autocomplete(false) ?>
-			<?= $form->select('Data Type', 'type')->values($context->fieldtypes()) ?>
-			<?= $form->select('Type', 'required')->values([ 'Optional' => 'false', 'Required' => 'true'])->value('false') ?>
-			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Define Field</button>
-			</div>
-		</fieldset>
-	
-		
 
-	<?= $form->close() ?>
-</section>
+			<?= $form->text('Field Title', 'title')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->text('Name', 'name')
+				->set('autocomplete', 'off') ?>
+
+			<?= $form->text('Order Index', 'idx')
+				->set('autocomplete', 'off')
+				->value_is(10) ?>
+
+			<?= $form->select('Data Type', 'type')
+				->options_array($context->fieldtypes()) ?>
+
+			<?= $form->select('Type', 'required')
+				->options_array([ 'false' => 'Optional', 'true' => 'Required'])
+				->value_is('false') ?>
+
+			<div class="form-actions">
+				<button class="btn btn-primary" <?= $form->mark() ?>>
+					Define Field
+				</button>
+			</div>
+
+		</fieldset>
+	</div>
+</div>

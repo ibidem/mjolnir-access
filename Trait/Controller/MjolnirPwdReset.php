@@ -10,9 +10,9 @@
 trait Trait_Controller_MjolnirPwdReset
 {
 	/**
-	 * Action: Reset user's password
+	 * Reset user's password
 	 */
-	function public_pwdreset()
+	function action_pwdreset()
 	{
 		if (\app\Server::request_method() === 'POST')
 		{
@@ -98,6 +98,16 @@ trait Trait_Controller_MjolnirPwdReset
 		{
 			return $this->pwdreset_view();
 		}
+	}
+
+	/**
+	 * Alias
+	 *
+	 * @return \mjolnir\types\Renderable
+	 */
+	function public_pwdreset()
+	{
+		return $this->action_pwdreset();
 	}
 
 	/**

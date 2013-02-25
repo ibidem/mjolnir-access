@@ -18,9 +18,15 @@
 			// alias list of your own administrator role
 			'+admin' => array
 				(
+					Allow::relays
+						(
+							'mjolnir:access/auth.route'
+						)
+						->all_parameters(),
+
 					Allow::backend
 						(
-							'user-index', 
+							'user-index',
 							'user-edit',
 							'user-edit-profile',
 							'user-role-index',
@@ -39,9 +45,9 @@
 	'aliaslist' => array # alias list
 		(
 			/**
-			 * If something is allowed for the alias it will be allowed for 
-			 * the permission category as well. Does not apply for 
-			 * exceptions. If there is an exception for an alias the 
+			 * If something is allowed for the alias it will be allowed for
+			 * the permission category as well. Does not apply for
+			 * exceptions. If there is an exception for an alias the
 			 * exception will not apply for the permission category.
 			 */
 

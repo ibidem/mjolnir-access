@@ -313,6 +313,7 @@ class Auth extends \app\Instantiatable
 			}
 		}
 
+		\app\Model_User::update_last_singin($user);
 		return \app\Model_User::entry($user);
 	}
 

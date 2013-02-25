@@ -1,12 +1,12 @@
-<?  
+<?
 	/* @var $context \app\Backend_User */
 	/* @var $control \app\Controller_Backend */
 
 	namespace app;
-	
+
 	$id = $_REQUEST['id'];
 	$user = $context->entry($id);
-	
+
 	$profile_info = $context->profile_info($id);
 	$values = [];
 	foreach ($profile_info as $field)
@@ -15,37 +15,42 @@
 	}
 ?>
 
-<section role="application">
-	
+<div role="application">
+
 	<h1>Edit Profile #<?= $id ?></h1>
-	
+
 	<br/>
-	<p><small>User: <strong><?= $user['nickname'] ?></strong></small></p>
-	<?= $form = Form::instance()
-		->standard('twitter.general')
-		->errors($errors['user-update-profile'])
-		->action($control->action('update-profile')) ?>
-	
+	<p>User: <strong><?= $user['nickname'] ?></strong></p>
+
+	<?= $form = HTML::form($control->action('update-profile'), 'mjolnir:twitter')
+		->errors_are($errors['user-update-profile']) ?>
+
+	<div class="form-horizontal">
 		<fieldset>
-			
-			<?= $form->hidden('id')->value($user['id']) ?>
-			
+
+			<?= $form->hidden('id')->value_is($user['id']) ?>
+
 			<? $field_types = \app\CFS::config('mjolnir/profile-fieldtypes') ?>
-			<? foreach ($context->profile_fields() as $field): ?>
-				<? $value = isset($values[$field['id']]) ? $values[$field['id']] : null ?>
-				<?= $field_types[$field['type']]['form']($form, $field['title'], 'field-'.$field['id'], $value) ?>
-			<? endforeach; ?>
-			
+			<? $profile_fields = $context->profile_fields() ?>
+
+			<? if ( ! empty($profile_fields)): ?>
+				<? foreach ($profile_fields as $field): ?>
+					<? $value = isset($values[$field['id']]) ? $values[$field['id']] : null ?>
+					<?= $field_types[$field['type']]['form']($form, $field['title'], 'field-'.$field['id'], $value) ?>
+				<? endforeach; ?>
+			<? else: # blank state ?>
+				<p class="text-info">There are currently no profile fields defined.</p>
+			<? endif; ?>
+
 			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
-				<a class="btn btn-small" 
-				   href="<?= $control->backend('user-profile') ?>?id=<?= $user['id'] ?>">
+				<button class="btn btn-primary" <?= $form->mark() ?>>Update</button>
+				<a class="btn btn-small" href="<?= $control->backend('user-profile') ?>?id=<?= $user['id'] ?>">
 					Cancel
 				</a>
 			</div>
-			
+
 		</fieldset>
-	
-	<?= $form->close() ?>
-	
-</section>
+
+	</div>
+
+</div>

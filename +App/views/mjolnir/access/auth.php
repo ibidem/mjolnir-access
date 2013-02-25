@@ -1,14 +1,14 @@
 <?
-	namespace app; 
-	
+	namespace app;
+
 	$providers = $context->authorized_a12n_providers();
 ?>
 
 <? if ( ! empty($providers)): ?>
-	<ul class="nav nav-pills nav-stacked">
+	<ul class="nav nav-pills nav-bar">
 		<? foreach ($providers as $provider): ?>
 			<li>
-				<?= \app\View::instance()->file('mjolnir/access/auth/'.$provider['slug'])->render() ?>
+				<?= \app\View::instance('mjolnir/access/auth/'.$provider['slug'])->render() ?>
 			</li>
 		<? endforeach; ?>
 	</ul>

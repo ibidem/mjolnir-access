@@ -10,16 +10,24 @@
 trait Trait_Controller_MjolnirSignin
 {
 	/**
-	 * Action: Sign In user
-	 *
-	 * @return \mjolnir\types\Renderable
+	 * Check if user is already signed in and redirect to appropriate page. In
+	 * cases where you don't want to redirect the user simply overwrite this
+	 * method.
 	 */
-	function public_signin()
+	function redirect_signedin_users()
 	{
 		if (\app\Auth::role() !== \app\Auth::Guest)
 		{
 			\app\Server::redirect(\app\Server::url_frontpage());
 		}
+	}
+
+	/**
+	 * @return \mjolnir\types\Renderable
+	 */
+	function action_signin()
+	{
+		$this->redirect_signedin_users();
 
 		if (\app\Server::request_method() === 'POST')
 		{
@@ -137,13 +145,33 @@ trait Trait_Controller_MjolnirSignin
 	}
 
 	/**
-	 * Action: Sign Out user out of system.
+	 * Alias
+	 *
+	 * @return \mjolnir\types\Renderable
 	 */
-	function public_signout()
+	function public_signin()
+	{
+		return $this->action_signin();
+	}
+
+	/**
+	 * Sign Out user out of system.
+	 */
+	function action_signout()
 	{
 		\app\Auth::signout();
 		$a12n_config = \app\CFS::config('mjolnir/auth');
 		\app\Server::redirect($a12n_config['default.signin']);
+	}
+
+	/**
+	 * Alias
+	 *
+	 * @return \mjolnir\types\Renderable
+	 */
+	function public_signout()
+	{
+		return $this->action_signout();
 	}
 
 	/**

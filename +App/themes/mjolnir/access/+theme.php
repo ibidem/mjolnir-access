@@ -1,35 +1,43 @@
 <?php return array
 	(
-		// mapping targets to files
-		'targets' => array
+		'version' => '1.0',
+
+		'loaders' => array # null = default configuration
+			(
+				'style' => [ 'default.style' => 'minimalistic' ],
+				'javascript' => null,
+			),
+
+		// target-to-file mapping
+		'mapping' => array
 			(
 				'lobby' => array
 					(
-						'components/base',
+						'foundation/base',
 						'lobby'
 					),
 
 				'signin' => array
 					(
-						'components/base',
+						'foundation/base',
 						'signin'
 					),
 
 				'signup' => array
 					(
-						'components/base',
+						'foundation/base',
 						'signup'
 					),
 
 				'pwdreset' => array
 					(
-						'components/base',
+						'foundation/base',
 						'pwdreset'
 					),
-			
+
 				'emails' => array
 					(
-						'components/base',
+						'foundation/base',
 						'emails'
 					),
 
@@ -37,24 +45,24 @@
 
 				'exception-NotFound' => array
 					(
-						'components/errors/base',
+						'foundation/error',
 						'errors/not-found'
 					),
 				'exception-NotAllowed' => array
 					(
-						'components/errors/base',
+						'foundation/error',
 						'errors/not-allowed'
 					),
 				'exception-NotApplicable' => array
 					(
-						'components/errors/base',
+						'foundation/error',
 						'errors/not-applicable'
 					),
 				'exception-Unknown' => array
 					(
-						'components/errors/base',
+						'foundation/error',
 						'errors/unknown'
 					),
 			),
-	);
 
+	); # theme
