@@ -12,7 +12,7 @@ require 'fileutils'
 $basedir = File.expand_path(File.dirname(__FILE__)+'/..')
 Dir.chdir $basedir
 
-json_config = `php -r "chdir('#{$basedir}'); echo json_encode(include '+style.php');"`;
+json_config = `php -r "chdir('#{$basedir}'); echo json_encode(include '+scripts.php');"`;
 $config = JSON.parse json_config
 
 # cleanup config
@@ -47,23 +47,25 @@ end#def
 
 purge($rootdir)
 
-# copy all non .scss files to the root; compass only copies images/
+# copy all files to the root
 $srcdir = $basedir+'/'+$config['sources'];
 
 Dir["#{$srcdir}/**/*"].each do |file|
-	if file !~ /^\..*$/ && file !~ /^.*\.(scss|sass)$/ &&
-		rootfile = $rootdir + (file.gsub $srcdir, '')
-		# check if file is non-empty directory
-		if File.directory?(file) && ! (Dir.entries(file) - %w[ . .. ]).empty?
-			if ($silent == false || $silent == nil)
-				puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
+	if (file.to_s.gsub($srcdir.to_s, '') !~ /\/(test|tests|docs)(\/|$)/)
+		if file !~ /^\..*$/ && file !~ /^.*\.(js|json)$/ &&
+			rootfile = $rootdir + (file.gsub $srcdir, '')
+			# check if file is non-empty directory
+			if File.directory?(file) && ! (Dir.entries(file) - %w[ . .. ]).empty?
+				if ($silent == false || $silent == nil)
+					puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
+				end#if
+				FileUtils.cp_r(file, rootfile)
+			else # file
+				if ($silent == false || $silent == nil)
+					puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
+				end#if
+				FileUtils.cp(file, rootfile)
 			end#if
-			FileUtils.cp_r(file, rootfile)
-		else # file
-			if ($silent == false || $silent == nil)
-				puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
-			end#if
-			FileUtils.cp(file, rootfile)
 		end#if
 	end#if
 end#each

@@ -5,6 +5,8 @@ require 'json'
 require 'zip/zipfilesystem' # gem install rubyzip
 require 'net/http'
 
+require_relative 'library/cleanup.rb'
+
 $basedir = nil;
 $config = nil;
 

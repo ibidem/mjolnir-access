@@ -51,30 +51,32 @@ purge($rootdir)
 $srcdir = $basedir+'/'+$config['sources'];
 
 Dir["#{$srcdir}/**/*"].each do |file|
-	if file !~ /^\..*$/ && file !~ /^.*\.(scss|sass|json|md)$/ &&
-		rootfile = $rootdir + (file.gsub $srcdir, '')
-		# check if file is non-empty directory
-		if File.directory?(file) && ! (Dir.entries(file) - %w[ . .. ]).empty?
-			if ($silent == false || $silent == nil)
-				puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
-			end#if
-			if ! File.exist? rootfile
+	if (file.to_s.gsub($srcdir.to_s, '') !~ /\/(jquery|test|tests|docs|js|javascript|less)(\/|$)/)
+		if file !~ /^\..*$/ && file !~ /^.*\.(scss|sass|json|md)$/
+			rootfile = $rootdir + (file.gsub $srcdir, '')
+			# check if file is non-empty directory
+			if File.directory?(file) && ! (Dir.entries(file) - %w[ . .. ]).empty?
+				if ($silent == false || $silent == nil)
+					puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
+				end#if
+				if ! File.exist? rootfile
+					begin
+						# FileUtils.cp_r(file, rootfile)
+						FileUtils.mkdir(rootfile)
+					rescue
+						puts "    failed to copy directory!"
+					end#rescue
+				end
+			elsif ! File.directory?(file)
+				if ($silent == false || $silent == nil)
+					puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
+				end#if
 				begin
-					# FileUtils.cp_r(file, rootfile)
-					FileUtils.mkdir(rootfile)
+					FileUtils.cp(file, rootfile) 
 				rescue
-					puts "    failed to copy directory!"
+					puts "    failed to copy file!"
 				end#rescue
-			end
-		elsif ! File.directory?(file)
-			if ($silent == false || $silent == nil)
-				puts "   moving  #{file.gsub($basedir, '')} => #{rootfile.gsub($basedir, '')}"
 			end#if
-			begin
-				FileUtils.cp(file, rootfile) 
-			rescue
-				puts "    failed to copy file!"
-			end#rescue
 		end#if
 	end#if
 end#each
