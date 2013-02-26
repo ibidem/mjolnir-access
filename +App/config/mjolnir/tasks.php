@@ -10,7 +10,7 @@
 					),
 				'flags' => array
 					(
-						'username' => array
+						'username' => array # intentionally not nickname
 							(
 								'description' => 'Name',
 								'short' => 'u',
@@ -35,6 +35,39 @@
 								'type' => 'text',
 							// shorthand email for development purposes
 								'default' => \base_convert(\time(), 10, 32).'@nobody.tld',
+							),
+					),
+			),
+		'user:password' => array
+			(
+				'category' => 'Access',
+				'description' => array
+					(
+						'Change user password.',
+						'The user may be mentioned via either a username or email.',
+						'If both are specified the email will take precedence.'
+					),
+				'flags' => array
+					(
+						'username' => array # intentionally not nickname
+							(
+								'description' => 'Name',
+								'short' => 'u',
+								'type' => 'text',
+								'default' => false,
+							),
+						'email' => array
+							(
+								'description' => 'Email',
+								'short' => 'e',
+								'type' => 'text',
+								'default' => false,
+							),
+						'password' => array
+							(
+								'description' => 'Password',
+								'short' => 'p',
+								'type' => 'text',
 							),
 					),
 			),
