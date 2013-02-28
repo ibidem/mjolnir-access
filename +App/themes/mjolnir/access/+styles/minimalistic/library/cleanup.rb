@@ -51,7 +51,7 @@ purge($rootdir)
 $srcdir = $basedir+'/'+$config['sources'];
 
 Dir["#{$srcdir}/**/*"].each do |file|
-	if (file.to_s.gsub($srcdir.to_s, '') !~ /\/(jquery|test|tests|docs|js|javascript|less)(\/|$)/)
+	if (file.to_s.gsub($srcdir.to_s, '') !~ /\/(jquery|test|tests|docs|js|javascript|less|demos|examples|demo|example)(\/|$)/)
 		if file !~ /^\..*$/ && file !~ /^.*\.(scss|sass|json|md)$/
 			rootfile = $rootdir + (file.gsub $srcdir, '')
 			# check if file is non-empty directory
