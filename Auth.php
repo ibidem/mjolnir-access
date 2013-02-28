@@ -73,7 +73,7 @@ class Auth extends \app\Instantiatable
 	}
 
 	/**
-	 * @return \mjolnir\access\A12n
+	 * @return static
 	 */
 	static function instance()
 	{

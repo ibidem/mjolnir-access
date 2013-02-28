@@ -44,7 +44,7 @@ class Protocol extends \app\Instantiatable
 	private $self = null;
 
 	/**
-	 * @return \mjolnir\access\Protocol_Rule $this
+	 * @return static $this
 	 */
 	function relays(array $relays)
 	{
@@ -53,7 +53,7 @@ class Protocol extends \app\Instantiatable
 	}
 
 	/**
-	 * @return \mjolnir\access\Protocol_Rule $this
+	 * @return static $this
 	 */
 	function attributes(array $attributes)
 	{
@@ -64,7 +64,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Constraints rule to only users who are NOT the owners of said object.
 	 *
-	 * @return \mjolnir\access\Protocol
+	 * @return static $this
 	 */
 	function only_others()
 	{
@@ -75,7 +75,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Constraints rule to only users who are the owners of said object.
 	 *
-	 * @return \mjolnir\access\Protocol $this
+	 * @return static $this
 	 */
 	function only_owner()
 	{
@@ -86,7 +86,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * Resets constraint on ownership back to everybody.
 	 *
-	 * @return \mjolnir\access\Protocol $this
+	 * @return static $this
 	 */
 	function everybody()
 	{
@@ -105,7 +105,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @param string name
 	 * @param array values
-	 * @return \mjolnir\access\Protocol $this
+	 * @return static $this
 	 */
 	function param($name, array $values)
 	{
@@ -115,7 +115,7 @@ class Protocol extends \app\Instantiatable
 	}
 
 	/**
-	 * @return \mjolnir\access\Protocol $this
+	 * @return static $this
 	 */
 	function all_parameters()
 	{

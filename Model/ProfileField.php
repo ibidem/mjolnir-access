@@ -74,7 +74,7 @@ class Model_ProfileField
 	// Update profile
 
 	/**
-	 * @return \app\Validation
+	 * @return \app\Validator
 	 */
 	static function update_profile_check($id, array $fields)
 	{
