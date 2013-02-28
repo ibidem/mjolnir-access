@@ -269,6 +269,8 @@ class A12n extends \app\Instantiatable
 		{
 			\app\Session::set('user', $user);
 			\app\Session::set('role', \app\Model_User::role_for($user));
+			
+			static::remember_user($user, 259200);
 		}
 		else # no user exists at the moment
 		{
