@@ -101,7 +101,7 @@ class Model_User
 	/**
 	 * Add additional fields for processing
 	 */
-	static function injectfields(array &$filtered_fields, array &$fields)
+	static function injectfields(array &$filtered_fields, array $fields)
 	{
 		// empty
 	}
