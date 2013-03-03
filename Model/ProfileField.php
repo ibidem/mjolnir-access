@@ -33,8 +33,7 @@ class Model_ProfileField
 	 */
 	static function assoc_user()
 	{
-		$database_config = \app\CFS::config('mjolnir/database');
-		return $database_config['table_prefix'].static::$table_user_field;
+		return \app\CFS::config('mjolnir/database')['table_prefix'].static::$table_user_field;
 	}
 
 	// -------------------------------------------------------------------------

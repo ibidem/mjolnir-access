@@ -1,9 +1,8 @@
 <?
 	namespace app;
-	
+
 	$provider_id = 'myspace';
-	
-	$provider = \app\CFS::config('mjolnir/auth')['signin'][$provider_id];
+	$provider = CFS::config('mjolnir/auth')['signin'][$provider_id];
 ?>
 
 <a rel="nofollow" href="<?= \app\URL::route('mjolnir:access/channel.route')->url(['provider' => 'universal', 'id' => $provider_id]) ?>">

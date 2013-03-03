@@ -8,7 +8,16 @@
 	$h2 = HH::raise($h1);
 
 	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:access/twitter';
-	$email_manager = isset($route) ? $route : \app\CFS::config('mjolnir/auth')['default.emails_manager'];
+
+	if (isset($route))
+	{
+		$email_manager = $route;
+	}
+	else # $route not set
+	{
+		$authconfig = CFS::config('mjolnir/auth');
+		$email_manager = $authconfig['default.emails_manager'];
+	}
 ?>
 
 <?= $f = HTML::form($email_manager, $form_standard)

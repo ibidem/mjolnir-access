@@ -4,7 +4,16 @@
 	/* @var $theme ThemeView */
 
 	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:access/twitter';
-	$pwdreset_manager = isset($route) ? $route : \app\CFS::config('mjolnir/auth')['default.pwdreset'];
+
+	if (isset($route))
+	{
+		$pwdreset_manager = $route;
+	}
+	else # $route not set
+	{
+		$authconfig = CFS::config('mjolnir/auth');
+		$pwdreset_manager = $authconfig['default.pwdreset'];
+	}
 
 	if (isset($errors, $errors['\mjolnir\a12n\pwdreset'], $errors['\mjolnir\a12n\pwdreset']['form']) && ! empty($errors['\mjolnir\a12n\pwdreset']['form']))
 	{

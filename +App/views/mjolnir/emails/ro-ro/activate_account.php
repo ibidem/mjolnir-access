@@ -1,10 +1,11 @@
 <?
 	namespace app;
-	
+
 	/* @var $theme ThemeView */
-	
-	$contact = \app\CFS::config('mjolnir/base')['system.info']['contact.email'];
-	$site = \app\CFS::config('mjolnir/base')['domain'].\app\CFS::config('mjolnir/base')['path'];
+
+	$baseconfig = CFS::config('mjolnir/base');
+	$contact = $baseconfig['system.info']['contact.email'];
+	$site = $baseconfig['domain'].$baseconfig['path'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -50,14 +51,14 @@
 				<td valign="top">
 
 					<div style="text-align: center;">
-						
+
 						<p>
 							Pentru a vă activa contul trebuie să autorizați acest email prin intermediul linkul următor,<br/>
 							<br/>
-							&gt;&gt; 
-							<big style="text-align: center; color: orange; text-decoration: none;"> 
+							&gt;&gt;
+							<big style="text-align: center; color: orange; text-decoration: none;">
 								<a target ="_blank" title="Token" style="color: red; text-decoration: none;" href="<?= $token_url ?>">Activează Cont</a>
-							</big> 
+							</big>
 							&lt;&lt;
 							<p><small>Expiră in 7 zile de la data eliberării.</small></p>
 						</p>
@@ -73,11 +74,11 @@
 					<p>No other (automated) method exists. Please contact us with any additional issues.</p>
 					<p>
 						<hr/>
-						
+
 						<?
 							// the following is INTENTIONALLY not translated
 						?>
-						
+
 						<small>If you did not request this account please ignore this email.</small><br/>
 						<small>Please report any issues at <a href="mailto:<?= $contact ?>"><?= $contact ?></a></small>
 					</p>

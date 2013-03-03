@@ -226,7 +226,7 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 				throw $e;
 			}
 		}
-		
+
 		// inject openid providers
 		$providers = \app\CFS::config('mjolnir/auth')['signin'];
 		foreach ($providers as $provider)
@@ -234,5 +234,5 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 			\app\Register::inject($provider['register'], 'off');
 		}
 	}
-	
+
 } # class

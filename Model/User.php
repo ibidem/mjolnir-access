@@ -40,8 +40,7 @@ class Model_User
 	 */
 	static function assoc_roles()
 	{
-		$database_config = \app\CFS::config('mjolnir/database');
-		return $database_config['table_prefix'].static::$user_role_table;
+		return \app\CFS::config('mjolnir/database')['table_prefix'].static::$user_role_table;
 	}
 
 	/**

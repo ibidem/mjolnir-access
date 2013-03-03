@@ -30,7 +30,7 @@
 
 			<?= $form->hidden('id')->value_is($user['id']) ?>
 
-			<? $field_types = \app\CFS::config('mjolnir/profile-fieldtypes') ?>
+			<? $field_types = CFS::config('mjolnir/profile-fieldtypes') ?>
 			<? $profile_fields = $context->profile_fields() ?>
 
 			<? if ( ! empty($profile_fields)): ?>

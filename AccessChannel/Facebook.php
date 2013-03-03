@@ -18,7 +18,8 @@ class AccessChannel_Facebook extends \app\Instantiatable
 		if($session_state && ($session_state === $state))
 		{
 			\app\Session::set('facebook_state', null);
-			$provider = \app\CFS::config('mjolnir/auth')['signin']['facebook'];
+			$authconfig = \app\CFS::config('mjolnir/auth');
+			$provider = $authconfig['signin']['facebook'];
 
 			$appid = $provider['AppID'];
 			$appsecret = $provider['AppSecret'];
@@ -44,7 +45,7 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				$user = \json_decode(\file_get_contents($graph_url));
 
 				// save in session the access token for later use
-				\app\Session::set(\app\CFS::config('mjolnir/auth')['signin']['facebook']['session.token.name'], $params['access_token']);
+				\app\Session::set($authconfig['signin']['facebook']['session.token.name'], $params['access_token']);
 
 				$signedin_user = \app\Auth::inferred_signin($user->username, $user->email, 'facebook', $user);
 
@@ -76,12 +77,13 @@ class AccessChannel_Facebook extends \app\Instantiatable
 				$state = \app\Session::set('facebook_state', \md5(\uniqid(\rand(), true)));
 			}
 
-			$provider = \app\CFS::config('mjolnir/auth')['signin']['facebook'];
+			$authconfig = \app\CFS::config('mjolnir/auth');
+			$provider = $authconfig['signin']['facebook'];
 			$appid = $provider['AppID'];
 			$redirect = \app\URL::route('mjolnir:access/channel.route')->url(['provider' => 'facebook']);
 			$protocol = empty($_SERVER['HTTPS']) ? 'http' : 'https';
 
-			$permissions = \app\CFS::config('mjolnir/auth')['signin']['facebook']['scope'];
+			$permissions = $authconfig['signin']['facebook']['scope'];
 
 			self::$signin_url = 'https://www.facebook.com/dialog/oauth?client_id='
 				. $appid.'&amp;redirect_uri='.$protocol.':'.$redirect.'&amp;scope='.$permissions.'&amp;state='.$state;

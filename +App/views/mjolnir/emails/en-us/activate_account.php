@@ -1,10 +1,11 @@
 <?
 	namespace app;
-	
+
 	/* @var $theme ThemeView */
-	
-	$contact = \app\CFS::config('mjolnir/base')['system.info']['contact.email'];
-	$site = \app\CFS::config('mjolnir/base')['domain'].\app\CFS::config('mjolnir/base')['path'];
+
+	$baseconfig = CFS::config('mjolnir/base');
+	$contact = $baseconfig['system.info']['contact.email'];
+	$site = $baseconfig['domain'].$baseconfig['path'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -50,14 +51,14 @@
 				<td valign="top">
 
 					<div style="text-align: center;">
-						
+
 						<p>
 							To activate your account, you must authorize this email via the following link,<br/>
 							<br/>
-							&gt;&gt; 
-							<big style="text-align: center; color: orange; text-decoration: none;"> 
+							&gt;&gt;
+							<big style="text-align: center; color: orange; text-decoration: none;">
 								<a target ="_blank" title="Token" style="color: red; text-decoration: none;" href="<?= $token_url ?>">Activate Account</a>
-							</big> 
+							</big>
 							&lt;&lt;
 							<p><small>Expires in 7 days from the time it was issued.</small></p>
 						</p>

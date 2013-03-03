@@ -1,7 +1,7 @@
 <?php namespace mjolnir\access;
 
-$mvc = \app\CFS::config('mjolnir/layer-stacks')['public'];
+$public = \app\CFS::config('mjolnir/layer-stacks')['public'];
 
-\app\Router::process('mjolnir:access/channel.route', $mvc);
-\app\Router::process('mjolnir:access/endpoint.route', $mvc);
-\app\Router::process('mjolnir:access/auth.route', $mvc);
+\app\Router::process('mjolnir:access/channel.route', $public);
+\app\Router::process('mjolnir:access/endpoint.route', $public);
+\app\Router::process('mjolnir:access/auth.route', $public);

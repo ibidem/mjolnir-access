@@ -3,7 +3,8 @@
 
 	/* @var $theme ThemeView */
 
-	$user = \app\Model_User::entry(\app\Auth::instance()->user());
+	$user = Model_User::entry(\app\Auth::instance()->user());
+	$baseconfig = CFS::config('mjolnir/base');
 ?>
 
 <div class="hero-unit">
@@ -41,5 +42,5 @@
 		</tr>
 	</table>
 	<br/>
-	<p><a href="<?= \app\Server::url_frontpage() ?>" class="btn btn-primary btn-large"><i class="icon-home"></i> Proceed to <?= \app\CFS::config('mjolnir/base')['site:title'] ?></a></p>
+	<p><a href="<?= \app\Server::url_frontpage() ?>" class="btn btn-primary btn-large"><i class="icon-home"></i> Proceed to <?= $baseconfig['site:title'] ?></a></p>
 </div>

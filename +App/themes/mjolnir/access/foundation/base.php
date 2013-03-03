@@ -4,8 +4,7 @@
 	/* @var $theme      ThemeView */
 	/* @var $entrypoint View */
 
-	$base_config = \app\CFS::config('mjolnir/base');
-	$landing_page = \app\Server::url_frontpage();
+	$baseconfig = \app\CFS::config('mjolnir/base');
 ?>
 
 <div class="container">
@@ -16,7 +15,7 @@
 		<div class="navbar-inner">
 			<div class="container">
 				<a href="<?= \app\Server::url_frontpage() ?>" class="brand">
-					<?= \app\CFS::config('mjolnir/base')['site:title'] ?>
+					<?= $baseconfig['site:title'] ?>
 				</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav">

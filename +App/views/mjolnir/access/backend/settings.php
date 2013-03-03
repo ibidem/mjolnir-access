@@ -4,7 +4,8 @@
 	/* @var $context Backend_Registration */
 	/* @var $control Controller_Backend */
 
-	$signin_providers = \app\CFS::config('mjolnir/auth')['signin'];
+	$authconfig = CFS::config('mjolnir/auth');
+	$signin_providers = $authconfig['signin'];
 
 	$providers = \app\Arr::gather($signin_providers, 'register');
 
@@ -39,7 +40,7 @@
 					->options_array($switch_format)
 					->value_is($access_fields['mjolnir:access/signup/public']);
 
-				if ( ! \app\CFS::config('mjolnir/auth')['standard.signup'])
+				if ( ! $authconfig['standard.signup'])
 				{
 					$public_registration
 						->hint('Disabled at static configuration level by [standard.signup], please check your private [mjolnir/auth]')

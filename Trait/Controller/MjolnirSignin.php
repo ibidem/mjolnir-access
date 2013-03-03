@@ -160,8 +160,7 @@ trait Trait_Controller_MjolnirSignin
 	function action_signout()
 	{
 		\app\Auth::signout();
-		$a12n_config = \app\CFS::config('mjolnir/auth');
-		\app\Server::redirect($a12n_config['default.signin']);
+		\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
 	}
 
 	/**
