@@ -74,9 +74,8 @@ trait Trait_Controller_MjolnirPwdReset
 						{
 							\mjolnir\log
 								(
-									'Warning',
-									'Failed to send password reset email to: '.$user['email'],
-									'Errors/'
+									'Emails',
+									'Failed to send password reset email to: '.$user['email']
 								);
 
 							$this->pwdreset_view(['form' => [\app\Lang::term('Failed to send the reset email to account address. Please try again later; if problem persists please contact us.')] ]);

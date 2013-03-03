@@ -523,7 +523,7 @@ class Model_User
 	static function change_password($user, array $fields)
 	{
 		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
-		
+
 		$errors = static::change_passwords_check($user, $fields)->errors();
 
 		if (empty($errors))
@@ -815,7 +815,7 @@ class Model_User
 
 		if ( ! $sent)
 		{
-			\mjolnir\log('Error', 'Failed to send activation email for ['.$user_id.']');
+			\mjolnir\log('Emails', 'Failed to send activation email for ['.$user_id.']');
 		}
 
 		return $sent;

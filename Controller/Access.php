@@ -78,7 +78,7 @@ class Controller_Access extends \app\Puppet implements \mjolnir\types\Controller
 			$register = \app\CFS::config('mjolnir/auth')['signin'][$id]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
-				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
+				\mjolnir\log('Hacking', 'Attempt to access unauthorized area.');
 				throw new \app\Exception_NotApplicable('Access Denied.');
 			}
 
@@ -92,7 +92,7 @@ class Controller_Access extends \app\Puppet implements \mjolnir\types\Controller
 			$register = \app\CFS::config('mjolnir/auth')['signin'][$provider]['register'];
 			if (\app\Register::pull([$register])[$register] !== 'on')
 			{
-				\mjolnir\log('SecurityError', 'Attempt to access unauthorized area.', '+Security/');
+				\mjolnir\log('Hacking', 'Attempt to access unauthorized area.');
 				throw new \app\Exception('Access Denied. Provider is not enabled.');
 			}
 
