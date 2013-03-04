@@ -1169,7 +1169,7 @@ class Model_User
 	 * @param string salt
 	 * @return array [salt, verifier]
 	 */
-	protected static function generate_password($password_text, $salt = null)
+	static function generate_password($password_text, $salt = null)
 	{
 		$password = [];
 
