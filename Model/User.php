@@ -65,7 +65,7 @@ class Model_User
 	 */
 	static function check(array $fields, $context = null)
 	{
-		$user_config = \app\CFS::config('model/User');
+		$user_config = \app\CFS::config('model/user');
 
 		$user_for_email = \app\Model_User::for_email($fields['email']);
 
@@ -168,7 +168,7 @@ class Model_User
 
 		// resolve dependencies
 		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
-		static::dependencies(static::$last_inserted_id, \app\CFS::config('model/User'));
+		static::dependencies(static::$last_inserted_id, \app\CFS::config('model/user'));
 
 		// assign role if set
 		if (isset($fields['role']))
@@ -503,7 +503,7 @@ class Model_User
 	 */
 	static function change_passwords_check($user, array $fields)
 	{
-		$user_config = \app\CFS::config('model/User');
+		$user_config = \app\CFS::config('model/user');
 
 		return \app\Validator::instance($fields)
 			->adderrormessages($user_config['errors'])

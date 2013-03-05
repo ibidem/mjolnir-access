@@ -130,7 +130,7 @@ class Auth
 			// auto-signup user
 			try
 			{
-				$default_role = \app\CFS::config('model/User')['signup']['role'];
+				$default_role = \app\CFS::config('model/user')['signup']['role'];
 
 				\app\Model_User::inferred_signup
 					(

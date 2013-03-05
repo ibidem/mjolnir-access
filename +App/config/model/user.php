@@ -6,20 +6,10 @@
 			),
 		'dependencies' => array
 			(
-
+				// empty
 			),
 		'fields' => array
 			(
-				'givenname' => array
-					(
-						'maxlength' => 70,
-						'size' => 30,
-					),
-				'familyname' => array
-					(
-						'maxlength' => 70,
-						'size' => 30,
-					),
 				'nickname' => array
 					(
 						'maxlength' => 80,
@@ -35,12 +25,12 @@
 						'minlength' => 8,
 						'size' => 60,
 					),
-			),
+			),	
 		'errors' => array
 			(
 				'nickname' => array
 					(
-						'not_empty' => 'You must type in a nickname.',
+						'not_empty' => 'You must type in a username.',
 						'max_length' => 'Please choose a shorter account name.',
 						':unique' => 'User with same name already exists.',
 					),
@@ -59,4 +49,5 @@
 						':unique' => 'User with the same email already exists.',
 					),
 			),
-	);
+	
+	); # config
