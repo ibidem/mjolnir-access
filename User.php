@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, 2013 Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class User
+class User extends \app\Instantiatable
 {
 	/**
 	 * @var int
@@ -26,7 +26,7 @@ class User
 	{
 		// check session
 		$instance->user = \app\Session::get('user', null);
-		$instance->role = \app\Session::get('role', static::guest());
+		$instance->role = \app\Session::get('role', \app\Auth::Guest);
 
 		if ($instance->user === null)
 		{
