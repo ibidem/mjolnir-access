@@ -10,7 +10,7 @@
 class SecurityToken
 {
 	/**
-	 * Creates a new token.
+	 * Creates a new security token.
 	 *
 	 * When expires is null the default expires for tokens from mjolnir/security
 	 * will be used.

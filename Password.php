@@ -13,9 +13,8 @@ class Password
 	 * Given a password in plaintext the method will produce a verifier, salt
 	 * and algorythm.
 	 *
-	 * You can provide an algorythm and/or salt and it will not be generated.
-	 * This is useful for, as an example, using this method to check if another
-	 * password is equivalent to this password by regenerating the verifier.
+	 * You can provide an algorythm and/or salt and it will be used instead of
+	 * a new one being generated.
 	 *
 	 * @return array [salt, verifier, algorythm]
 	 */

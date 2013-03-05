@@ -27,7 +27,14 @@ trait Trait_Controller_MjolnirSignin
 	 */
 	function action_signin()
 	{
+		// this method is not guranteed since some implementations allow for 
+		// login from all user roles
 		$this->redirect_signedin_users();
+		
+		// gurantee current user is signed out before attempting to login new
+		// user; this is a problem on pages with login pages that do not take
+		// account if a user is signed in or not and just display the form
+		\app\Auth::signout();
 
 		if (\app\Server::request_method() === 'POST')
 		{

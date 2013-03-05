@@ -56,7 +56,7 @@ class Auth
 	 * ...
 	 */
 	static function signin($user, $role)
-	{
+	{		
 		// reset signin attempts
 		\app\Model_User::reset_pwdattempts($user);
 		\app\Model_User::update_last_singin($user);

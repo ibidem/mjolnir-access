@@ -35,6 +35,12 @@ class Task_User_Password extends \app\Instantiatable implements \mjolnir\types\T
 		else if ($nickname !== false)
 		{
 			$user = \app\Model_User::find_entry(['nickname' => $nickname, 'locked' => false]);
+			
+			if ($user['nickname'] !== $nickname)
+			{
+				$this->writer->writef(" No user [{$nickname}] found.")->eol();
+				exit(1);
+			}
 		}
 		else # no nickname and email provided
 		{

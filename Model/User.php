@@ -22,13 +22,7 @@ class Model_User
 	/**
 	 * @var array
 	 */
-	protected static $fieldformat = array
-		(
-			'pwddate' => 'datetime',
-			'pwdreset_expires' => 'datetime',
-			'timestamp' => 'datetime',
-			'last_signin' => 'datetime',
-		);
+	protected static $fieldformat = 'model/user';
 
 	/**
 	 * @var string
@@ -194,8 +188,8 @@ class Model_User
 				',
 				'mysql'
 			)
-			->bindnum(':user', $id)
-			->bindnum(':role', $config['signup']['role'])
+			->num(':user', $id)
+			->num(':role', \app\Model_Role::by_name(\app\CFS::config('mjolnir/auth')['signup.default.role']))
 			->run();
 	}
 
@@ -211,7 +205,7 @@ class Model_User
 	}
 
 	// ------------------------------------------------------------------------
-	// Collection interface
+	// Collection
 
 	/**
 	 * @return array
@@ -358,6 +352,140 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// Extended
 
+	
+	/**
+	 * @param array (identification, email, provider)
+	 * @return \app\Validator
+	 */
+	static function inferred_signup_check(array $fields)
+	{
+		return \app\Validator::instance($fields)
+			->rule(['identification', 'email', 'role', 'provider'], 'not_empty');
+	}
+
+	/**
+	 * @param array fields
+	 */
+	static function inferred_signup_process(array $fields)
+	{
+		$fields['ipaddress'] = \app\Server::client_ip();
+		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
+
+		// most providers are pretty bad at passing a sensible username; so we have
+		// to do some really burtish processing on it
+		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
+
+		$fields['active'] = true;
+		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'], ['active'])->run();
+		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
+
+		// assign role if set
+		if (isset($fields['role']))
+		{
+			static::assign_role($user, $fields['role']);
+		}
+	}
+
+	/**
+	 * @param array (identification, email, provider)
+	 * @return \app\Validator|null
+	 */
+	static function inferred_signup(array $fields)
+	{
+		$errors = static::inferred_signup_check($fields)->errors();
+
+		if (empty($errors))
+		{
+			\app\SQL::begin();
+			try
+			{
+				static::inferred_signup_process($fields);
+
+				\app\SQL::commit();
+			}
+			catch (\Exception $e)
+			{
+				\app\SQL::rollback();
+				throw $e;
+			}
+
+			return null;
+		}
+		else # invalid
+		{
+			return $errors;
+		}
+	}
+	
+	/**
+	 * @param array fields
+	 * @return \app\Validator|null
+	 */
+	static function change_passwords_check($user, array $fields)
+	{
+		$user_config = \app\CFS::config('model/user');
+
+		return \app\Validator::instance($fields)
+			->adderrormessages($user_config['errors'])
+			->rule('password', 'not_empty')
+			->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
+	}
+
+	/**
+	 * @return \app\Validator|null
+	 */
+	static function change_password($user, array $fields)
+	{
+		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
+
+		$errors = static::change_passwords_check($user, $fields)->errors();
+
+		if (empty($errors))
+		{
+			\app\SQL::begin();
+			try
+			{
+				// compute password
+				$pwd = \app\Password::generate($fields['password']);
+
+				$new_fields = array
+					(
+						'pwdverifier' => $pwd['verifier'],
+						'pwdsalt' => $pwd['salt'],
+						'pwdalgorythm' => $pwd['algorythm'],
+					);
+
+				static::updater
+					(
+						$user,
+						$new_fields,
+						[
+							'pwdverifier',
+							'pwdsalt',
+							'pwdalgorythm'
+						]
+					)
+					->run();
+
+				\app\SQL::commit();
+			}
+			catch (\Exception $e)
+			{
+				\app\SQL::rollback();
+				throw $e;
+			}
+
+			return null;
+		}
+		else # invalid
+		{
+			return $errors;
+		}
+	}
+	
+	// ------------------------------------------------------------------------
+	// etc
+	
 	/**
 	 * Update last_signin field to current time or specified time (string) if
 	 * provided.
@@ -431,136 +559,6 @@ class Model_User
 		}
 
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
-	}
-
-	/**
-	 * @param array (identification, email, provider)
-	 * @return \app\Validator
-	 */
-	static function inferred_signup_check(array $fields)
-	{
-		return \app\Validator::instance($fields)
-			->rule(['identification', 'email', 'role', 'provider'], 'not_empty');
-	}
-
-	/**
-	 * @param array fields
-	 */
-	static function inferred_signup_process(array $fields)
-	{
-		$fields['ipaddress'] = \app\Server::client_ip();
-		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
-
-		// most providers are pretty bad at passing a sensible username; so we have
-		// to do some really burtish processing on it
-		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
-
-		$fields['active'] = true;
-		static::inserter($fields, ['nickname', 'email', 'ipaddress', 'provider'], ['active'])->run();
-		$user = static::$last_inserted_id = \app\SQL::last_inserted_id();
-
-		// assign role if set
-		if (isset($fields['role']))
-		{
-			static::assign_role($user, $fields['role']);
-		}
-	}
-
-	/**
-	 * @param array (identification, email, provider)
-	 * @return \app\Validator|null
-	 */
-	static function inferred_signup(array $fields)
-	{
-		$errors = static::inferred_signup_check($fields)->errors();
-
-		if (empty($errors))
-		{
-			\app\SQL::begin();
-			try
-			{
-				static::inferred_signup_process($fields);
-
-				\app\SQL::commit();
-			}
-			catch (\Exception $e)
-			{
-				\app\SQL::rollback();
-				throw $e;
-			}
-
-			return null;
-		}
-		else # invalid
-		{
-			return $errors;
-		}
-	}
-
-	/**
-	 * @param array fields
-	 * @return \app\Validator|null
-	 */
-	static function change_passwords_check($user, array $fields)
-	{
-		$user_config = \app\CFS::config('model/user');
-
-		return \app\Validator::instance($fields)
-			->adderrormessages($user_config['errors'])
-			->rule('password', 'not_empty')
-			->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
-	}
-
-	/**
-	 * @return \app\Validator|null
-	 */
-	static function change_password($user, array $fields)
-	{
-		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
-
-		$errors = static::change_passwords_check($user, $fields)->errors();
-
-		if (empty($errors))
-		{
-			\app\SQL::begin();
-			try
-			{
-				// compute password
-				$pwd = \app\Password::generate($fields['password']);
-
-				$new_fields = array
-					(
-						'pwdverifier' => $pwd['verifier'],
-						'pwdsalt' => $pwd['salt'],
-						'pwdalgorythm' => $pwd['algorythm'],
-					);
-
-				static::updater
-					(
-						$user,
-						$new_fields,
-						[
-							'pwdverifier',
-							'pwdsalt',
-							'pwdalgorythm'
-						]
-					)
-					->run();
-
-				\app\SQL::commit();
-			}
-			catch (\Exception $e)
-			{
-				\app\SQL::rollback();
-				throw $e;
-			}
-
-			return null;
-		}
-		else # invalid
-		{
-			return $errors;
-		}
 	}
 
 	/**
@@ -775,9 +773,6 @@ class Model_User
 
 		return $result;
 	}
-
-	// -------------------------------------------------------------------------
-	// etc
 
 	/**
 	 * Sends the activation email with a token for activating the account; if

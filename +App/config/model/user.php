@@ -8,6 +8,13 @@
 			(
 				// empty
 			),
+		'fieldformat' => array
+			(
+				'pwddate' => 'datetime',
+				'pwdreset_expires' => 'datetime',
+				'timestamp' => 'datetime',
+				'last_signin' => 'datetime',
+			),
 		'fields' => array
 			(
 				'nickname' => array
