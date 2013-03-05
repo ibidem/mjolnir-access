@@ -126,7 +126,7 @@ trait Trait_Controller_MjolnirSignin
 			// logged in
 			if (isset($_POST['remember_me']) && $_POST['remember_me'] === 'on')
 			{
-				\app\Auth::remember_user($user['id']);
+				\app\User::remember($user['id']);
 			}
 			else # remember_me === off
 			{

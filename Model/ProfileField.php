@@ -2,8 +2,8 @@
 
 /**
  * @package    mjolnir
- * @category   Model
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */

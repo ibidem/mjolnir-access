@@ -3,132 +3,23 @@
 /**
  * @package    mjolnir
  * @category   Access
- * @author     Ibidem
- * @copyright  (c) 2012, Ibidem Team
+ * @author     Ibidem Team
+ * @copyright  (c) 2012, 2013 Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Auth extends \app\Instantiatable
+class Auth
 {
-	const Guest = '\mjolnir\access\Auth::guest';
+	const Guest = 'mjolnir:access/guest.role';
+
+	// ------------------------------------------------------------------------
+	// Shorthand for User class
 
 	/**
-	 * @var int
-	 */
-	private $user;
-
-	/**
-	 * @var string
-	 */
-	private $role;
-
-	/**
-	 * @param mixed instance
-	 */
-	protected static function init($instance)
-	{
-		// check session
-		$instance->user = \app\Session::get('user', null);
-		$instance->role = \app\Session::get('role', static::guest());
-
-		if ($instance->user === null)
-		{
-			// verify cookies
-			$user = \app\Cookie::get('user', null);
-			$token = \app\Cookie::get('accesstoken', null);
-
-			if ($user !== null && $token !== null)
-			{
-				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
-				if ( ! empty($entry) && $entry['token'] === $token)
-				{
-					static::remember_user($user);
-				}
-			}
-		}
-	}
-
-	/**
-	 * Store remember me information.
-	 */
-	static function remember_user($user)
-	{
-		$role = \app\Model_User::role_for($user);
-
-		\app\Session::set('user', $user);
-		\app\Session::set('role', $role);
-
-		$instance = static::instance();
-		$instance->user = $user;
-		$instance->role = $role;
-
-		// generate and save new token
-		$token = \sha1(\uniqid('user_tokens', true));
-
-		\app\Model_UserSigninToken::refresh($user, $token);
-
-		$timeout = \app\CFS::config('mjolnir/auth')['remember_me.timeout'];
-
-		\app\Cookie::set('user', $user, $timeout);
-		\app\Cookie::set('accesstoken', $token, $timeout);
-	}
-
-	/**
-	 * @return static
-	 */
-	static function instance()
-	{
-		static $instance = null;
-
-		if ($instance === null)
-		{
-			$instance = parent::instance();
-			static::init($instance);
-		}
-
-		return $instance;
-	}
-
-	/**
-	 * @return string
-	 */
-	function overwriterole($role)
-	{
-		$base_config = \app\CFS::config('mjolnir/base');
-
-		// allow role manipulation in development for mockup purposes
-		if (isset($base_config['development']) && $base_config['development'])
-		{
-			$this->role = $role;
-		}
-		else # access violation
-		{
-			throw new \app\Exception_NotAllowed
-				('Role manipulation violation detected. Terminating.');
-		}
-	}
-
-	/**
-	 * @return int
-	 */
-	function user()
-	{
-		return $this->user;
-	}
-
-	/**
-	 * @return int
+	 * @return int|null
 	 */
 	static function id()
 	{
-		return static::instance()->user();
-	}
-
-	/**
-	 * @return string
-	 */
-	function rolename()
-	{
-		return $this->role;
+		return \app\User::instance()->id();
 	}
 
 	/**
@@ -136,68 +27,19 @@ class Auth extends \app\Instantiatable
 	 */
 	static function role()
 	{
-		return \app\Auth::instance()->rolename();
+		return \app\User::instance()->role();
 	}
 
 	/**
-	 * @return array|null user information
+	 * @return array|null
 	 */
-	function current()
+	static function info()
 	{
-		static $current = null;
-
-		if ($this->user === null)
-		{
-			return null;
-		}
-		else # actual id provided
-		{
-			if ($current === null)
-			{
-				$current = \app\SQL::prepare
-					(
-						__METHOD__,
-						'
-							SELECT *
-							  FROM `'.\app\Model_User::table().'`
-							 WHERE id = :id
-						',
-						'mysql'
-					)
-					->num(':id', $this->user)
-					->run()
-					->fetch_entry();
-			}
-
-			return $current;
-		}
+		return \app\User::instance()->info();
 	}
 
-	/**
-	 * Retrieves the role name for the abstraction notion of "everybody"
-	 *
-	 * ie. unauthentificated (such as guests and otherwise)
-	 *
-	 * @return string
-	 */
-	static function guest()
-	{
-		// unique identifier
-		return static::Guest;
-	}
-
-	/**
-	 * Retrieves the role name for the abstraction notion of "everybody"
-	 *
-	 * ie. unauthentificated by us
-	 *
-	 * @return string
-	 */
-	static function oauth_guest()
-	{
-		// unique identifier
-		return '\mjolnir\access\Auth::oauth_guest';
-	}
+	// ------------------------------------------------------------------------
+	// Access Control
 
 	/**
 	 * Sign out current user.
@@ -235,9 +77,9 @@ class Auth extends \app\Instantiatable
 		$user = \app\Model_User::for_email($email);
 
 		// handle logged in state
-		if (\app\Auth::role() !== \app\Auth::Guest)
+		if (static::role() !== static::Guest)
 		{
-			if ($user === \app\Auth::id())
+			if ($user === static::id())
 			{
 				// we don't need to do anything since the email is already
 				// linked to this user
@@ -246,7 +88,7 @@ class Auth extends \app\Instantiatable
 			}
 
 			\app\SQL::begin();
-			if ($user !== null && $user !== \app\Auth::id())
+			if ($user !== null && $user !== static::id())
 			{
 				// close other account
 				\app\Model_User::lock($user);
@@ -257,14 +99,14 @@ class Auth extends \app\Instantiatable
 				(
 					[
 						'email' => $email,
-						'user' => \app\Auth::id()
+						'user' => static::id()
 					]
 				);
 
 			if ($errors !== null)
 			{
 				\app\SQL::rollback();
-				throw new \Exception('Failed to add secondary email ['.$email.'] to [user] '.\app\Auth::id());
+				throw new \Exception('Failed to add secondary email ['.$email.'] to [user] '.static::id());
 			}
 			else # success
 			{
@@ -274,7 +116,7 @@ class Auth extends \app\Instantiatable
 					->save();
 			}
 
-			$user = \app\Model_User::entry(\app\Auth::id())['id'];
+			$user = \app\Model_User::entry(static::id())['id'];
 		}
 
 		// continue signin process
@@ -315,22 +157,6 @@ class Auth extends \app\Instantiatable
 
 		\app\Model_User::update_last_singin($user);
 		return \app\Model_User::entry($user);
-	}
-
-	/**
-	 * @return array
-	 */
-	static function userinfo()
-	{
-		return \app\Model_User::entry(\app\Auth::id());
-	}
-
-	/**
-	 * @return string
-	 */
-	static function nickname()
-	{
-		return static::userinfo()['nickname'];
 	}
 
 } # class

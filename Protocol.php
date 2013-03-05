@@ -9,25 +9,29 @@
  */
 class Protocol extends \app\Instantiatable
 {
-	/**
-	 * @var array
-	 */
-	private $relays;
+	const Everybody  = null;
+	const OnlyOwner  = true;
+	const OnlyOthers = false;
 
 	/**
 	 * @var array
 	 */
-	private $attributes;
+	protected $relays;
 
 	/**
 	 * @var array
 	 */
-	private $parameters;
+	protected $attributes;
+
+	/**
+	 * @var array
+	 */
+	protected $parameters;
 
 	/**
 	 * @var boolean
 	 */
-	private $all_parameters = false;
+	protected $all_parameters = false;
 
 	/**
 	 * null is a control value. If the attribute is set to null this means there
@@ -41,7 +45,7 @@ class Protocol extends \app\Instantiatable
 	 *
 	 * @var boolean|null
 	 */
-	private $self = null;
+	protected $self = null;
 
 	/**
 	 * @return static $this
@@ -55,7 +59,7 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @return static $this
 	 */
-	function attributes(array $attributes)
+	function attr(array $attributes)
 	{
 		$this->attributes = $attributes;
 		return $this;
@@ -97,17 +101,15 @@ class Protocol extends \app\Instantiatable
 	/**
 	 * @return boolean|null
 	 */
-	function get_self()
+	function control()
 	{
 		return $this->self;
 	}
 
 	/**
-	 * @param string name
-	 * @param array values
 	 * @return static $this
 	 */
-	function param($name, array $values)
+	function allow($name, array $values)
 	{
 		$this->parameters or $this->parameters = array();
 		$this->parameters[$name] = $values;
@@ -115,20 +117,27 @@ class Protocol extends \app\Instantiatable
 	}
 
 	/**
+	 * Grant unrestricted access to the given relays. ie. all parameters are
+	 * allowed.
+	 *
 	 * @return static $this
 	 */
-	function all_parameters()
+	function unrestricted()
 	{
 		$this->all_parameters = true;
 		return $this;
 	}
 
 	/**
-	 * @param string relay
-	 * @param array context
-	 * @param string attribute
+	 * Relays are relays or routes, context is an array of values required for
+	 * the match, among these values "owner" is a special idenfication value.
+	 *
+	 * For inpage elements you must provide attribute restrictions. An attribute
+	 * is an element on the page.
+	 *
+	 * @return boolean
 	 */
-	function matches($relay, array $context = null, $test_attribute = null)
+	function matches($relay, array $context = null, $attribute = null)
 	{
 		// cycle though acceptable relays
 		foreach ($this->relays as $name)
@@ -193,7 +202,7 @@ class Protocol extends \app\Instantiatable
 
 				// every paramter matched to at least one value. Now we check if
 				// we need a object check
-				if ($test_attribute !== null)
+				if ($attribute !== null)
 				{
 					$match = false;
 					// if we do we go though all objects and check with the
@@ -205,9 +214,9 @@ class Protocol extends \app\Instantiatable
 						return false;
 					}
 
-					foreach ($this->attributes as $attribute)
+					foreach ($this->attributes as $attr)
 					{
-						if ($attribute === $test_attribute)
+						if ($attr === $attribute)
 						{
 							// match found
 							$match = true;

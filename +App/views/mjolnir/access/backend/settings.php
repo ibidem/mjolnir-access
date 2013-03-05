@@ -27,7 +27,7 @@
 
 	<br/>
 
-	<?= $form = HTML::form($control->action('update'), 'mjolnir:access/twitter')
+	<?= $form = HTML::form($control->action('update'), 'mjolnir:twitter')
 		->errors_are($errors['registration-update']) ?>
 
 	<div class="form-horizontal">

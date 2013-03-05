@@ -27,11 +27,7 @@
 
 <?= $f->password(Lang::term('Password'), 'password') ?>
 
-<?= $f->select
-	(
-		null,
-		'remember_me'
-	)
+<?= $f->select(null, 'remember_me')
 	->options_array
 	(
 		[

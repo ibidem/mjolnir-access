@@ -21,7 +21,7 @@ trait Trait_Controller_MjolnirSignup
 
 		if (\app\Server::request_method() === 'POST')
 		{
-			$_POST['role'] = \app\Model_Role::role_by_name('member');
+			$_POST['role'] = \app\Model_Role::by_name('member');
 			$_POST['active'] = false;
 
 			// check recaptcha

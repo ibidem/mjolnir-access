@@ -38,22 +38,23 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 			(
 				\app\Model_User::table(),
 				'
-					`id`          :key_primary,
-					`token`       :key_foreign,
+					`id`           :key_primary,
+					`token`        :key_foreign,
 
-					`nickname`    :username,
-					`email`       :email,
-					`ipaddress`   :ipaddress,
+					`nickname`     :username,
+					`email`        :email,
+					`ipaddress`    :ipaddress,
 
-					`pwdverifier` :secure_hash DEFAULT NULL,
-					`pwdsalt`     :secure_hash DEFAULT NULL,
-					`pwddate`     :datetime_optional DEFAULT NULL,
-					`pwdattempts` int DEFAULT 0,
+					`pwdalgorythm` :title,
+					`pwdverifier`  :secure_hash DEFAULT NULL,
+					`pwdsalt`      :secure_hash DEFAULT NULL,
+					`pwddate`      :datetime_optional DEFAULT NULL,
+					`pwdattempts`  int DEFAULT 0,
 
-					`provider`    :titlename DEFAULT NULL,
-					`timestamp`   :timestamp,
-					`locked`      :boolean DEFAULT FALSE,
-					`active`      :boolean DEFAULT FALSE,
+					`provider`     :titlename DEFAULT NULL,
+					`timestamp`    :timestamp,
+					`locked`       :boolean DEFAULT FALSE,
+					`active`       :boolean DEFAULT FALSE,
 
 					`pwdreset`         :secure_hash DEFAULT NULL,
 					`pwdreset_expires` :datetime_optional DEFAULT NULL,

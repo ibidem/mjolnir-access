@@ -7,7 +7,7 @@
 	$h1 = $h;
 	$h2 = HH::raise($h1);
 
-	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:access/twitter';
+	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:twitter';
 
 	if (isset($route))
 	{

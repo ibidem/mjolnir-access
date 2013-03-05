@@ -2,21 +2,18 @@
 
 /**
  * @package    mjolnir
- * @category   Model
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
 class Model_SecondaryEmail
 {
-	# last_inserted_id, table, push, update, update_check
 	use \app\Trait_Model_Factory;
-	# stash, statement, snatch, inserter, updater
 	use \app\Trait_Model_Utilities;
-	# entries, entry, find, find_entry, clear_entry_cache, delete, count, exists
 	use \app\Trait_Model_Collection
 		{
-			\app\Trait_Model_Collection::delete as protected collection_delete;
+			delete as protected collection_delete;
 		}
 
 	/**

@@ -22,7 +22,7 @@ class Backend_ProfileField extends \app\Backend_Collection
 
 	function entries($page, $limit, $offset = 0, array $order = [])
 	{
-		$order['idx'] = 'ASC';
+		$order['idx'] = 'asc';
 		return parent::entries($page, $limit, $offset, $order);
 	}
 

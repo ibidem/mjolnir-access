@@ -3,26 +3,26 @@
 /**
  * @package    mjolnir
  * @category   Access
- * @author     Ibidem
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-final class Access
+class Access
 {
 	/**
 	 * @var array
 	 */
-	private static $whitelist;
+	protected static $whitelist;
 
 	/**
 	 * @var array
 	 */
-	private static $blacklist;
+	protected static $blacklist;
 
 	/**
 	 * @var array
 	 */
-	private static $aliaslist;
+	protected static $aliaslist;
 
 	/**
 	 * @param array config
@@ -35,13 +35,9 @@ final class Access
 	}
 
 	/**
-	 * @param array permissions
-	 * @param string relay
-	 * @param array context information (action, etc)
-	 * @param string attribute associated to the relay
 	 * @return boolean
 	 */
-	private static function match_check(array $permissions, $relay, $context, $attribute)
+	protected static function match_check(array $permissions, $relay, $context, $attribute)
 	{
 		if (isset($context['owner']))
 		{
@@ -57,7 +53,7 @@ final class Access
 			{
 				// check self inference
 				// null means it doens't require self nor require !self
-				if ($permission->get_self() !== null)
+				if ($permission->control() !== \app\Protocol::Everybody)
 				{
 					// if we didn't get an owner parameter we deny access
 					if ( ! isset($context['owner']) || $context['owner'] == null)
@@ -70,7 +66,7 @@ final class Access
 					}
 
 					// permission only in effect if user is owner of object
-					if ($permission->get_self() == true)
+					if ($permission->control() == \app\Protocol::OnlyOwner)
 					{
 						// route must be object belonging to owner
 						if ($user == $context['owner'])
@@ -80,7 +76,7 @@ final class Access
 						}
 					}
 					// permission only in effect if user is NOT owner of object
-					elseif ($permission->get_self() == false)
+					elseif ($permission->control() == \app\Protocol::OnlyOthers)
 					{
 						// route must be object NOT belonging to owner
 						if ($user != $context['owner'])
@@ -103,9 +99,6 @@ final class Access
 	}
 
 	/**
-	 * @param string relay
-	 * @param array context information (action, etc)
-	 * @param string attribute associated to the relay
 	 * @return boolean
 	 */
 	static function can($relay, array $context = null, $attribute = null, $user_role = null)

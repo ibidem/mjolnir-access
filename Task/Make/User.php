@@ -22,17 +22,17 @@ class Task_Make_User extends \app\Instantiatable implements \mjolnir\types\Task
 		$password = $this->get('password', null);
 		$email = $this->get('email', null);
 		$role = $this->get('role', 'member');
-		
+
 		$errors = \app\Model_User::push
 			(
 				[
-					'nickname' => $username, 
-					'password' => $password, 
+					'nickname' => $username,
+					'password' => $password,
 					'email' => $email,
-					'role' => \app\Model_Role::role_by_name($role),
+					'role' => \app\Model_Role::by_name($role),
 				]
 			);
-		
+
 		if ($errors === null)
 		{
 			$this->writer->writef(" Created $role: $username")->eol();

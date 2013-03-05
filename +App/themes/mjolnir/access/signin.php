@@ -8,7 +8,7 @@
 
 <h1><?= Lang::key('mjolnir:access/signin-title') ?></h1>
 
-<?= $f = HTML::form(\app\URL::route('mjolnir:access/auth.route')->url(['action' => 'signin']), 'mjolnir:access/twitter')
+<?= $f = HTML::form(\app\URL::route('mjolnir:access/auth.route')->url(['action' => 'signin']), 'mjolnir:twitter')
 	->errors_are($errors['mjolnir:access/signin.errors']) ?>
 
 <div class="form-horizontal">

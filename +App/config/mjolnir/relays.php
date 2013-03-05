@@ -17,7 +17,7 @@
 				'action'  => 'channel',
 				'target'  => null, # theme targeting
 				'control' => '\mjolnir\access\Controller_Access',
-				'context' => '\mjolnir\access\Context_Access',
+				'context' => '\mjolnir\access\Controller_Access',
 			),
 
 		'mjolnir:access/endpoint.route' => array
@@ -30,7 +30,7 @@
 				'action'  => 'endpoint',
 				'target'  => null, # theme targeting
 				'control' => '\mjolnir\access\Controller_Access',
-				'context' => '\mjolnir\access\Context_Access',
+				'context' => '\mjolnir\access\Controller_Access',
 			),
 
 		'mjolnir:access/auth.route' => array

@@ -3,7 +3,7 @@
 
 	/* @var $theme ThemeView */
 
-	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:access/twitter';
+	$form_standard = isset($form_standard) ? $form_standard : 'mjolnir:twitter';
 
 	if (isset($route))
 	{

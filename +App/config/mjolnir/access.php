@@ -11,7 +11,7 @@
 							'mjolnir:access/channel.route',
 							'mjolnir:access/endpoint.route'
 						)
-						->all_parameters(),
+						->unrestricted(),
 				),
 
 			// the following role acts as a template, include it in the
@@ -22,7 +22,7 @@
 						(
 							'mjolnir:access/auth.route'
 						)
-						->all_parameters(),
+						->unrestricted(),
 
 					Allow::backend
 						(
@@ -59,4 +59,5 @@
 		(
 			'admin' => 1,
 		),
-);
+
+); # config

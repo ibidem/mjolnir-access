@@ -25,19 +25,19 @@
 		<tr>
 			<th>last sign in</th>
 			<td>
-				<?= \app\Auth::userinfo()['last_signin'] !== null ? \app\Auth::userinfo()['last_signin']->format('Y-m-d @ H:i') : 'an unspecified date' ?>
+				<?= \app\Auth::info()['last_signin'] !== null ? \app\Auth::info()['last_signin']->format('Y-m-d @ H:i') : 'an unspecified date' ?>
 			</td>
 		<tr>
 		<tr>
 			<th>access level</th>
 			<td>
-				<?= \app\Auth::userinfo()['roletitle'] ?>
+				<?= \app\Auth::info()['roletitle'] ?>
 			</td>
 		<tr>
 		<tr>
 			<th>member since</th>
 			<td>
-				<?= \app\Auth::userinfo()['timestamp']->format('Y-m-d') ?>
+				<?= \app\Auth::info()['timestamp']->format('Y-m-d') ?>
 			</td>
 		</tr>
 	</table>

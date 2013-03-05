@@ -5,7 +5,7 @@ require_once \app\CFS::dir('vendor/recaptcha').'/recaptchalib'.EXT;
 /**
  * @package    mjolnir
  * @category   Access
- * @author     Ibidem
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */

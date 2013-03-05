@@ -2,8 +2,8 @@
 
 /**
  * @package    mjolnir
- * @category   Security
- * @author     Ibidem
+ * @category   Access
+ * @author     Ibidem Team
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
@@ -61,8 +61,7 @@ class Model_User
 	}
 
 	/**
-	 * @param array fields
-	 * @return Validator
+	 * @return \app\Validator
 	 */
 	static function check(array $fields, $context = null)
 	{
@@ -139,15 +138,16 @@ class Model_User
 	 */
 	static function process(array $fields)
 	{
-		$password = static::generate_password($fields['password']);
+		$pwd = \app\Password::generate($fields['password']);
 
 		$filtered_fields = array
 			(
 				'nickname' => \htmlspecialchars($fields['nickname']),
 				'email' => \htmlspecialchars($fields['email']),
 				'ipaddress' => \app\Server::client_ip(),
-				'pwdverifier' => $password['verifier'],
-				'pwdsalt' => $password['salt'],
+				'pwdverifier' => $pwd['verifier'],
+				'pwdsalt' => $pwd['salt'],
+				'pwdalgorythm' => $pwd['algorythm'],
 				'pwddate' => \date('Y-m-d H:i:s'),
 				'active' => $fields['active'],
 				'last_signin' => \date('Y-m-d H:i:s'),
@@ -255,17 +255,13 @@ class Model_User
 	}
 
 	/**
-	 * @param int page
-	 * @param int limit
-	 * @param int offset
-	 * @param array order
 	 * @return array
 	 */
 	static function entries($page, $limit, $offset = 0, $order = [])
 	{
 		if (empty($order))
 		{
-			$order = ['id' => 'ASC'];
+			$order = ['id' => 'asc'];
 		}
 
 		return static::stash
@@ -383,8 +379,7 @@ class Model_User
 	}
 
 	/**
-	 * @param int user id
-	 * @param int role
+	 * ...
 	 */
 	static function assign_role($id, $role)
 	{
@@ -531,15 +526,26 @@ class Model_User
 			try
 			{
 				// compute password
-				$password = static::generate_password($fields['password']);
+				$pwd = \app\Password::generate($fields['password']);
 
 				$new_fields = array
 					(
-						'pwdverifier' => $password['verifier'],
-						'pwdsalt' => $password['salt'],
+						'pwdverifier' => $pwd['verifier'],
+						'pwdsalt' => $pwd['salt'],
+						'pwdalgorythm' => $pwd['algorythm'],
 					);
 
-				static::updater($user, $new_fields, ['pwdverifier', 'pwdsalt'])->run();
+				static::updater
+					(
+						$user,
+						$new_fields,
+						[
+							'pwdverifier',
+							'pwdsalt',
+							'pwdalgorythm'
+						]
+					)
+					->run();
 
 				\app\SQL::commit();
 			}
@@ -562,12 +568,8 @@ class Model_User
 	 */
 	static function recompute_password(array $fields)
 	{
-		// load configuration
-		$security = \app\CFS::config('mjolnir/security');
-		// generate password salt and hash
-		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $fields['password'], $security['keys']['apikey'], false);
-		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, false);
+		$pwd = \app\Password::generate($fields['password']);
+
 		// update
 		static::statement
 			(
@@ -576,6 +578,7 @@ class Model_User
 					UPDATE :table
 					   SET pwdverifier = :pwdverifier,
 					       pwdsalt = :pwdsalt,
+						   pwdalgorythm = :pwdalgorythm,
 					       pwddate = :pwddate,
 					       ipaddress = :ipaddress
 					 WHERE nickname = :nickname
@@ -583,10 +586,11 @@ class Model_User
 				',
 				'mysql'
 			)
-			->bindstr(':pwdverifier', $pwdverifier)
-			->bindstr(':pwdsalt', $pwdsalt)
+			->str(':pwdverifier', $pwd['verifier'])
+			->str(':pwdsalt', $pwd['salt'])
+			->str(':pwdalgorythm', $pwd['algorythm'])
 			->str(':pwddate', \date('Y-m-d H:i:s'))
-			->bindstr(':nickname', $fields['nickname'])
+			->str(':nickname', $fields['nickname'])
 			->str(':ipaddress', \app\Server::client_ip())
 			->run();
 	}
@@ -668,7 +672,6 @@ class Model_User
 	}
 
 	/**
-	 * @param int user_id
 	 * @return string or null
 	 */
 	static function role_for($user_id)
@@ -709,7 +712,6 @@ class Model_User
 	}
 
 	/**
-	 * @param string email
 	 * @return int id
 	 */
 	static function for_email($email)
@@ -1072,12 +1074,8 @@ class Model_User
 			return [ \app\Lang::term('Password reset has expired. Please repeat the process.') ];
 		}
 
-		// load configuration
-		$security = \app\CFS::config('mjolnir/security');
-		// generate password salt and hash
-		$pwdsalt = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password, $security['keys']['apikey'], false);
-		$pwdverifier = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $pwdsalt, false);
+		$pwd = \app\Password::generate($password);
+
 		// update
 		static::statement
 			(
@@ -1086,6 +1084,7 @@ class Model_User
 					UPDATE :table
 					   SET pwdverifier = :pwdverifier,
 					       pwdsalt = :pwdsalt,
+						   pwdalgorythm = :pwdalgorythm,
 					       pwddate = :pwddate,
 					       ipaddress = :ipaddress,
 						   pwdreset = NULL,
@@ -1094,8 +1093,9 @@ class Model_User
 				',
 				'mysql'
 			)
-			->str(':pwdverifier', $pwdverifier)
-			->str(':pwdsalt', $pwdsalt)
+			->str(':pwdverifier', $pwd['verifier'])
+			->str(':pwdsalt', $pwd['salt'])
+			->str(':pwdalgorythm', $pwd['algorythm'])
 			->str(':pwddate', \date('Y-m-d H:i:s'))
 			->num(':user', $entry['id'])
 			->str(':ipaddress', \app\Server::client_ip())
@@ -1112,19 +1112,17 @@ class Model_User
 	/**
 	 * Confirm password matches user.
 	 *
-	 * @param string password
-	 * @param int user
 	 * @return boolean
 	 */
 	static function matching_password($password, $user)
 	{
 		$cachekey = __METHOD__.'__userinfo_'.$user;
-		$user_info = \app\Stash::get($cachekey, null);
+		$entry = \app\Stash::get($cachekey, null);
 
-		if ($user_info === null)
+		if ($entry === null)
 		{
 			// get user data
-			$user_info = static::statement
+			$entry = static::statement
 				(
 					__METHOD__,
 					'
@@ -1143,52 +1141,18 @@ class Model_User
 			\app\Stash::store
 				(
 					$cachekey,
-					$user_info,
+					$entry,
 					\app\Stash::tags('User', ['change'])
 				);
 		}
 
-		// compute verifier for given password
-		$test = static::generate_password($password, $user_info['salt']);
-
-		if ($test['verifier'] == $user_info['verifier'])
-		{
-			return true;
-		}
-		else # does not match
-		{
-			return false;
-		}
-	}
-
-	// -------------------------------------------------------------------------
-	// Helpers
-
-	/**
-	 * @param string password (plaintext)
-	 * @param string salt
-	 * @return array [salt, verifier]
-	 */
-	static function generate_password($password_text, $salt = null)
-	{
-		$password = [];
-
-		// load configuration
-		$security = \app\CFS::config('mjolnir/security');
-
-		// generate password salt and hash
-		if ($salt === null)
-		{
-			$password['salt'] = \hash($security['hash']['algorythm'], (\uniqid(\rand(), true)), false);
-		}
-		else # salt provided
-		{
-			$password['salt'] = $salt;
-		}
-		$apilocked_password = \hash_hmac($security['hash']['algorythm'], $password_text, $security['keys']['apikey'], false);
-		$password['verifier'] = \hash_hmac($security['hash']['algorythm'], $apilocked_password, $password['salt'], false);
-
-		return $password;
+		return \app\Password::match
+			(
+				$password,
+				$entry['verifier'],
+				$entry['salt'],
+				$entry['algorythm']
+			);
 	}
 
 } # class
