@@ -53,7 +53,7 @@ class Access
 			{
 				// check self inference
 				// null means it doens't require self nor require !self
-				if ($permission->control() !== \app\Protocol::Everybody)
+				if ($permission->selfcontrol() !== \app\Protocol::Everybody)
 				{
 					// if we didn't get an owner parameter we deny access
 					if ( ! isset($context['owner']) || $context['owner'] == null)
@@ -66,7 +66,7 @@ class Access
 					}
 
 					// permission only in effect if user is owner of object
-					if ($permission->control() == \app\Protocol::OnlyOwner)
+					if ($permission->selfcontrol() == \app\Protocol::OnlyOwner)
 					{
 						// route must be object belonging to owner
 						if ($user == $context['owner'])
@@ -76,7 +76,7 @@ class Access
 						}
 					}
 					// permission only in effect if user is NOT owner of object
-					elseif ($permission->control() == \app\Protocol::OnlyOthers)
+					elseif ($permission->selfcontrol() == \app\Protocol::OnlyOthers)
 					{
 						// route must be object NOT belonging to owner
 						if ($user != $context['owner'])

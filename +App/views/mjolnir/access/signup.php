@@ -30,7 +30,7 @@
 		<? endif; ?>
 
 		<?= $f->text(Lang::term('Name'), 'nickname')
-			->attr('autofocus', 'autofocus') ?>
+			->set('autofocus', 'autofocus') ?>
 
 		<?= $f->text(Lang::term('Email'), 'email') ?>
 

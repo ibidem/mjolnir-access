@@ -134,7 +134,7 @@ class Password extends \mjolnir\access\Password
 
 /**
  * @method \app\Protocol relays(array $relays)
- * @method \app\Protocol attr(array $attributes)
+ * @method \app\Protocol attrs(array $attributes)
  * @method \app\Protocol only_others()
  * @method \app\Protocol only_owner()
  * @method \app\Protocol everybody()
