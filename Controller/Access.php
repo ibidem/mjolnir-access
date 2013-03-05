@@ -31,7 +31,10 @@ class Controller_Access extends \app\Puppet implements \mjolnir\types\Controller
 	function preprocess()
 	{
 		$this->trait_preprocess();
-		$this->channel()->set('web:title', 'Access');
+		
+		$this->channel()
+			->get('layer:html')
+			->set('title', 'Access');
 	}
 
 	/**
