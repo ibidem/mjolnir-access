@@ -183,7 +183,7 @@ trait Trait_Controller_MjolnirEmails
 					->classes(['alert-warning'])
 					->save();
 			}
-			else # sent = 0
+			else # ! $sent
 			{
 				\app\Notice::make(\app\Lang::term('Failed to send confirmation email.'))
 					->classes(['alert-error'])

@@ -70,7 +70,7 @@ trait Trait_Controller_MjolnirPwdReset
 								\app\Lang::key('mjolnir:access/pwdreset-reset-url', [':url' => $pwdreset_url]) # message
 							);
 
-						if ($emails_sent === 0)
+						if ( ! $emails_sent)
 						{
 							\mjolnir\log
 								(
