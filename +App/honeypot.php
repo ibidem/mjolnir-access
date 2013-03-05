@@ -28,8 +28,6 @@ class Allow extends \mjolnir\access\Allow
 
 class Auth extends \mjolnir\access\Auth
 {
-	/** @return \app\Auth */
-	static function instance() { return parent::instance(); }
 }
 
 class Backend_ProfileField extends \mjolnir\access\Backend_ProfileField
@@ -58,12 +56,6 @@ class Backend_User extends \mjolnir\access\Backend_User
 
 class Ban extends \mjolnir\access\Ban
 {
-}
-
-class Context_Access extends \mjolnir\access\Context_Access
-{
-	/** @return \app\Context_Access */
-	static function instance() { return parent::instance(); }
 }
 
 /**
@@ -132,20 +124,22 @@ class Model_User extends \mjolnir\access\Model_User
 
 class Model_UserSigninToken extends \mjolnir\access\Model_UserSigninToken
 {
-	/** @return \app\Model_UserSigninToken */
-	static function instance() { return parent::instance(); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
 }
 
+class Password extends \mjolnir\access\Password
+{
+}
+
 /**
  * @method \app\Protocol relays(array $relays)
- * @method \app\Protocol attributes(array $attributes)
+ * @method \app\Protocol attr(array $attributes)
  * @method \app\Protocol only_others()
  * @method \app\Protocol only_owner()
  * @method \app\Protocol everybody()
- * @method \app\Protocol param($name, array $values)
- * @method \app\Protocol all_parameters()
+ * @method \app\Protocol allow($name, array $values)
+ * @method \app\Protocol unrestricted()
  */
 class Protocol extends \mjolnir\access\Protocol
 {
@@ -197,3 +191,9 @@ trait Trait_Controller_MjolnirPwdReset { use \mjolnir\access\Trait_Controller_Mj
 trait Trait_Controller_MjolnirSignin { use \mjolnir\access\Trait_Controller_MjolnirSignin; }
 trait Trait_Controller_MjolnirSignup { use \mjolnir\access\Trait_Controller_MjolnirSignup; }
 trait Trait_Model_SecurityToken { use \mjolnir\access\Trait_Model_SecurityToken; }
+
+class User extends \mjolnir\access\User
+{
+	/** @return \app\User */
+	static function instance() { return parent::instance(); }
+}
