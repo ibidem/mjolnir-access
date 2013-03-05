@@ -46,7 +46,7 @@ class Auth
 	 */
 	static function signout()
 	{
-		\app\Model_UserSigninToken::purge(static::instance()->user());
+		\app\Model_UserSigninToken::purge(static::id());
 		\app\Session::destroy();
 		\app\Cookie::delete('user');
 		\app\Cookie::delete('accesstoken');

@@ -1,6 +1,8 @@
 <?php namespace mjolnir\access;
 
 /**
+ * If possible use the more readable \app\Auth equivalent of the methods here.
+ * 
  * @package    mjolnir
  * @category   Access
  * @author     Ibidem Team
@@ -48,7 +50,7 @@ class User extends \app\Instantiatable
 	/**
 	 * @return static
 	 */
-	static function instance()
+	final static function instance()
 	{
 		static $instance = null;
 

@@ -3,7 +3,7 @@
 
 	/* @var $theme ThemeView */
 
-	$user = Model_User::entry(\app\Auth::instance()->user());
+	$user = Model_User::entry(\app\Auth::id());
 	$baseconfig = CFS::config('mjolnir/base');
 ?>
 

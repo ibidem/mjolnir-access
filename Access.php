@@ -42,7 +42,7 @@ class Access
 		if (isset($context['owner']))
 		{
 			// if we need owner computations we store the user
-			$user = \app\Auth::instance()->user();
+			$user = \app\Auth::id();
 		}
 
 		// check if no exception exists
