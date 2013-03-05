@@ -23,7 +23,6 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 				\app\Model_User::assoc_roles(),
 				\app\Model_ProfileField::table(),
 				\app\Model_ProfileField::assoc_user(),
-				\app\Model_UserSigninToken::table(),
 				\app\Model_SecurityToken::table(),
 				\app\Model_SecondaryEmail::table()
 			);
@@ -116,17 +115,6 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 
 		\app\Schematic::table
 			(
-				\app\Model_UserSigninToken::table(),
-				'
-					`user`  :key_foreign NOT NULL,
-					`token` :secure_hash,
-
-					UNIQUE `user` (`user`)
-				'
-			);
-
-		\app\Schematic::table
-			(
 				\app\Model_SecurityToken::table(),
 				'
 					`id`      :key_primary,
@@ -172,10 +160,6 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 						(
 							'field' => [ \app\Model_ProfileField::table(), 'CASCADE', 'CASCADE' ],
 							'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
-						),
-					\app\Model_UserSigninToken::table() => array
-						(
-							'user' => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
 						),
 					\app\Model_SecondaryEmail::table() => array
 						(

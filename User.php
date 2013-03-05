@@ -38,8 +38,7 @@ class User extends \app\Instantiatable
 
 			if ($user !== null && $token !== null)
 			{
-				$entry = \app\Model_UserSigninToken::find_entry(['user' => $user]);
-				if ( ! empty($entry) && $entry['token'] === $token)
+				if (\app\Model_User::confirm_token($user, $token, 'mjolnir:access/remember-me'))
 				{
 					static::remember($user);
 				}
@@ -78,11 +77,8 @@ class User extends \app\Instantiatable
 		$instance->user = $user;
 		$instance->role = $role;
 
-		// generate and save new token
-		$token = \sha1(\uniqid('user_tokens', true));
-
-		\app\Model_UserSigninToken::refresh($user, $token);
-
+		// generate new token
+		$token = \app\Model_User::token($user, '+1 month', 'mjolnir:access/remember-me');
 		$timeout = \app\CFS::config('mjolnir/auth')['remember_me.timeout'];
 
 		\app\Cookie::set('user', $user, $timeout);
