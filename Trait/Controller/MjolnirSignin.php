@@ -60,7 +60,7 @@ trait Trait_Controller_MjolnirSignin
 				if ( ! isset($_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']))
 				{
 
-					$errors['form'][] = \app\Lang::key('login.passwordattemps', [':number' => $user['pwdattempts']]);
+					$errors['form'][] = \app\Lang::key('login.passwordattemps', $user['pwdattempts']);
 					return $this->signin_view($errors);
 				}
 
