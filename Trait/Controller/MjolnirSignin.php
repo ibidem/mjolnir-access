@@ -33,7 +33,7 @@ trait Trait_Controller_MjolnirSignin
 
 		if (\app\Server::request_method() === 'POST')
 		{
-			$errors = [ 'form' => [] ];
+			$errors = [];
 
 			$auth_config = \app\CFS::config('mjolnir/auth');
 
@@ -48,6 +48,7 @@ trait Trait_Controller_MjolnirSignin
 
 			if ( ! $user)
 			{
+				isset($errors['form']) or $errors['form'] = [];
 				$errors['form'][] = \app\Lang::term('Sign in failed. We do not know of any such user or email.');
 				return $this->signin_view($errors);
 			}
@@ -59,8 +60,10 @@ trait Trait_Controller_MjolnirSignin
 
 				if ( ! isset($_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']))
 				{
-
+					isset($errors['form']) or $errors['form'] = [];
 					$errors['form'][] = \app\Lang::key('login.passwordattemps', $user['pwdattempts']);
+					\app\Model_User::bump_pwdattempts($user['id']);
+					
 					return $this->signin_view($errors);
 				}
 
@@ -74,11 +77,7 @@ trait Trait_Controller_MjolnirSignin
 
 				if ($captcha_errors !== null)
 				{
-					if ( ! isset($errors['form']))
-					{
-						$errors['form'] = [];
-					}
-
+					isset($errors['form']) or $errors['form'] = [];
 					$errors['form'][] = \app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
 					\app\Model_User::bump_pwdattempts($user['id']);
 
@@ -119,7 +118,6 @@ trait Trait_Controller_MjolnirSignin
 			// check if user is active
 			if ( ! $user['active'])
 			{
-
 				$errors['form'][] = \app\Lang::key('mjolnir:access/your-account-is-inactive');
 				\app\Model_User::send_activation_email($user['id']);
 				return $this->signin_view($errors);

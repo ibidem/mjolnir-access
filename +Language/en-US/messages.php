@@ -71,7 +71,7 @@ this account.',
 					
 		'login.passwordattemps' => function ($in)
 			{
-				return "You've failed to sign in {$in} times.";
+				return "You've failed to sign in {$in} times. Additional check required.";
 			},
 					
 	);

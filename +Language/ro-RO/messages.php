@@ -71,6 +71,6 @@ emailul respectiv vă va redirecta către contul curent.',
 					
 		'login.passwordattemps' => function ($in)
 			{
-				return "Ați eșuat logarea de {$in} ori.";
+				return "Ați eșuat logarea de {$in} ori. Verificare suplimentară este necesară.";
 			},
 	);
