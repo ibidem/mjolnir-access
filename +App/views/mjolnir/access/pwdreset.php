@@ -28,52 +28,56 @@
 
 <? else: # pwdreset form ?>
 
-	<?= $f = HTML::form($pwdreset_manager, $form_standard)
+	<? $f = HTML::form($pwdreset_manager, $form_standard)
 		->errors_are($errors['\mjolnir\a12n\pwdreset']) ?>
 
-	<div class="form-horizontal">
+	<? View::frame() ?>
+	
+		<div class="form-horizontal">
 
-		<fieldset>
+			<fieldset>
 
-			<? if (isset($_POST) && isset($_POST['form']) && $_POST['form'] === $f->get('id')): ?>
-				<div class="control-group">
-					<? if (isset($form_errors)): ?>
-						<? foreach ($form_errors as $error): ?>
-							<span class="alert alert-error"><?= $error ?></span>
-						<? endforeach; ?>
-					<? endif; ?>
-				</div>
-			<? endif; ?>
-
-			<? if (isset($_GET, $_GET['user'], $_GET['key'])): ?>
-
-				<?= $f->hidden('user')->value_is($_GET['user']) ?>
-
-				<?= $f->hidden('key')->value_is($_GET['key']) ?>
-
-				<?= $f->password(Lang::term('New Password'), 'password') ?>
-
-			<? else: ?>
-
-				<?= $f->text(Lang::term('<b>Username</b> or <b>Email</b>'), 'identity')
-					->set('autofocus', 'autofocus') ?>
-
-				<div class="control-group">
-					<div class="controls">
-						<?=	\app\ReCaptcha::html() ?>
+				<? if (isset($_POST) && isset($_POST['form']) && $_POST['form'] === $f->get('id')): ?>
+					<div class="control-group">
+						<? if (isset($form_errors)): ?>
+							<? foreach ($form_errors as $error): ?>
+								<span class="alert alert-error"><?= $error ?></span>
+							<? endforeach; ?>
+						<? endif; ?>
 					</div>
+				<? endif; ?>
+
+				<? if (isset($_GET, $_GET['user'], $_GET['key'])): ?>
+
+					<?= $f->hidden('user')->value_is($_GET['user']) ?>
+
+					<?= $f->hidden('key')->value_is($_GET['key']) ?>
+
+					<?= $f->password(Lang::term('New Password'), 'password') ?>
+
+				<? else: ?>
+
+					<?= $f->text(Lang::term('<b>Username</b> or <b>Email</b>'), 'identity')
+						->set('autofocus', 'autofocus') ?>
+
+					<div class="control-group">
+						<div class="controls">
+							<?=	\app\ReCaptcha::html() ?>
+						</div>
+					</div>
+
+				<? endif; ?>
+
+				<div class="form-actions">
+					<button class="btn btn-primary btn-large" <?= $f->mark() ?>>
+						<i class="icon-unlock"></i> <?= Lang::term('Reset Password') ?>
+					</button>
 				</div>
 
-			<? endif; ?>
+			</fieldset>
 
-			<div class="form-actions">
-				<button class="btn btn-primary btn-large" <?= $f->mark() ?>>
-					<i class="icon-unlock"></i> <?= Lang::term('Reset Password') ?>
-				</button>
-			</div>
-
-		</fieldset>
-
-	</div>
+		</div>
+	
+	<?= $f->appendtagbody(View::endframe()); ?>
 
 <? endif; ?>
