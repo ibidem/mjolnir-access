@@ -29,9 +29,9 @@ class Access
 	 */
 	static function protocols(array $config)
 	{
-		self::$whitelist = $config['whitelist'];
-		self::$blacklist = $config['blacklist'];
-		self::$aliaslist = $config['aliaslist'];
+		static::$whitelist = $config['whitelist'];
+		static::$blacklist = $config['blacklist'];
+		static::$aliaslist = $config['aliaslist'];
 	}
 
 	/**
@@ -109,18 +109,18 @@ class Access
 		// initial status
 		$status = false; # unauthorized
 
-		if (isset(self::$whitelist[$user_role]))
+		if (isset(static::$whitelist[$user_role]))
 		{
 			// attempt to authorize
-			$status = self::match_check(self::$whitelist[$user_role], $relay, $context, $attribute);
+			$status = static::match_check(static::$whitelist[$user_role], $relay, $context, $attribute);
 		}
 
 		// failed authorization? check aliases for addition rules
-		if ( ! $status && isset(self::$aliaslist[$user_role]))
+		if ( ! $status && isset(static::$aliaslist[$user_role]))
 		{
-			foreach (self::$aliaslist[$user_role] as $alias)
+			foreach (static::$aliaslist[$user_role] as $alias)
 			{
-				if (isset(self::$whitelist[$alias]) && self::match_check(self::$whitelist[$alias], $relay, $context, $attribute))
+				if (isset(static::$whitelist[$alias]) && static::match_check(static::$whitelist[$alias], $relay, $context, $attribute))
 				{
 					$status = true; # authorized
 					break;
@@ -129,7 +129,7 @@ class Access
 		}
 
 		// authorized? confirm blacklist
-		if ($status && isset(self::$blacklist[$user_role]) && self::match_check(self::$blacklist[$user_role], $relay, $context, $attribute))
+		if ($status && isset(static::$blacklist[$user_role]) && static::match_check(static::$blacklist[$user_role], $relay, $context, $attribute))
 		{
 			$status = false; # cancel authorization
 		}
