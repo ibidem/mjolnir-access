@@ -26,7 +26,7 @@
 				->value_is($role['title']) ?>
 
 			<div class="form-actions">
-				<button class="btn btn-primary" <?= $form->mark() ?>>Update</button>
+				<button type="submit" class="btn btn-primary" <?= $form->mark() ?>>Update</button>
 				<a class="btn btn-small"
 				   href="<?= \app\URL::href('mjolnir:backend.route', ['slug' => 'user-role-index']) ?>">
 					Cancel

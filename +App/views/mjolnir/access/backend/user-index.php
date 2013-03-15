@@ -84,7 +84,7 @@
 				->value_is('yes') ?>
 
 			<div class="form-actions">
-				<button class="btn btn-primary" <?= $form->mark() ?>>Create User</button>
+				<button type="submit" class="btn btn-primary" <?= $form->mark() ?>>Create User</button>
 			</div>
 		</fieldset>
 	</div>

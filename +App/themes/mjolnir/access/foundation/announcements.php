@@ -18,7 +18,7 @@
 <? if ($notice !== null): ?>
 
 	<p class="alert <?= \implode(' ', $notice->get_classes()) ?>">
-		<button data-dismiss="alert" class="close" type="button">×</button>
+		<button type="button" data-dismiss="alert" class="close">×</button>
 		<?= $notice->get_body() ?>
 	</p>
 

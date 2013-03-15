@@ -29,7 +29,7 @@
 			<?= $form->select('Type', 'required')->values([ 'Optional' => 'false', 'Required' => 'true'])->value($field['required']) ?>
 
 			<div class="form-actions">
-				<button class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
+				<button type="submit" class="btn btn-primary" tabindex="<?= Form::tabindex() ?>">Update</button>
 				<a class="btn btn-small"
 				   href="<?= \app\URL::href('mjolnir:backend.route', ['slug' => 'user-profile-index']) ?>">
 					Cancel

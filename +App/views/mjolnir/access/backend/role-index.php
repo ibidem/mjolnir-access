@@ -42,7 +42,7 @@
 				->set('autocomplete', 'off') ?>
 
 			<div class="form-actions">
-				<button class="btn btn-primary" <?= $form->mark() ?>>
+				<button type="submit" class="btn btn-primary" <?= $form->mark() ?>>
 					Create Role
 				</button>
 			</div>

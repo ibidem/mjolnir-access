@@ -43,7 +43,7 @@
 		<?=	\app\ReCaptcha::html() ?>
 
 		<div class="form-actions">
-			<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
+			<button type="submit" class="btn btn-primary btn-large" <?= $f->sign() ?>>
 				<i class="icon-signin"></i> <?= Lang::term('Sign Up') ?>
 			</button>
 		</div>

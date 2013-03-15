@@ -42,7 +42,7 @@
 <? endif; ?>
 
 <div class="form-actions">
-	<button class="btn btn-primary btn-large" <?= $f->sign() ?>>
+	<button type="submit" class="btn btn-primary btn-large" <?= $f->sign() ?>>
 		<i class="icon-signin"></i> <?= Lang::term('Sign In') ?>
 	</button>
 

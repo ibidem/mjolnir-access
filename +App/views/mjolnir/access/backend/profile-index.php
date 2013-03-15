@@ -57,7 +57,7 @@
 
 						<?= $delete_form = HTML::form($control->action('erase'), 'mjolnir:inline') ?>
 						<?= $delete_form->hidden('id')->value_is($field['id']) ?>
-						<button class="btn btn-mini btn-danger" <?= $delete_form->mark() ?>>
+						<button type="submit" class="btn btn-mini btn-danger" <?= $delete_form->mark() ?>>
 							Delete
 						</button>
 
@@ -78,7 +78,7 @@
 				->apply('twitter') ?>
 		</div>
 
-		<button class="btn btn-danger btn-mini" <?= $form->mark() ?>>
+		<button type="submit" class="btn btn-danger btn-mini" <?= $form->mark() ?>>
 			<i class="icon-trash"></i> Delete Selected
 		</button>
 
@@ -118,7 +118,7 @@
 				->value_is('false') ?>
 
 			<div class="form-actions">
-				<button class="btn btn-primary" <?= $form->mark() ?>>
+				<button type="submit" class="btn btn-primary" <?= $form->mark() ?>>
 					Define Field
 				</button>
 			</div>

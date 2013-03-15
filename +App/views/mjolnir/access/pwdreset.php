@@ -69,7 +69,7 @@
 				<? endif; ?>
 
 				<div class="form-actions">
-					<button class="btn btn-primary btn-large" <?= $f->mark() ?>>
+					<button type="submit" class="btn btn-primary btn-large" <?= $f->mark() ?>>
 						<i class="icon-unlock"></i> <?= Lang::term('Reset Password') ?>
 					</button>
 				</div>
