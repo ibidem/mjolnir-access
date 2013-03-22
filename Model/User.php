@@ -61,9 +61,9 @@ class Model_User
 	static function check(array $fields, $context = null)
 	{
 		$user_config = \app\CFS::config('model/User');
-		
+
 		$user_for_email = \app\Model_User::for_email($fields['email']);
-		
+
 		if ($user_for_email === null || $user_for_email === $context)
 		{
 			$unique_email = true;
@@ -72,7 +72,7 @@ class Model_User
 		{
 			$unique_email = false;
 		}
-		
+
 		$validator = \app\Validator::instance($user_config['errors'], $fields)
 			->ruleset('not_empty', ['nickname', 'email', 'role'])
 			->test('email', ':valid', \app\Email::valid($fields['email']))
@@ -90,7 +90,7 @@ class Model_User
 
 		return $validator;
 	}
-	
+
 	/**
 	 * @return array
 	 */
@@ -104,9 +104,9 @@ class Model_User
 		{
 			$password = null;
 		}
-		
+
 		$filtered_fields = [];
-		
+
 		if (isset($fields['active']))
 		{
 			$active_state = $fields['active'] === 'on' ? true : $fields['active'];
@@ -115,7 +115,7 @@ class Model_User
 		{
 			$active_state = true;
 		}
-		
+
 		if ($password)
 		{
 			$filtered_fields['fields'] = array
@@ -176,7 +176,7 @@ class Model_User
 					'active',
 				);
 		}
-		
+
 		return $filtered_fields;
 	}
 
@@ -238,18 +238,18 @@ class Model_User
 	static function update_process($id, array $fields)
 	{
 		$filtered_fields = static::filter_fields($fields);
-		
+
 		// update role
 		static::assign_role($id, $fields['role']);
 		static::updater
 			(
-				$id, 
+				$id,
 				$filtered_fields['fields'],
 				$filtered_fields['string'],
 				$filtered_fields['int'],
 				$filtered_fields['bool']
 			)->run();
-		
+
 		static::clear_entry_cache($id);
 	}
 
@@ -435,7 +435,7 @@ class Model_User
 	{
 		$fields['ipaddress'] = \app\Server::client_ip();
 		$fields['nickname'] = \str_replace('@', '[at]', $fields['identification']);
-		
+
 		// most providers are pretty bad at passing a sensible username; so we have
 		// to do some really burtish processing on it
 		$fields['nickname'] = \preg_replace('[\. ]', '-', \preg_replace('#[^-a-zA-Z0-9_\. ]#', '', \trim($fields['nickname'])));
@@ -610,12 +610,12 @@ class Model_User
 				->bind(':email', $fields['identity'])
 				->execute()
 				->fetch_array(static::field_format());
-			
+
 			if ($user === null)
 			{
 				// check secondary emails
 				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $fields['identity']]);
-				
+
 				if ($entry !== null)
 				{
 					$user = static::entry($entry['user']);
@@ -675,7 +675,7 @@ class Model_User
 	{
 		$cachekey = __METHOD__.'_'.\sha1($email);
 		$result = \app\Stash::get($cachekey, null);
-		
+
 		if ($result === null)
 		{
 			$result = static::statement
@@ -694,11 +694,11 @@ class Model_User
 				->set(':email', $email)
 				->execute()
 				->fetch_all();
-			
+
 			if (empty($result))
 			{
 				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $email]);
-				
+
 				if ($entry !== null)
 				{
 					$result = $entry['user'];
@@ -720,7 +720,7 @@ class Model_User
 					\app\Stash::tags(\get_called_class(), ['change'])
 				);
 		}
-		
+
 		return $result;
 	}
 
@@ -728,48 +728,48 @@ class Model_User
 	// etc
 
 	/**
-	 * Sends the activation email with a token for activating the account; if 
-	 * the account is not activated the user will be blocked on signin, but 
+	 * Sends the activation email with a token for activating the account; if
+	 * the account is not activated the user will be blocked on signin, but
 	 * otherwise the account will behave normally.
-	 * 
+	 *
 	 * This function logs failed attempts. Status is passed for any additional
 	 * processing.
-	 * 
+	 *
 	 * @return boolean sent?
 	 */
 	static function send_activation_email($user_id)
 	{
 		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
-		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;		
-		
+		$confirm_email_url = \app\CFS::config('mjolnir/a12n')['default.signup'].'?user='.$user_id.'&key='.$key;
+
 		$user = static::entry($user_id);
-		
+
 		// send code via email
 		$sent = \app\Email::instance()
 			->send
 			(
-				$user['email'], 
-				null, 
+				$user['email'],
+				null,
 				\app\Lang::tr('Confirmation of Email Ownership'),
 				\app\Lang::msg
 					(
-						'mjolnir:email:activate_account', 
+						'mjolnir:email:activate_account',
 						[
-							':token_url' => $confirm_email_url, 
+							':token_url' => $confirm_email_url,
 							':nickname' => $user['nickname'],
 						]
 					),
 				true # is html
 			);
-		
+
 		if ( ! $sent)
 		{
 			\mjolnir\log('Error', 'Failed to send activation email for ['.$user_id.']');
 		}
-		
+
 		return $sent;
 	}
-	
+
 	/**
 	 * Set account to [active] state, allowing user to login. Until account is
 	 * active the user won't be able to login into it.
@@ -787,15 +787,15 @@ class Model_User
 			)
 			->set_int(':user_id', $user_id)
 			->execute();
-		
+
 		$user = \app\Model_User::entry($user_id);
-		
+
 		// close all other accounts with this email
 		static::autolock_for_email($user['email'], $user_id);
-		
+
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 	/**
 	 * Add secondary email. If a user with the same email already exists, the
 	 * account will be locked.
@@ -803,15 +803,15 @@ class Model_User
 	static function add_secondary_email($user_id, $email)
 	{
 		static::autolock_for_email($email, $user_id);
-		
+
 		$entry = \app\Model_SecondaryEmail::find_entry
 			(
 				[
-					'user' => $user_id, 
+					'user' => $user_id,
 					'email' => $email
 				]
 			);
-		
+
 		// check if entry doesn't exist
 		if ($entry === null)
 		{
@@ -822,22 +822,22 @@ class Model_User
 						'user' => $user_id,
 					]
 				);
-			
+
 			if ($errors !== null)
 			{
 				throw new \Exception('Failed to add secondary email.');
 			}
 		}
 	}
-	
+
 	/**
-	 * Changes the email for the current user. All other users with the same 
+	 * Changes the email for the current user. All other users with the same
 	 * email will have their accounts locked.
 	 */
 	static function change_email($user_id, $email)
 	{
 		static::autolock_for_email($email, $user_id);
-		
+
 		static::statement
 			(
 				__METHOD__,
@@ -850,12 +850,12 @@ class Model_User
 			->set(':email', $email)
 			->set_int(':id', $user_id)
 			->execute();
-		
+
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 	/**
-	 * If a user has the email as a main email or as a secondary email the 
+	 * If a user has the email as a main email or as a secondary email the
 	 * account will be locked; the context is used to specify an exception user
 	 * for exception (errornous) input.
 	 */
@@ -877,12 +877,12 @@ class Model_User
 			->set_int(':context', $context)
 			->execute()
 			->fetch_all();
-		
+
 		foreach ($entries as $entry)
 		{
 			static::lock($entry['id']);
 		}
-		
+
 		// search for secondary emails
 		$secondary_emails = static::statement
 			(
@@ -898,16 +898,16 @@ class Model_User
 			->set_int(':context', $context)
 			->execute()
 			->fetch_all();
-		
+
 		foreach ($secondary_emails as $entry)
 		{
 			static::lock($entry['user']);
 		}
-		
+
 		// reset cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
-	
+
 	/**
 	 * Lock account, prevent access to it. Inspection functions will still work
 	 * but authorization functions will ignore the account.
@@ -925,15 +925,16 @@ class Model_User
 			)
 			->set_int(':id', $user_id)
 			->execute();
-		
+
 		static::purgetoken($user_id);
-		
+
 		// remove all associated secondary emails
 		\app\Model_SecondaryEmail::purge_for($user_id);
-		
+
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user_id);
 	}
-	
+
 	/**
 	 * Password attempts are incremented by 1.
 	 */
@@ -950,6 +951,9 @@ class Model_User
 			)
 			->set_int(':user', $user)
 			->execute();
+
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user);
 	}
 
 	/**
@@ -968,6 +972,9 @@ class Model_User
 			)
 			->set_int(':user', $user)
 			->execute();
+
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user);
 	}
 
 	/**
@@ -1001,6 +1008,7 @@ class Model_User
 
 		// make sure to clear cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user);
 
 		return $pwdreset_key;
 	}
@@ -1051,7 +1059,8 @@ class Model_User
 			->set(':ipaddress', \app\Server::client_ip())
 			->execute();
 
-		\app\Stash::purge(\app\Stash::tags('User', ['change']));
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		static::clear_entry_cache($user);
 
 		return null;
 	}
