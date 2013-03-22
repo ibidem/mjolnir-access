@@ -82,7 +82,8 @@ trait Trait_Controller_MjolnirPwdReset
 						}
 						else # succesfully sent emails
 						{
-							$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success');
+							$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success')
+								. ' <a href="'.\app\CFS::config('mjolnir/auth')['default.signin'].'>'.\app\Lang::key('mjolnir:access/signin-title').'</a>';
 							return $this->pwdreset_view();
 						}
 					}

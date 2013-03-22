@@ -352,7 +352,7 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// Extended
 
-	
+
 	/**
 	 * @param array (identification, email, provider)
 	 * @return \app\Validator
@@ -416,7 +416,7 @@ class Model_User
 			return $errors;
 		}
 	}
-	
+
 	/**
 	 * @param array fields
 	 * @return \app\Validator|null
@@ -482,10 +482,10 @@ class Model_User
 			return $errors;
 		}
 	}
-	
+
 	// ------------------------------------------------------------------------
 	// etc
-	
+
 	/**
 	 * Update last_signin field to current time or specified time (string) if
 	 * provided.
@@ -1046,8 +1046,8 @@ class Model_User
 			->str(':key', $pwdreset_key)
 			->run();
 
-		// make sure to clear cache
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user);
 
 		return $pwdreset_key;
 	}
@@ -1096,7 +1096,8 @@ class Model_User
 			->str(':ipaddress', \app\Server::client_ip())
 			->run();
 
-		\app\Stash::purge(\app\Stash::tags('User', ['change']));
+		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
+		\app\Model_User::clear_entry_cache($user);
 
 		return null;
 	}
