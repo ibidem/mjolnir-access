@@ -2,7 +2,7 @@
 	(
 		'mjolnir\access' => array
 			(
-				 'ReCAPTCHA Keys' => function ()
+				 'ReCAPTCHA keys' => function ()
 					{
 						$recaptcha = \app\CFS::config('mjolnir/auth')['recaptcha'];
 

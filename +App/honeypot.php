@@ -6,10 +6,6 @@
 // HowTo: order honeypot -n 'mjolnir\access'
 
 
-class Access extends \mjolnir\access\Access
-{
-}
-
 class AccessChannel_Facebook extends \mjolnir\access\AccessChannel_Facebook
 {
 	/** @return \app\AccessChannel_Facebook */
@@ -20,6 +16,10 @@ class AccessChannel_Universal extends \mjolnir\access\AccessChannel_Universal
 {
 	/** @return \app\AccessChannel_Universal */
 	static function instance() { return parent::instance(); }
+}
+
+class Access extends \mjolnir\access\Access
+{
 }
 
 class Allow extends \mjolnir\access\Allow
@@ -65,12 +65,12 @@ class Ban extends \mjolnir\access\Ban
  * @method \app\Renderable signup_view($errors = null)
  * @method \app\Renderable pwdreset_view($errors = null)
  * @method \app\Renderable emails_view($errors = null)
- * @method \app\Controller_Access channel_is($channel)
- * @method \app\Channel channel()
  * @method \app\Controller_Access add_preprocessor($name, $processor)
  * @method \app\Controller_Access add_postprocessor($name, $processor)
- * @method \app\Controller_Access trait_preprocess()
  * @method \app\Controller_Access postprocess()
+ * @method \app\Controller_Access channel_is($channel)
+ * @method \app\Channel channel()
+ * @method \app\Controller_Access preprocess()
  * @method \app\Renderable action_signin()
  * @method \app\Renderable public_signin()
  * @method \app\Renderable public_signout()
@@ -117,12 +117,6 @@ class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 }
 
 class Model_User extends \mjolnir\access\Model_User
-{
-	/** @return \app\SQLStatement */
-	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
-}
-
-class Model_UserSigninToken extends \mjolnir\access\Model_UserSigninToken
 {
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
