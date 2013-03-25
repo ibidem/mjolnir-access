@@ -15,7 +15,7 @@
 		<div class="navbar-inner">
 			<div class="container">
 				<a href="<?= \app\Server::url_frontpage() ?>" class="brand">
-					<?= $baseconfig['site:title'] ?>
+					<?= $baseconfig['system']['title'] ?>
 				</a>
 				<div class="nav-collapse collapse">
 					<ul class="nav">

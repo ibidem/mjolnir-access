@@ -8,7 +8,7 @@
 <div class="container">
 
 	<ul class="nav nav-pills">
-		<li><a href="<?= $landing_page ?>"><i class="icon-home"></i> <?= $base_config['site:title'] ?></a></li>
+		<li><a href="<?= $landing_page ?>"><i class="icon-home"></i> <?= $base_config['system']['title'] ?></a></li>
 	</ul>
 
 	<hr/>

@@ -42,5 +42,5 @@
 		</tr>
 	</table>
 	<br/>
-	<p><a href="<?= \app\Server::url_frontpage() ?>" class="btn btn-primary btn-large"><i class="icon-home"></i> Proceed to <?= $baseconfig['site:title'] ?></a></p>
+	<p><a href="<?= \app\Server::url_frontpage() ?>" class="btn btn-primary btn-large"><i class="icon-home"></i> Proceed to <?= $baseconfig['system']['title'] ?></a></p>
 </div>
