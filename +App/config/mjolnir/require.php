@@ -8,7 +8,7 @@
 
 						if ($recaptcha['public_key'] !== null && $recaptcha['private_key'] !== null)
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'error';
@@ -20,7 +20,7 @@
 
 						if ($securitykeys['apikey'] !== null)
 						{
-							return 'available';
+							return 'satisfied';
 						}
 
 						return 'error';
