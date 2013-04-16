@@ -27,18 +27,18 @@ def purge(directory)
 		next if file == '.' || file == '..'
 		if File.directory? file
 			if ($silent == false || $silent == nil)
-				puts "  purging  #{File.expand_path(file).gsub($basedir, '')}"
+#				puts "  purging  #{File.expand_path(file).gsub($basedir, '')}"
 			end#if
 			purge(File.expand_path(file))
 			if (Dir.entries(file) - %w[ . .. ]).empty?
 				if ($silent == false || $silent == nil)
-					puts " cleaning  #{file.gsub($basedir, '')}"
+#					puts " cleaning  #{file.gsub($basedir, '')}"
 				end#if
 				Dir.rmdir file
 			end#if
 		elsif file !~ /^\..*$/ # ignore dot files
 			if ($silent == false || $silent == nil)
-				puts " removing  #{file.gsub($basedir, '')}"
+#				puts " removing  #{file.gsub($basedir, '')}"
 			end#if
 			FileUtils.rm_rf file, :noop => false, :verbose => false
 		end#if
