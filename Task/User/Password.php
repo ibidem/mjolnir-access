@@ -48,7 +48,7 @@ class Task_User_Password extends \app\Task_Base
 				
 		$this->writer->writef(" Detected user [{$user['nickname']}] with email [{$user['email']}].")->eol();
 		\app\Model_User::change_password($user['id'], [ 'password' => $password ]);
-		$this->writer->writef(' Password has been changed.');
+		$this->writer->writef(' Password has been changed.')->eol();
 	}
 
 } # class
