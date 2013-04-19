@@ -48,6 +48,9 @@ class Model_User
 	// -------------------------------------------------------------------------
 	// factory interface
 
+	/**
+	 * ...
+	 */
 	static function cleanup(array &$fields)
 	{
 		isset($fields['verifier']) or $fields['verifier'] = $fields['password'];
