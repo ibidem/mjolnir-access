@@ -18,7 +18,7 @@
 
 		'mjolnir:access/pwdreset-title'	=> 'Password Reset',
 		'mjolnir:access/pwdreset-success'
-			=> 'An email with further instructions has been mailed to you address.',
+			=> 'An email with further instructions has been mailed to your address.',
 		'mjolnir:access/pwdreset-failure'
 			=> 'Failed to reset password. Please try repeating the process from the begining.',
 		'mjolnir:access/pwdreset-finished'

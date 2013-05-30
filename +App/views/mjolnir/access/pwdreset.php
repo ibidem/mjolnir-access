@@ -15,10 +15,10 @@
 		$pwdreset_manager = $authconfig['default.pwdreset'];
 	}
 
-	if (isset($errors, $errors['\mjolnir\a12n\pwdreset'], $errors['\mjolnir\a12n\pwdreset']['form']) && ! empty($errors['\mjolnir\a12n\pwdreset']['form']))
+	if (isset($errors, $errors['mjolnir:access/pwdreset.errors'], $errors['mjolnir:access/pwdreset.errors']['form']) && ! empty($errors['mjolnir:access/pwdreset.errors']['form']))
 	{
-		$form_errors = $errors['\mjolnir\a12n\pwdreset']['form'];
-		unset($errors['\mjolnir\a12n\pwdreset']['form']);
+		$form_errors = $errors['mjolnir:access/pwdreset.errors']['form'];
+		unset($errors['mjolnir:access/pwdreset.errors']['form']);
 	}
 ?>
 
@@ -29,12 +29,12 @@
 <? else: # pwdreset form ?>
 
 	<? $f = HTML::form($pwdreset_manager, $form_standard)
-		->errors_are($errors['\mjolnir\a12n\pwdreset']) ?>
+		->errors_are($errors['mjolnir:access/pwdreset.errors']) ?>
 
 	<? View::frame() ?>
 	
 		<div class="form-horizontal">
-
+			
 			<fieldset>
 
 				<? if (isset($_POST) && isset($_POST['form']) && $_POST['form'] === $f->get('id')): ?>

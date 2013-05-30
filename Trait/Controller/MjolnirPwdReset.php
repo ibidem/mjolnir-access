@@ -82,9 +82,7 @@ trait Trait_Controller_MjolnirPwdReset
 						}
 						else # succesfully sent emails
 						{
-							$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success')
-								. ' <a href="'.\app\CFS::config('mjolnir/auth')['default.signin'].'>'.\app\Lang::key('mjolnir:access/signin-title').'</a>';
-							return $this->pwdreset_view();
+							return $this->succesfully_reset_password();	
 						}
 					}
 					else # got errors
@@ -99,6 +97,16 @@ trait Trait_Controller_MjolnirPwdReset
 			return $this->pwdreset_view();
 		}
 	}
+	
+	/**
+	 * @return \mjolnir\types\Renderable
+	 */
+	function succesfully_reset_password()
+	{
+		$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-success')
+			. ' <a href="'.\app\CFS::config('mjolnir/auth')['default.signin'].'>'.\app\Lang::key('mjolnir:access/signin-title').'</a>';
+		return $this->pwdreset_view();
+	}
 
 	/**
 	 * Alias
@@ -111,7 +119,7 @@ trait Trait_Controller_MjolnirPwdReset
 	}
 
 	/**
-	 * Setup view used when signing up.
+	 * Setup view used when resetting password.
 	 *
 	 * @return \mjolnir\types\Renderable
 	 */
