@@ -9,7 +9,7 @@
  */
 class Auth
 {
-	const Guest = 'mjolnir:access/guest.role';
+	const Guest = 'mj:guest';
 
 	// ------------------------------------------------------------------------
 	// Shorthand for User class
