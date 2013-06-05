@@ -1,16 +1,9 @@
 <?php return array
 	(
+	/*
 		'mjolnir-access' => array
 			(
 				'database' => 'default',
-
-				'1.1.0' => array
-					(
-						'require' => array
-							(
-								'mjolnir-base' => '1.0.0',
-							)
-					),
 
 				// versions
 				'1.0.0' => array
@@ -178,33 +171,37 @@
 							},
 					),
 			),
+	 */
+	'red' => array
+		(
+			'1.0.0' => [ 'require' => [ ] ],
+			'1.1.0' => [ 'require' => [ 'blue' => '1.5.0' ] ],
+			'1.2.0' => [ 'require' => [ ] ],
+			'1.3.0' => [ 'require' => [ ] ],
+			'1.4.0' => [ 'require' => [ ] ],
+			'1.5.0' => [ 'require' => [ ] ],
+		),
+	
+	'blue' => array
+		(
+			'1.0.0' => [ 'require' => [ ] ],
+			'1.1.0' => [ 'require' => [ ] ],
+			'1.2.0' => [ 'require' => [ 'black' => '1.3.0' ] ],
+			'1.3.0' => [ 'require' => [ ] ],
+			'1.4.0' => [ 'require' => [ ] ],
+			'1.5.0' => [ 'require' => [ ] ],
+		),
+	
+	'black' => array
+		(
+			'1.0.0' => [ 'require' => [ ] ],
+			'1.1.0' => [ 'require' => [ ] ],
+			'1.2.0' => [ 'require' => [ ] ],
+			'1.3.0' => [ 'require' => [ ] ],
+			'1.4.0' => [ 'require' => [ ] ],
+			'1.5.0' => [ 'require' => [ ] ],
+		),
 
-		'mjolnir-base' => array
-			(
-				'1.0.0' => array
-					(
-						'require' => array
-							(
-								'mjolnir-access' => '1.0.0',
-								'mjolnir-database' => '1.0.0',
-							)
-					),
-			),
-
-		'mjolnir-foundation' => array
-			(
-				'1.0.0' => array
-					(
-						'mjolnir-database' => '1.1.0',
-					)
-			),
-
-		'mjolnir-database' => array
-			(
-				'1.0.0' => array
-					(
-						// empty
-					),
-			),
-
+	
+	
 	); # config
