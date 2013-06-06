@@ -34,6 +34,7 @@ class Task_Make_User extends \app\Task_Base
 		if ($errors === null)
 		{
 			$this->writer->writef(" Created $role: $username")->eol();
+			return \app\Model_User::last_inserted_id();
 		}
 		else # got errors
 		{
@@ -42,6 +43,7 @@ class Task_Make_User extends \app\Task_Base
 			{
 				$this->writer->writef("  - $field: ".\array_pop($error))->eol();
 			}
+			return null;
 		}
 	}
 
