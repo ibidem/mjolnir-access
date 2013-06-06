@@ -2,7 +2,12 @@
 	(
 		// please place 'require' inside the main paradox configuration file
 		// this file should only contain information required by the operation
-	
+
+		'description'
+			=> 'Install for User, Role (along with User -> Role association), '
+			.  'Profile fields, Security Tokens, and Secondary Emails support.'
+			,
+
 		'configure' => array
 			(
 				'tables' => array
