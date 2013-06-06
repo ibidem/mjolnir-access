@@ -1,6 +1,6 @@
 <?php return array
 	(
-	/*
+	
 		'mjolnir-access' => array
 			(
 				'database' => 'default',
@@ -171,37 +171,5 @@
 							},
 					),
 			),
-	 */
-	'red' => array
-		(
-			'1.0.0' => [ 'require' => [ ] ],
-			'1.1.0' => [ 'require' => [ 'blue' => '1.5.0' ] ],
-			'1.2.0' => [ 'require' => [ ] ],
-			'1.3.0' => [ 'require' => [ ] ],
-			'1.4.0' => [ 'require' => [ ] ],
-			'1.5.0' => [ 'require' => [ ] ],
-		),
-	
-	'blue' => array
-		(
-			'1.0.0' => [ 'require' => [ ] ],
-			'1.1.0' => [ 'require' => [ ] ],
-			'1.2.0' => [ 'require' => [ 'black' => '1.3.0' ] ],
-			'1.3.0' => [ 'require' => [ ] ],
-			'1.4.0' => [ 'require' => [ ] ],
-			'1.5.0' => [ 'require' => [ ] ],
-		),
-	
-	'black' => array
-		(
-			'1.0.0' => [ 'require' => [ ] ],
-			'1.1.0' => [ 'require' => [ ] ],
-			'1.2.0' => [ 'require' => [ ] ],
-			'1.3.0' => [ 'require' => [ ] ],
-			'1.4.0' => [ 'require' => [ ] ],
-			'1.5.0' => [ 'require' => [ ] ],
-		),
-
-	
 	
 	); # config
