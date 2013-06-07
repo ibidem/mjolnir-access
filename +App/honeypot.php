@@ -6,6 +6,10 @@
 // HowTo: order honeypot -n 'mjolnir\access'
 
 
+class Access extends \mjolnir\access\Access
+{
+}
+
 class AccessChannel_Facebook extends \mjolnir\access\AccessChannel_Facebook
 {
 	/** @return \app\AccessChannel_Facebook */
@@ -16,10 +20,6 @@ class AccessChannel_Universal extends \mjolnir\access\AccessChannel_Universal
 {
 	/** @return \app\AccessChannel_Universal */
 	static function instance() { return parent::instance(); }
-}
-
-class Access extends \mjolnir\access\Access
-{
 }
 
 class Allow extends \mjolnir\access\Allow
@@ -68,7 +68,7 @@ class Ban extends \mjolnir\access\Ban
  * @method \app\Controller_Access add_preprocessor($name, $processor)
  * @method \app\Controller_Access add_postprocessor($name, $processor)
  * @method \app\Controller_Access postprocess()
- * @method \app\Controller_Access channel_is($channel)
+ * @method \app\Controller_Access channel_is($channel = null)
  * @method \app\Channel channel()
  * @method \app\Controller_Access preprocess()
  * @method \app\Renderable action_signin()
@@ -83,7 +83,10 @@ class Controller_Access extends \mjolnir\access\Controller_Access
 }
 
 /**
- * @method \app\Layer_Access channel_is($channel)
+ * @method \app\Layer_Access set($name, $value)
+ * @method \app\Layer_Access add($name, $value)
+ * @method \app\Layer_Access metadata_is(array $metadata = null)
+ * @method \app\Layer_Access channel_is($channel = null)
  * @method \app\Channel channel()
  */
 class Layer_Access extends \mjolnir\access\Layer_Access
@@ -94,30 +97,42 @@ class Layer_Access extends \mjolnir\access\Layer_Access
 
 class Model_ProfileField extends \mjolnir\access\Model_ProfileField
 {
+	/** @return \app\Validator */
+	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
 }
 
 class Model_Role extends \mjolnir\access\Model_Role
 {
+	/** @return \app\Validator */
+	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
+	/** @return \app\Validator */
+	static function check(array $fields, $context = null) { return parent::check($fields, $context); }
 }
 
 class Model_SecondaryEmail extends \mjolnir\access\Model_SecondaryEmail
 {
+	/** @return \app\Validator */
+	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
 }
 
 class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 {
+	/** @return \app\Validator */
+	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
 }
 
 class Model_User extends \mjolnir\access\Model_User
 {
+	/** @return \app\Validator */
+	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
 }
