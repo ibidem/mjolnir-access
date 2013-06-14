@@ -20,10 +20,10 @@ class Backend_ProfileField extends \app\Backend_Collection
 			);
 	}
 	
-	function entries($page, $limit, $offset = 0, array $order = [])
+	function entries($page, $limit, $offset = 0, array $order = [], array $constraints = [])
 	{
 		$order['idx'] = 'ASC';
-		return parent::entries($page, $limit, $offset, $order);
+		return parent::entries($page, $limit, $offset, $order, $constraints);
 	}
 	
 } # class

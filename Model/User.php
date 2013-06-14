@@ -263,7 +263,7 @@ class Model_User
 	 * @param array order
 	 * @return array
 	 */
-	static function entries($page, $limit, $offset = 0, $order = [])
+	static function entries($page, $limit, $offset = 0, $order = [], $constraints = [])
 	{
 		if (empty($order))
 		{
@@ -294,6 +294,7 @@ class Model_User
 			)
 			->key(__FUNCTION__)
 			->page($page, $limit, $offset)
+			->constraints($constraints)
 			->order($order)
 			->fetch_all();
 	}
