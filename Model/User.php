@@ -254,7 +254,7 @@ class Model_User
 	/**
 	 * @return array
 	 */
-	static function entries($page, $limit, $offset = 0, $order = [])
+	static function entries($page, $limit, $offset = 0, $order = [], $constraints = [])
 	{
 		if (empty($order))
 		{
@@ -287,6 +287,7 @@ class Model_User
 			->key(__FUNCTION__)
 			->page($page, $limit, $offset)
 			->order($order)
+			->constraints($constraints)
 			->fetch_all(static::fieldformat());
 	}
 
