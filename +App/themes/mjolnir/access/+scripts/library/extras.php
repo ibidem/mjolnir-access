@@ -3,7 +3,7 @@
 // these functions can't be place in the framework since this entire
 // folder has to be completely independent
 
-\defined('APPVERSION') or \define('APPVERSION', '0.0');
+\defined('MJ_APP_VERSION') or \define('MJ_APP_VERSION', '0.0.0');
 
 // error reporting may duplicate the definition
 if ( ! \function_exists('\app\index'))
