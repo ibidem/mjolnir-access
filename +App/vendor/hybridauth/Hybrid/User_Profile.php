@@ -6,12 +6,12 @@
 */
 
 /**
- * Hybrid_User_Profile object represents the current logged in user profile. 
- * The list of fields available in the normalized user profile structure used by HybridAuth.  
+ * Hybrid_User_Profile object represents the current logged in user profile.
+ * The list of fields available in the normalized user profile structure used by HybridAuth.
  *
- * The Hybrid_User_Profile object is populated with as much information about the user as 
+ * The Hybrid_User_Profile object is populated with as much information about the user as
  * HybridAuth was able to pull from the given API or authentication provider.
- * 
+ *
  * http://hybridauth.sourceforge.net/userguide/Profile_Data_User_Profile.html
  */
 class Hybrid_User_Profile
@@ -60,7 +60,7 @@ class Hybrid_User_Profile
 
 	/* User email. Note: not all of IDp garant access to the user email */
 	public $email = NULL;
-	
+
 	/* Verified user email. Note: not all of IDp garant access to verified user email */
 	public $emailVerified = NULL;
 

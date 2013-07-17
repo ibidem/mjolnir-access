@@ -82,7 +82,7 @@ trait Trait_Controller_MjolnirPwdReset
 						}
 						else # succesfully sent emails
 						{
-							return $this->succesfully_reset_password();	
+							return $this->succesfully_reset_password();
 						}
 					}
 					else # got errors
@@ -97,7 +97,7 @@ trait Trait_Controller_MjolnirPwdReset
 			return $this->pwdreset_view();
 		}
 	}
-	
+
 	/**
 	 * @return \mjolnir\types\Renderable
 	 */

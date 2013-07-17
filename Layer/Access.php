@@ -17,7 +17,7 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 	function run()
 	{
 		$channel = $this->channel();
-		
+
 		if ($channel->status() === \app\Channel::error)
 		{
 			return; # allow all error processing
@@ -31,10 +31,10 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 
 		// build context
 		$relaynode = $channel->get('relaynode');
-		
+
 		$relaymatcher = $relaynode->get('matcher', null);
-		
-		// we can potentially not have a route matcher when the routing is a 
+
+		// we can potentially not have a route matcher when the routing is a
 		// hardcoded code path and not actual routing from outside input
 		if ($relaymatcher !== null && ! \is_bool($relaymatcher))
 		{
@@ -44,7 +44,7 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 		{
 			$context = [];
 		}
-		
+
 		$relay_context = $relaynode->get('context', null);
 		if ($relay_context !== null && \is_array($relaynode->get('context', null)))
 		{

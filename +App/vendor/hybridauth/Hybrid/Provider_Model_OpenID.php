@@ -7,8 +7,8 @@
 
 /**
  * To implement an OpenID based service provider, Hybrid_Provider_Model_OpenID
- * can be used to save the hassle of the authentication flow. 
- * 
+ * can be used to save the hassle of the authentication flow.
+ *
  * Each class that inherit from Hybrid_Provider_Model_OAuth2 have only to define
  * the provider identifier : <code>public $openidIdentifier = ""; </code>
  *
@@ -18,12 +18,12 @@
 class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 {
 	/* Openid provider identifier */
-	public $openidIdentifier = ""; 
+	public $openidIdentifier = "";
 
 	// --------------------------------------------------------------------
 
 	/**
-	* adapter initializer 
+	* adapter initializer
 	*/
 	function initialize()
 	{
@@ -32,15 +32,15 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 		}
 
 		// include LightOpenID lib
-		require_once Hybrid_Auth::$config["path_libraries"] . "OpenID/LightOpenID.php"; 
+		require_once Hybrid_Auth::$config["path_libraries"] . "OpenID/LightOpenID.php";
 
-		$this->api = new LightOpenID( parse_url( Hybrid_Auth::$config["base_url"], PHP_URL_HOST) ); 
+		$this->api = new LightOpenID( parse_url( Hybrid_Auth::$config["base_url"], PHP_URL_HOST) );
 	}
 
 	// --------------------------------------------------------------------
 
 	/**
-	* begin login step 
+	* begin login step
 	*/
 	function loginBegin()
 	{
@@ -50,7 +50,7 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 
 		$this->api->identity  = $this->openidIdentifier;
 		$this->api->returnUrl = $this->endpoint;
-		$this->api->required  = ARRAY( 
+		$this->api->required  = ARRAY(
 			'namePerson/first'       ,
 			'namePerson/last'        ,
 			'namePerson/friendly'    ,
@@ -64,11 +64,11 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 			'birthDate/birthYear'    ,
 
 			'person/gender'          ,
-			'pref/language'          , 
+			'pref/language'          ,
 
 			'contact/postalCode/home',
 			'contact/city/home'      ,
-			'contact/country/home'   , 
+			'contact/country/home'   ,
 
 			'media/image/default'    ,
 		);
@@ -80,7 +80,7 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 	// --------------------------------------------------------------------
 
 	/**
-	* finish login step 
+	* finish login step
 	*/
 	function loginFinish()
 	{
@@ -105,21 +105,21 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 		$this->user->profile->displayName = (array_key_exists("namePerson",$response))?$response["namePerson"]:"";
 		$this->user->profile->email       = (array_key_exists("contact/email",$response))?$response["contact/email"]:"";
 		$this->user->profile->language    = (array_key_exists("pref/language",$response))?$response["pref/language"]:"";
-		$this->user->profile->country     = (array_key_exists("contact/country/home",$response))?$response["contact/country/home"]:""; 
-		$this->user->profile->zip         = (array_key_exists("contact/postalCode/home",$response))?$response["contact/postalCode/home"]:""; 
-		$this->user->profile->gender      = (array_key_exists("person/gender",$response))?$response["person/gender"]:""; 
-		$this->user->profile->photoURL    = (array_key_exists("media/image/default",$response))?$response["media/image/default"]:""; 
+		$this->user->profile->country     = (array_key_exists("contact/country/home",$response))?$response["contact/country/home"]:"";
+		$this->user->profile->zip         = (array_key_exists("contact/postalCode/home",$response))?$response["contact/postalCode/home"]:"";
+		$this->user->profile->gender      = (array_key_exists("person/gender",$response))?$response["person/gender"]:"";
+		$this->user->profile->photoURL    = (array_key_exists("media/image/default",$response))?$response["media/image/default"]:"";
 
-		$this->user->profile->birthDay    = (array_key_exists("birthDate/birthDay",$response))?$response["birthDate/birthDay"]:""; 
-		$this->user->profile->birthMonth  = (array_key_exists("birthDate/birthMonth",$response))?$response["birthDate/birthMonth"]:""; 
-		$this->user->profile->birthYear   = (array_key_exists("birthDate/birthDate",$response))?$response["birthDate/birthDate"]:"";  
+		$this->user->profile->birthDay    = (array_key_exists("birthDate/birthDay",$response))?$response["birthDate/birthDay"]:"";
+		$this->user->profile->birthMonth  = (array_key_exists("birthDate/birthMonth",$response))?$response["birthDate/birthMonth"]:"";
+		$this->user->profile->birthYear   = (array_key_exists("birthDate/birthDate",$response))?$response["birthDate/birthDate"]:"";
 
 		if( ! $this->user->profile->displayName ) {
-			$this->user->profile->displayName = trim( $this->user->profile->lastName . " " . $this->user->profile->firstName ); 
+			$this->user->profile->displayName = trim( $this->user->profile->lastName . " " . $this->user->profile->firstName );
 		}
 
-		if( isset( $response['namePerson/friendly'] ) && ! empty( $response['namePerson/friendly'] ) && ! $this->user->profile->displayName ) { 
-			$this->user->profile->displayName = (array_key_exists("namePerson/friendly",$response))?$response["namePerson/friendly"]:"" ; 
+		if( isset( $response['namePerson/friendly'] ) && ! empty( $response['namePerson/friendly'] ) && ! $this->user->profile->displayName ) {
+			$this->user->profile->displayName = (array_key_exists("namePerson/friendly",$response))?$response["namePerson/friendly"]:"" ;
 		}
 
 		if( isset( $response['birthDate'] ) && ! empty( $response['birthDate'] ) && ! $this->user->profile->birthDay ) {
@@ -140,12 +140,12 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 
 		if( $this->user->profile->gender == "m" ){
 			$this->user->profile->gender = "male";
-		} 
+		}
 
 		// set user as logged in
 		$this->setUserConnected();
 
-		// with openid providers we get the user profile only once, so store it 
+		// with openid providers we get the user profile only once, so store it
 		Hybrid_Auth::storage()->set( "hauth_session.{$this->providerId}.user", $this->user );
 	}
 
@@ -162,7 +162,7 @@ class Hybrid_Provider_Model_OpenID extends Hybrid_Provider_Model
 		// if not found
 		if ( ! is_object( $this->user ) ){
 			throw new Exception( "User profile request failed! User is not connected to {$this->providerId} or his session has expired.", 6 );
-		} 
+		}
 
 		return $this->user->profile;
 	}

@@ -32,7 +32,7 @@
 						'minlength' => 8,
 						'size' => 60,
 					),
-			),	
+			),
 		'errors' => array
 			(
 				'nickname' => array
@@ -56,5 +56,5 @@
 						':unique' => 'User with the same email already exists.',
 					),
 			),
-	
+
 	); # config

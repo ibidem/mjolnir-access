@@ -22,17 +22,17 @@ $validator_unkeyed = function ($config)
 
 return array
 	(
-	
+
 	// signup
-	
+
 		'standard.signup' => false, # true = enabled, false = disabled
-	
+
 		'signup.default.role' => 'member',
-	
+
 		'default.signup' => \app\URL::href('mjolnir:access/auth.route', ['action' => 'signup'], [], 'http'),
-	
+
 	// misc signin
-	
+
 		'default.pwdreset' => \app\URL::href('mjolnir:access/auth.route', ['action' => 'pwdreset'], [], 'http'),
 
 		'default.emails_manager' => \app\URL::href('mjolnir:access/auth.route', ['action' => 'emails'], [], 'http'),
@@ -40,7 +40,7 @@ return array
 		'remember_me.timeout' => 60 * 60 * 24 * 14,
 
 		'default.signin' => \app\URL::href('mjolnir:access/auth.route', ['action' => 'signin']),
-		
+
 		'recaptcha' => array
 			(
 				'public_key' => null,

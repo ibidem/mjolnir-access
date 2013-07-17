@@ -10,7 +10,7 @@
 class Protocol extends \app\Instantiatable implements \mjolnir\types\Protocol
 {
 	use \app\Trait_Protocol;
-	
+
 	const Everybody  = null;
 	const OnlyOwner  = true;
 	const OnlyOthers = false;

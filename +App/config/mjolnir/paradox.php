@@ -1,10 +1,10 @@
 <?php return array
 	(
-	
+
 		'mjolnir-access' => array
 			(
 				'database' => 'default',
-			
+
 				// versions
 				'1.0.0' => \app\Pdx::gate
 					(
@@ -14,5 +14,5 @@
 						]
 					),
 			),
-	
+
 	); # config

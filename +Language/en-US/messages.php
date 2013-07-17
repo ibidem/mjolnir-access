@@ -32,32 +32,32 @@
 						$in
 					);
 			},
-					
+
 		'mjolnir:access/emails-title' => 'Emails',
-					
-		'mjolnir:access/emails-intructions' => 
-'To sign in via additional providers please link the emails by which those 
-providers know you as to this account. If an account already exists on our end 
-with the given email it will be locked and using said email will sign you into 
+
+		'mjolnir:access/emails-intructions' =>
+'To sign in via additional providers please link the emails by which those
+providers know you as to this account. If an account already exists on our end
+with the given email it will be locked and using said email will sign you into
 this account.',
-					
-		'mjolnir:access/emails-no-secondary-emails' 
+
+		'mjolnir:access/emails-no-secondary-emails'
 			=> 'You currently have no secondary emails.',
-					
+
 		'mjolnir:access/email-visit-url-to-finish' => function ($in)
 			{
 				return \strtr('Please visit following url to complete the process:'."\n:url", $in);
 			},
-			
-		'mjolnir:access/invalid-token' 
+
+		'mjolnir:access/invalid-token'
 			=> 'Invalid token supplied; please try repeating the process. This error occurs if you copy pasted the incorrect url, or to code in question has expired.',
-					
+
 		'mjolnir:access/account-activated'
 			=> 'Your account is now active.',
-					
+
 		'mjolnir:access/your-account-is-inactive'
 			=> 'Your account is not active, access defined. A fresh activation code has been send to your email address.',
-					
+
 		'mjolnir:access/email-activate-account' => function ($in)
 			{
 				return \app\View::instance('mjolnir/emails/en-US/activate_account')
@@ -65,14 +65,13 @@ this account.',
 					->variable('token_url', $in[':token_url'])
 					->render();
 			},
-					
+
 		'mjolnir:access/sent-activation-email'
 			=> 'Success! But your account is currently inactive. An email has been sent to your email address with activation instructions. Attempting to signin will re-issue a new activation email.',
-					
+
 		'login.passwordattemps' => function ($in)
 			{
 				return "You've failed to sign in {$in} times. Additional check required.";
 			},
-					
+
 	);
-	

@@ -1,6 +1,6 @@
 <?
 	namespace app;
-	
+
 	$context->channel()->set('title', '500');
 ?>
 

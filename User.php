@@ -2,7 +2,7 @@
 
 /**
  * If possible use the more readable \app\Auth equivalent of the methods here.
- * 
+ *
  * @package    mjolnir
  * @category   Access
  * @author     Ibidem Team

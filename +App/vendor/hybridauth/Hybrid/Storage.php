@@ -8,7 +8,7 @@
 /**
  * HybridAuth storage manager
  */
-class Hybrid_Storage 
+class Hybrid_Storage
 {
 	function __construct()
 	{
@@ -17,58 +17,58 @@ class Hybrid_Storage
 		}
 	}
 
-	function get($key, $expiration = false) 
+	function get($key, $expiration = false)
 	{
-		$key = strtolower( $key );  
+		$key = strtolower( $key );
 
-		if( isset( $_SESSION["HA::STORE"][$key] ) ){ 
-			return unserialize( $_SESSION["HA::STORE"][$key] );  
+		if( isset( $_SESSION["HA::STORE"][$key] ) ){
+			return unserialize( $_SESSION["HA::STORE"][$key] );
 		}
 
-		return NULL; 
+		return NULL;
 	}
 
 	function set( $key, $value )
 	{
-		$key = strtolower( $key ); 
+		$key = strtolower( $key );
 
-		$_SESSION["HA::STORE"][$key] = serialize( $value ); 
+		$_SESSION["HA::STORE"][$key] = serialize( $value );
 	}
 
 	function clear()
-	{ 
-		$_SESSION["HA::STORE"] = ARRAY(); 
-	} 
+	{
+		$_SESSION["HA::STORE"] = ARRAY();
+	}
 
 	function delete($key)
 	{
-		$key = strtolower( $key );  
+		$key = strtolower( $key );
 
-		if( isset( $_SESSION["HA::STORE"][$key] ) ){ 
+		if( isset( $_SESSION["HA::STORE"][$key] ) ){
 			unset( $_SESSION["HA::STORE"][$key] );
-		} 
+		}
 	}
 
 	function deleteMatch($key)
 	{
-		$key = strtolower( $key ); 
+		$key = strtolower( $key );
 
 		if( isset( $_SESSION["HA::STORE"] ) && count( $_SESSION["HA::STORE"] ) ) {
-			foreach( $_SESSION["HA::STORE"] as $k => $v ){ 
+			foreach( $_SESSION["HA::STORE"] as $k => $v ){
 				if( strstr( $k, $key ) ){
-					unset( $_SESSION["HA::STORE"][ $k ] ); 
+					unset( $_SESSION["HA::STORE"][ $k ] );
 				}
 			}
 		}
 	}
 
 	function getSessionData()
-	{ 
+	{
 		return serialize( $_SESSION["HA::STORE"] );
 	}
 
 	function restoreSessionData( $sessiondata = NULL )
-	{ 
+	{
 		$_SESSION["HA::STORE"] = unserialize( $sessiondata );
 	}
 }

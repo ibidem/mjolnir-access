@@ -1,10 +1,10 @@
 <?
 	namespace app;
-	
+
 	/* @var $theme ThemeView */
-	
+
 	$notices = \app\Notice::all();
-	
+
 	if ( ! empty($notices))
 	{
 		$notice = $notices[0];

@@ -1,7 +1,7 @@
 <?php
-// OAuthWrapHandler.php 1.1 
+// OAuthWrapHandler.php 1.1
 
-/** 
+/**
  * FILE:        OAuthWrapHandler.php
  *
  * DESCRIPTION: Sample implementation of OAuth WRAP Authentication protocol.
@@ -17,13 +17,13 @@
  * php applicaiton.
  */
 class OAuthWrapHandler
-{ 
+{
     function ProcessRequest()
     {
         $this->ExpireCookies();
         $cookies_setup = $this->convertParamsToCookies($_REQUEST);
         if(isset($cookies_setup['verification_code']))
-        { 
+        {
             $auth_params = $this->getAuthorizationToken(
                     WRAP_ACCESS_URL
                     , WRAP_CLIENT_ID
@@ -31,7 +31,7 @@ class OAuthWrapHandler
                     , WRAP_CALLBACK
                     , $cookies_setup['verification_code']
             );
- 
+
             unset($cookies_setup['verification_code']);
         }
         else
@@ -42,10 +42,10 @@ class OAuthWrapHandler
         $cookies_auth = $this->convertParamsToCookies($auth_params);
         $cookies = array_merge($cookies_setup, $cookies_auth);
         $this->setAuthCookies($cookies);
-		
+
 		return $cookies;
     }
- 
+
     function ExpireCookies()
     {
         setcookie ("c_accessToken", "", time() - 3600);
@@ -57,7 +57,7 @@ class OAuthWrapHandler
         setcookie ("c_expiry", "", time() - 3600);
         setcookie ("lca", "", time() - 3600);
     }
- 
+
     private function setAuthCookies($cookies)
     {
         foreach($cookies as $key => $value)
@@ -67,7 +67,7 @@ class OAuthWrapHandler
         setcookie ('c_clientId', WRAP_CLIENT_ID, time() + 36000); //clientID == appId
         setcookie ('lca', 'done', time() + 36000); //lca //done
     }
- 
+
     private function convertParamsToCookies($array)
     {
         $cookies = array();
@@ -77,7 +77,7 @@ class OAuthWrapHandler
             $getParam = urldecode($getParam);
             switch($getParam)
             {
-                case 'wrap_client_state': 
+                case 'wrap_client_state':
                     $cookies['c_clientState'] = $array['wrap_client_state'];
                     break;
                 case 'wrap_verification_code':
@@ -105,9 +105,9 @@ class OAuthWrapHandler
         }
         return $cookies;
     }
- 
+
     private function getAuthorizationToken($authUrl, $appId, $appSecret, $callbackUrl, $verificationCode)
-    { 
+    {
         $tokenRequest = 'wrap_client_id=' . urlencode($appId)
                 . '&wrap_client_secret=' . urlencode($appSecret)
                 . '&wrap_callback=' . urlencode($callbackUrl)
@@ -115,7 +115,7 @@ class OAuthWrapHandler
         $response = $this->postWRAPRequest($authUrl, $tokenRequest);
         return $this->parseWRAPResponse($response);
     }
- 
+
     private function postWRAPRequest($posturl, $postvars)
     {
         $ch = curl_init($posturl);
@@ -130,20 +130,20 @@ class OAuthWrapHandler
 
         return urldecode($Rec_Data);
     }
- 
+
     private function parseWRAPResponse($response)
-    { 
+    {
         $pos = strpos($response, 'wrap_access_token=');
         if ($pos === false)
         {
             $pos = strpos($response, 'wrap_error_reason=');
         }
         $codes = '?' . substr($response, $pos, strlen($response));
- 
+
         if (preg_match_all('/[?&]([^&=]+)=([^&=]+)/', $codes, $matches))
         {
             for($i =0; $i < count($matches[1]); $i++)
-            { 
+            {
                 $contents[$matches[1][$i]] = $matches[2][$i];
             }
         }
@@ -153,21 +153,21 @@ class OAuthWrapHandler
         }
         return $contents;
     }
- 
+
 	function GET($url,$params=false,$auth=false){
-		
+
 		$url = $this->MakeUrl($url,$params);
 		// borrowed from Andy Langton: http://andylangton.co.uk/
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL,$url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER,1);
-		
+
 		curl_setopt($ch,CURLOPT_HTTPHEADER,array (
 			"Authorization: WRAP access_token=$auth",
 			"Content-Type: application/json",
 			"Accept: application/json"
 		));
-		
+
 		if ( isset($_SERVER['HTTP_USER_AGENT']) ) {
 			curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT'] );
 		}else {
@@ -179,10 +179,10 @@ class OAuthWrapHandler
 		$result=curl_exec($ch);
 		$info=curl_getinfo($ch);
 		curl_close($ch);
-		
+
 		return $result;
 	}
- 
+
 	function MakeUrl($url,$params){
 		if(!empty($params) && $params){
 			foreach($params as $k=>$v) $kv[] = "$k=$v";

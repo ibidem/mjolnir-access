@@ -27,7 +27,7 @@ trait Trait_Controller_MjolnirSignin
 	 */
 	function action_signin()
 	{
-		// this method is not guranteed since some implementations allow for 
+		// this method is not guranteed since some implementations allow for
 		// login from all user roles
 		$this->redirect_signedin_users();
 
@@ -63,7 +63,7 @@ trait Trait_Controller_MjolnirSignin
 					isset($errors['form']) or $errors['form'] = [];
 					$errors['form'][] = \app\Lang::key('login.passwordattemps', $user['pwdattempts']);
 					\app\Model_User::bump_pwdattempts($user['id']);
-					
+
 					return $this->signin_view($errors);
 				}
 

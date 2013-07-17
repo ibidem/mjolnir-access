@@ -1,7 +1,7 @@
 <?php return array
 	(
 		// see: http://fortawesome.github.com/Font-Awesome/ for icon reference
-	
+
 		'General' => array
 			(
 				'user-profile-index' => array
@@ -11,7 +11,7 @@
 						'context' => '\app\Backend_ProfileField',
 						'view' => 'mjolnir/access/backend/profile-index'
 					),
-			
+
 				'user-profile-edit' => array
 					(
 						'hidden' => true,
@@ -20,7 +20,7 @@
 						'view' => 'mjolnir/access/backend/profile-edit'
 					),
 			),
-	
+
 		'Access' => array
 			(
 				'user-index' => array
@@ -73,5 +73,5 @@
 						'view' => 'mjolnir/access/backend/settings'
 					),
 			),
-			
+
 	);

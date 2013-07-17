@@ -32,9 +32,9 @@
 		->errors_are($errors['mjolnir:access/pwdreset.errors']) ?>
 
 	<? View::frame() ?>
-	
+
 		<div class="form-horizontal">
-			
+
 			<fieldset>
 
 				<? if (isset($_POST) && isset($_POST['form']) && $_POST['form'] === $f->get('id')): ?>
@@ -77,7 +77,7 @@
 			</fieldset>
 
 		</div>
-	
+
 	<?= $f->appendtagbody(View::endframe()); ?>
 
 <? endif; ?>

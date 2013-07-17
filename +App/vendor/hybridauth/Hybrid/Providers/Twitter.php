@@ -11,7 +11,7 @@
 class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 {
 	/**
-	* IDp wrappers initializer 
+	* IDp wrappers initializer
 	*/
 	function initialize()
 	{
@@ -42,14 +42,14 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 			throw new Exception( "User profile request failed! {$this->providerId} api returned an invalid response.", 6 );
 		}
 
-		# store the user profile.  
+		# store the user profile.
 		$this->user->profile->identifier  = (property_exists($response,'id'))?$response->id:"";
 		$this->user->profile->displayName = (property_exists($response,'screen_name'))?$response->screen_name:"";
 		$this->user->profile->description = (property_exists($response,'description'))?$response->description:"";
-		$this->user->profile->firstName   = (property_exists($response,'name'))?$response->name:""; 
+		$this->user->profile->firstName   = (property_exists($response,'name'))?$response->name:"";
 		$this->user->profile->photoURL    = (property_exists($response,'profile_image_url'))?$response->profile_image_url:"";
 		$this->user->profile->profileURL  = (property_exists($response,'screen_name'))?("http://twitter.com/".$response->screen_name):"";
-		$this->user->profile->webSiteURL  = (property_exists($response,'url'))?$response->url:""; 
+		$this->user->profile->webSiteURL  = (property_exists($response,'url'))?$response->url:"";
 		$this->user->profile->region      = (property_exists($response,'location'))?$response->location:"";
 
 		return $this->user->profile;
@@ -60,8 +60,8 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 	*/
 	function getUserContacts()
 	{
-		$parameters = array( 'cursor' => '-1' ); 
-		$response  = $this->api->get( 'friends/ids.json', $parameters ); 
+		$parameters = array( 'cursor' => '-1' );
+		$response  = $this->api->get( 'friends/ids.json', $parameters );
 
 		// check the last HTTP status code returned
 		if ( $this->api->http_code != 200 ){
@@ -75,11 +75,11 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 		// 75 id per time should be okey
 		$contactsids = array_chunk ( $response->ids, 75 );
 
-		$contacts    = ARRAY(); 
+		$contacts    = ARRAY();
 
-		foreach( $contactsids as $chunk ){ 
-			$parameters = array( 'user_id' => implode( ",", $chunk ) ); 
-			$response   = $this->api->get( 'users/lookup.json', $parameters ); 
+		foreach( $contactsids as $chunk ){
+			$parameters = array( 'user_id' => implode( ",", $chunk ) );
+			$response   = $this->api->get( 'users/lookup.json', $parameters );
 
 			// check the last HTTP status code returned
 			if ( $this->api->http_code != 200 ){
@@ -87,18 +87,18 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 			}
 
 			if( $response && count( $response ) ){
-				foreach( $response as $item ){ 
+				foreach( $response as $item ){
 					$uc = new Hybrid_User_Contact();
 
 					$uc->identifier   = (property_exists($item,'id'))?$item->id:"";
 					$uc->displayName  = (property_exists($item,'name'))?$item->name:"";
 					$uc->profileURL   = (property_exists($item,'screen_name'))?("http://twitter.com/".$item->screen_name):"";
 					$uc->photoURL     = (property_exists($item,'profile_image_url'))?$item->profile_image_url:"";
-					$uc->description  = (property_exists($item,'description'))?$item->description:""; 
+					$uc->description  = (property_exists($item,'description'))?$item->description:"";
 
 					$contacts[] = $uc;
-				} 
-			} 
+				}
+			}
 		}
 
 		return $contacts;
@@ -106,11 +106,11 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 
 	/**
 	* update user status
-	*/ 
+	*/
 	function setUserStatus( $status )
 	{
-		$parameters = array( 'status' => $status ); 
-		$response  = $this->api->post( 'statuses/update.json', $parameters ); 
+		$parameters = array( 'status' => $status );
+		$response  = $this->api->post( 'statuses/update.json', $parameters );
 
 		// check the last HTTP status code returned
 		if ( $this->api->http_code != 200 ){
@@ -119,19 +119,19 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
  	}
 
 	/**
-	* load the user latest activity  
+	* load the user latest activity
 	*    - timeline : all the stream
-	*    - me       : the user activity only  
+	*    - me       : the user activity only
 	*
 	* by default return the timeline
-	*/ 
+	*/
 	function getUserActivity( $stream )
 	{
 		if( $stream == "me" ){
-			$response  = $this->api->get( 'statuses/user_timeline.json' ); 
-		}                                                          
+			$response  = $this->api->get( 'statuses/user_timeline.json' );
+		}
 		else{
-			$response  = $this->api->get( 'statuses/home_timeline.json' ); 
+			$response  = $this->api->get( 'statuses/home_timeline.json' );
 		}
 
 		// check the last HTTP status code returned
@@ -153,10 +153,10 @@ class Hybrid_Providers_Twitter extends Hybrid_Provider_Model_OAuth1
 			$ua->text               = (property_exists($item,'text'))?$item->text:"";
 
 			$ua->user->identifier   = (property_exists($item->user,'id'))?$item->user->id:"";
-			$ua->user->displayName  = (property_exists($item->user,'name'))?$item->user->name:""; 
+			$ua->user->displayName  = (property_exists($item->user,'name'))?$item->user->name:"";
 			$ua->user->profileURL   = (property_exists($item->user,'screen_name'))?("http://twitter.com/".$item->user->screen_name):"";
 			$ua->user->photoURL     = (property_exists($item->user,'profile_image_url'))?$item->user->profile_image_url:"";
-			
+
 			$activities[] = $ua;
 		}
 
