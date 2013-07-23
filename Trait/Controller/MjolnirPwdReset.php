@@ -24,7 +24,7 @@ trait Trait_Controller_MjolnirPwdReset
 				if ($errors === null)
 				{
 					$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-finished');
-					$this->pwdreset_view();
+					return $this->finished_pwdreset();
 				}
 				else # got errors
 				{
@@ -141,6 +141,14 @@ trait Trait_Controller_MjolnirPwdReset
 		}
 
 		return $view;
+	}
+
+	/**
+	 * ...
+	 */
+	function finished_pwdreset()
+	{
+		return $this->pwdreset_view();
 	}
 
 } # trait
