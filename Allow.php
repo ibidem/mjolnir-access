@@ -10,7 +10,7 @@
 class Allow
 {
 	/**
-	 * @return \app\Protocol
+	 * @return \mjolnir\types\Protocol
 	 */
 	static function relays()
 	{
@@ -20,7 +20,7 @@ class Allow
 	}
 
 	/**
-	 * @return \app\Protocol
+	 * @return \mjolnir\types\Protocol
 	 */
 	static function attrs($relay, array $args)
 	{
@@ -31,7 +31,7 @@ class Allow
 	}
 
 	/**
-	 * @return \app\Protocol
+	 * @return \mjolnir\types\Protocol
 	 */
 	static function backend()
 	{

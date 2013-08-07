@@ -10,6 +10,14 @@
 trait Trait_Controller_MjolnirSignup
 {
 	/**
+	 * ...
+	 */
+	function public_signup()
+	{
+		return $this->action_signup();
+	}
+
+	/**
 	 * Action: Sign Up user into system
 	 */
 	function action_signup()
