@@ -4,7 +4,7 @@
 	/* @var $theme ThemeView */
 
 	$baseconfig = CFS::config('mjolnir/base');
-	$contact = $baseconfig['system.info']['contact.email'];
+	$contact = $baseconfig['system']['email'];
 	$site = $baseconfig['domain'].$baseconfig['path'];
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">

@@ -61,8 +61,8 @@ emailul respectiv vă va redirecta către contul curent.',
 		'mjolnir:access/email-activate-account' => function ($in)
 			{
 				return \app\View::instance('mjolnir/emails/ro-ro/activate_account')
-					->variable('nickname', $in[':nickname'])
-					->variable('token_url', $in[':token_url'])
+					->pass('nickname', $in[':nickname'])
+					->pass('token_url', $in[':token_url'])
 					->render();
 			},
 

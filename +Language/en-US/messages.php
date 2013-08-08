@@ -56,13 +56,13 @@ this account.',
 			=> 'Your account is now active.',
 
 		'mjolnir:access/your-account-is-inactive'
-			=> 'Your account is not active, access defined. A fresh activation code has been send to your email address.',
+			=> 'Your account is not active, access denied. A fresh activation code has been send to your email address.',
 
 		'mjolnir:access/email-activate-account' => function ($in)
 			{
 				return \app\View::instance('mjolnir/emails/en-US/activate_account')
-					->variable('nickname', $in[':nickname'])
-					->variable('token_url', $in[':token_url'])
+					->pass('nickname', $in[':nickname'])
+					->pass('token_url', $in[':token_url'])
 					->render();
 			},
 

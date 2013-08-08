@@ -63,7 +63,6 @@ trait Trait_Controller_MjolnirSignup
 					\app\Model_User::send_activation_email($user);
 
 					\app\Notice::make(\app\Lang::key('mjolnir:access/sent-activation-email'))
-						->classes(['alert-warning'])
 						->save();
 
 					\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
@@ -81,15 +80,11 @@ trait Trait_Controller_MjolnirSignup
 				if (\app\Model_User::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
 				{
 					\app\Model_User::activate_account($_GET['user']);
-					\app\Notice::make(\app\Lang::key('mjolnir:access/account-activated'))
-						->classes(['alert-warning'])
-						->save();
+					\app\Notice::make(\app\Lang::key('mjolnir:access/account-activated'))->save();
 				}
 				else # error checking token
 				{
-					\app\Notice::make(\app\Lang::key('mjolnir:access/invalid-token'))
-						->classes(['alert-warning'])
-						->save();
+					\app\Notice::make(\app\Lang::key('mjolnir:access/invalid-token'))->save();
 
 				}
 				\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
