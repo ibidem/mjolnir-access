@@ -97,7 +97,7 @@ class Layer_Access extends \mjolnir\access\Layer_Access
 
 class Model_ProfileField extends \mjolnir\access\Model_ProfileField
 {
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -105,17 +105,17 @@ class Model_ProfileField extends \mjolnir\access\Model_ProfileField
 
 class Model_Role extends \mjolnir\access\Model_Role
 {
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function check(array $fields, $context = null) { return parent::check($fields, $context); }
 }
 
 class Model_SecondaryEmail extends \mjolnir\access\Model_SecondaryEmail
 {
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -123,7 +123,7 @@ class Model_SecondaryEmail extends \mjolnir\access\Model_SecondaryEmail
 
 class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 {
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -131,7 +131,7 @@ class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 
 class Model_User extends \mjolnir\access\Model_User
 {
-	/** @return \app\Validator */
+	/** @return \mjolnir\types\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }

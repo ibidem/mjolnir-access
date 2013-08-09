@@ -58,7 +58,7 @@ class Model_User
 	}
 
 	/**
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function check(array $fields, $context = null)
 	{
@@ -359,7 +359,7 @@ class Model_User
 
 	/**
 	 * @param array (identification, email, provider)
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function inferred_signup_check(array $fields)
 	{
@@ -392,7 +392,7 @@ class Model_User
 
 	/**
 	 * @param array (identification, email, provider)
-	 * @return \app\Validator|null
+	 * @return \mjolnir\types\Validator|null
 	 */
 	static function inferred_signup(array $fields)
 	{
@@ -423,7 +423,7 @@ class Model_User
 
 	/**
 	 * @param array fields
-	 * @return \app\Validator|null
+	 * @return \mjolnir\types\Validator|null
 	 */
 	static function change_passwords_check($user, array $fields)
 	{
@@ -436,7 +436,7 @@ class Model_User
 	}
 
 	/**
-	 * @return \app\Validator|null
+	 * @return \mjolnir\types\Validator|null
 	 */
 	static function change_password($user, array $fields)
 	{

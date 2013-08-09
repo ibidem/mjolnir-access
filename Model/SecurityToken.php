@@ -27,7 +27,7 @@ class Model_SecurityToken
 	// Factory
 
 	/**
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function check(array $fields)
 	{

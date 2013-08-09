@@ -30,7 +30,7 @@ class Model_SecondaryEmail
 	// Factory
 
 	/**
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function check(array $fields, $context = null)
 	{
