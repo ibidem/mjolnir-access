@@ -24,6 +24,12 @@ class AccessChannel_Universal extends \mjolnir\access\AccessChannel_Universal
 
 class Allow extends \mjolnir\access\Allow
 {
+	/** @return \app\Protocol */
+	static function relays() { return parent::relays(); }
+	/** @return \app\Protocol */
+	static function attrs($relay, array $args) { return parent::attrs($relay, $args); }
+	/** @return \app\Protocol */
+	static function backend() { return parent::backend(); }
 }
 
 class Auth extends \mjolnir\access\Auth
@@ -56,6 +62,12 @@ class Backend_User extends \mjolnir\access\Backend_User
 
 class Ban extends \mjolnir\access\Ban
 {
+	/** @return \app\Protocol */
+	static function relays() { return parent::relays(); }
+	/** @return \app\Protocol */
+	static function attrs($relay, array $args) { return parent::attrs($relay, $args); }
+	/** @return \app\Protocol */
+	static function backend() { return parent::backend(); }
 }
 
 /**
@@ -74,6 +86,7 @@ class Ban extends \mjolnir\access\Ban
  * @method \app\Renderable action_signin()
  * @method \app\Renderable public_signin()
  * @method \app\Renderable public_signout()
+ * @method \app\Renderable succesfully_reset_password()
  * @method \app\Renderable public_pwdreset()
  */
 class Controller_Access extends \mjolnir\access\Controller_Access
@@ -98,6 +111,10 @@ class Layer_Access extends \mjolnir\access\Layer_Access
 class Model_ProfileField extends \mjolnir\access\Model_ProfileField
 {
 	/** @return \app\Validator */
+	static function check(array $fields, $context = null) { return parent::check($fields, $context); }
+	/** @return \app\Validator */
+	static function update_profile_check($id, array $fields) { return parent::update_profile_check($id, $fields); }
+	/** @return \app\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -116,6 +133,8 @@ class Model_Role extends \mjolnir\access\Model_Role
 class Model_SecondaryEmail extends \mjolnir\access\Model_SecondaryEmail
 {
 	/** @return \app\Validator */
+	static function check(array $fields, $context = null) { return parent::check($fields, $context); }
+	/** @return \app\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -124,6 +143,8 @@ class Model_SecondaryEmail extends \mjolnir\access\Model_SecondaryEmail
 class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 {
 	/** @return \app\Validator */
+	static function check(array $fields) { return parent::check($fields); }
+	/** @return \app\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */
 	static function statement($identifier, $sql, $lang = null) { return parent::statement($identifier, $sql, $lang); }
@@ -131,6 +152,16 @@ class Model_SecurityToken extends \mjolnir\access\Model_SecurityToken
 
 class Model_User extends \mjolnir\access\Model_User
 {
+	/** @return \app\Validator */
+	static function check(array $fields, $context = null) { return parent::check($fields, $context); }
+	/** @return \app\Validator */
+	static function inferred_signup_check(array $fields) { return parent::inferred_signup_check($fields); }
+	/** @return \app\Validator */
+	static function inferred_signup(array $fields) { return parent::inferred_signup($fields); }
+	/** @return \app\Validator */
+	static function change_passwords_check($user, array $fields) { return parent::change_passwords_check($user, $fields); }
+	/** @return \app\Validator */
+	static function change_password($user, array $fields) { return parent::change_password($user, $fields); }
 	/** @return \app\Validator */
 	static function update_check($id, array $fields) { return parent::update_check($id, $fields); }
 	/** @return \app\SQLStatement */

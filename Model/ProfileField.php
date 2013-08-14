@@ -40,7 +40,7 @@ class Model_ProfileField
 	// Factory interface
 
 	/**
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function check(array $fields, $context = null)
 	{
@@ -73,7 +73,7 @@ class Model_ProfileField
 	// Update profile
 
 	/**
-	 * @return \app\Validator
+	 * @return \mjolnir\types\Validator
 	 */
 	static function update_profile_check($id, array $fields)
 	{
