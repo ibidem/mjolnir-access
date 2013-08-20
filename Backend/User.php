@@ -12,21 +12,33 @@ class Backend_User extends \app\Backend_Collection
 	protected $model = 'User';
 	protected $index = 'user-index';
 
+	/**
+	 * @return array
+	 */
 	function roles()
 	{
 		return \app\Model_Role::entries(null, null);
 	}
 
+	/**
+	 * @return array
+	 */
 	function profile_info($id)
 	{
 		return \app\Model_ProfileField::profile_info($id);
 	}
 
+	/**
+	 * @return array
+	 */
 	function profile_fields()
 	{
 		return \app\Model_ProfileField::entries(null, null);
 	}
 
+	/**
+	 * @return array
+	 */
 	function action_update_profile()
 	{
 		$id = $_POST['id'];

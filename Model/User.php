@@ -211,6 +211,22 @@ class Model_User
 	// Collection
 
 	/**
+	 * @return string
+	 */
+	static function extraselectfields()
+	{
+		return '';
+	}
+
+	/**
+	 * @return string
+	 */
+	static function extraselectjoins()
+	{
+		return ''; # no joins
+	}
+
+	/**
 	 * @return array
 	 */
 	static function select_entries(array $entries = null)
@@ -226,25 +242,28 @@ class Model_User
 			(
 				__METHOD__,
 				'
-					SELECT user.id,
-					       user.nickname,
-					       user.email,
-						   user.last_signin,
-						   user.timestamp,
-					       user.ipaddress,
-						   user.active,
+					SELECT entry.id,
+					       entry.nickname,
+						   entry.email,
+						   entry.last_signin,
+						   entry.timestamp,
+						   entry.ipaddress,
+						   entry.active,
+						   '.static::extraselectfields().'
 					       role.id role,
 					       role.title roletitle
 
-					  FROM :table user
+					  FROM :table entry
 
 					  JOIN `'.static::assoc_roles().'` assoc_roles
-						ON assoc_roles.user = user.id
+						ON assoc_roles.user = entry.id
 
 					  JOIN `'.static::roles_table().'` role
 						ON assoc_roles.role = role.id
 
-					 WHERE user.`'.static::unique_key().'` IN ('.\implode(', ', $entries).')
+					  '.static::extraselectjoins().'
+
+					 WHERE entry.`'.static::unique_key().'` IN ('.\implode(', ', $entries).')
 				'
 			)
 			->key($cache_key)
@@ -265,23 +284,26 @@ class Model_User
 			(
 				__METHOD__,
 				'
-					SELECT user.id,
-					       user.nickname,
-					       user.email,
-						   user.last_signin,
-						   user.timestamp,
-					       user.ipaddress,
-						   user.active,
+					SELECT entry.id,
+					       entry.nickname,
+						   entry.email,
+						   entry.last_signin,
+						   entry.timestamp,
+						   entry.ipaddress,
+						   entry.active,
+						   '.static::extraselectfields().'
 					       role.id role,
 					       role.title roletitle
 
-					  FROM :table user
+					  FROM :table entry
 
 					  JOIN `'.static::assoc_roles().'` assoc_roles
-						ON assoc_roles.user = user.id
+						ON assoc_roles.user = entry.id
 
 					  JOIN `'.static::roles_table().'` role
 						ON assoc_roles.role = role.id
+
+					  '.static::extraselectjoins().'
 				'
 			)
 			->key(__FUNCTION__)
@@ -321,18 +343,21 @@ class Model_User
 				(
 					__METHOD__,
 					'
-						SELECT user.*,
+						SELECT entry.*,
+						       '.static::extraselectfields().'
 							   assoc.role role,
 							   role.title roletitle
-						  FROM :table user
+						  FROM :table entry
 
 						  JOIN `'.static::assoc_roles().'` assoc
-							ON user.id = assoc.user
+							ON entry.id = assoc.user
 
 						  JOIN `'.static::roles_table().'` role
 							ON role.id = assoc.role
 
-						 WHERE user.id = :id
+						  '.static::extraselectjoins().'
+
+						 WHERE entry.id = :id
 					',
 					'mysql'
 				)

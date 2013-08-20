@@ -19,7 +19,7 @@
 
 	<p class="alert <?= \implode(' ', $notice->get('class', [])) ?>">
 		<button type="button" data-dismiss="alert" class="close">×</button>
-		<?= $notice->get_body() ?>
+		<?= $notice->render() ?>
 	</p>
 
 <? endif; ?>

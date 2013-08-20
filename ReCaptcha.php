@@ -14,6 +14,13 @@ class ReCaptcha
 	/**
 	 * Outputs html required for recaptcha test.
 	 *
+	 * To customize add a script tag with
+	 *
+	 *		var RecaptchaOptions = {
+	 *			theme : 'clean',
+	 *			tabindex : 2
+	 *		};
+	 *
 	 * @return string
 	 */
 	static function html()

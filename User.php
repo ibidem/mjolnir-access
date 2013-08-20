@@ -49,7 +49,7 @@ class User extends \app\Instantiatable
 	/**
 	 * @return static
 	 */
-	final static function instance()
+	static function instance()
 	{
 		static $instance = null;
 
