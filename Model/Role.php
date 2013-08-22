@@ -63,4 +63,34 @@ class Model_Role
 			['id'];
 	}
 
+	/**
+	 * Checks for updates to the roles configuration and updates the roles
+	 * table.
+	 */
+	static function autoupdate()
+	{
+		$access = \app\CFS::config('mjolnir/access');
+		$knownroles = \array_keys($access['roles']);
+
+		$roles = static::entries(null, null);
+		$existingroles = \app\Arr::gather($roles, 'title');
+
+		$missing_roles = \array_diff($knownroles, $existingroles);
+
+		foreach ($missing_roles as $role)
+		{
+			static::statement
+				(
+					__METHOD__,
+					'
+						INSERT INTO :table
+						(id, title)	VALUES (:id, :title)
+					'
+				)
+				->str(':title', $role)
+				->num(':id', $access['roles'][$role])
+				->run();
+		}
+	}
+
 } # class
