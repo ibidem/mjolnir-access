@@ -53,13 +53,16 @@ class Layer_Access extends \app\Instantiatable implements \mjolnir\types\Layer
 
 		if ( ! \app\Access::can($relaynode->get('relaykey'), $context))
 		{
-			$http_layer = $channel->get('layer:http');
-
-			// check if this is a http request
-			if ($http_layer)
+			if (\app\Auth::role() === \app\Auth::Guest)
 			{
-				// redirect to the access route
-				\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
+				$http_layer = $channel->get('layer:http');
+
+				// check if this is a http request
+				if ($http_layer)
+				{
+					// redirect to the access route
+					\app\Server::redirect(\app\CFS::config('mjolnir/auth')['default.signin']);
+				}
 			}
 
 			// else; or if the redirect fails
