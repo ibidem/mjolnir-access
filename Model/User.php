@@ -273,7 +273,7 @@ class Model_User
 	/**
 	 * @return array
 	 */
-	static function entries($page, $limit, $offset = 0, $order = [], $constraints = [])
+	static function entries($page, $limit, $offset = 0, $order = null, $constraints = null)
 	{
 		if (empty($order))
 		{
