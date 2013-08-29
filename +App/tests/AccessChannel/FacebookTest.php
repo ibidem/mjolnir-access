@@ -2,7 +2,7 @@
 
 use \mjolnir\access\AccessChannel_Facebook;
 
-class AccessChannel_FacebookTest extends \PHPUnit_Framework_TestCase
+class AccessChannel_FacebookTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

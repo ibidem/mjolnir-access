@@ -7,7 +7,7 @@ class Trait_Controller_MjolnirPwdReset_Tester
 	use Trait_Controller_MjolnirPwdReset;
 }
 
-class Trait_Controller_MjolnirPwdResetTest extends \PHPUnit_Framework_TestCase
+class Trait_Controller_MjolnirPwdResetTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

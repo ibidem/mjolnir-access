@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Controller_Access;
 
-class Controller_AccessTest extends \PHPUnit_Framework_TestCase
+class Controller_AccessTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

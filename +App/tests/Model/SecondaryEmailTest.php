@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Model_SecondaryEmail;
 
-class Model_SecondaryEmailTest extends \PHPUnit_Framework_TestCase
+class Model_SecondaryEmailTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

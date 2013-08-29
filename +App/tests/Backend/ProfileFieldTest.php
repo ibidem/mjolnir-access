@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Backend_ProfileField;
 
-class Backend_ProfileFieldTest extends \PHPUnit_Framework_TestCase
+class Backend_ProfileFieldTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

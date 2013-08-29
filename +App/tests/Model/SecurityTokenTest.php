@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Model_SecurityToken;
 
-class Model_SecurityTokenTest extends \PHPUnit_Framework_TestCase
+class Model_SecurityTokenTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

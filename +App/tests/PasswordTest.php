@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Password;
 
-class PasswordTest extends \PHPUnit_Framework_TestCase
+class PasswordTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

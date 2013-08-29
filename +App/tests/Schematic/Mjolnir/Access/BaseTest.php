@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Schematic_Mjolnir_Access_Base;
 
-class Schematic_Mjolnir_Access_BaseTest extends \PHPUnit_Framework_TestCase
+class Schematic_Mjolnir_Access_BaseTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

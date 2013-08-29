@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Backend_Role;
 
-class Backend_RoleTest extends \PHPUnit_Framework_TestCase
+class Backend_RoleTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

@@ -7,7 +7,7 @@ class Trait_Controller_MjolnirSignin_Tester
 	use Trait_Controller_MjolnirSignin;
 }
 
-class Trait_Controller_MjolnirSigninTest extends \PHPUnit_Framework_TestCase
+class Trait_Controller_MjolnirSigninTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

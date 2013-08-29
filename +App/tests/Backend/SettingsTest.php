@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Backend_Settings;
 
-class Backend_SettingsTest extends \PHPUnit_Framework_TestCase
+class Backend_SettingsTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

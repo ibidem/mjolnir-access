@@ -7,7 +7,7 @@ class Trait_Controller_MjolnirEmails_Tester
 	use Trait_Controller_MjolnirEmails;
 }
 
-class Trait_Controller_MjolnirEmailsTest extends \PHPUnit_Framework_TestCase
+class Trait_Controller_MjolnirEmailsTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Task_User_Password;
 
-class Task_User_PasswordTest extends \PHPUnit_Framework_TestCase
+class Task_User_PasswordTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

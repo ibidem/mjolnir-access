@@ -7,7 +7,7 @@ class Trait_Model_SecurityToken_Tester
 	use Trait_Model_SecurityToken;
 }
 
-class Trait_Model_SecurityTokenTest extends \PHPUnit_Framework_TestCase
+class Trait_Model_SecurityTokenTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

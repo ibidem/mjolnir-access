@@ -2,7 +2,7 @@
 
 use \mjolnir\access\Layer_Access;
 
-class Layer_AccessTest extends \PHPUnit_Framework_TestCase
+class Layer_AccessTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()

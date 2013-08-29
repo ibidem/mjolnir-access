@@ -2,7 +2,7 @@
 
 use \mjolnir\access\User;
 
-class UserTest extends \PHPUnit_Framework_TestCase
+class UserTest extends \app\PHPUnit_Framework_TestCase
 {
 	/** @test */ function
 	can_be_loaded()
