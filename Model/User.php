@@ -9,9 +9,7 @@
  */
 class Model_User
 {
-	use \app\Trait_Model_Factory;
-	use \app\Trait_Model_Utilities;
-	use \app\Trait_Model_Collection;
+	use \app\Trait_ModelLib;
 	use \app\Trait_Model_SecurityToken;
 
 	/**
@@ -75,13 +73,13 @@ class Model_User
 			$unique_email = false;
 		}
 
-		$validator = \app\Validator::instance($fields)
+		$validator = \app\Validator::instance($fields, $unique_email)
 			->adderrormessages($user_config['errors'])
-			->rule(['nickname', 'email', 'role'], 'not_empty')
-			->test('email', \app\Email::valid($fields['email']))
-			->rule('email', ':unique', $unique_email)
+			->rule(['nickname', 'role'], 'not_empty')
 			->rule('nickname', 'max_length', \strlen($fields['nickname']) <= $user_config['fields']['nickname']['maxlength'])
 			->rule('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
+
+		$validator = static::email_checks($fields, $validator, $unique_email);
 
 		if ($context === null)
 		{
@@ -92,6 +90,17 @@ class Model_User
 		}
 
 		return $validator;
+	}
+
+	/**
+	 * @return \mjolnir\types\Validator
+	 */
+	static function email_checks(array $fields, \mjolnir\types\Validator $validator, $unique_email)
+	{
+		return $validator
+			->rule('email', 'not_empty')
+			->test('email', \app\Email::valid($fields['email']))
+			->rule('email', ':unique', $unique_email);
 	}
 
 	/**
