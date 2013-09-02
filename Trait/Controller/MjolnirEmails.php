@@ -99,12 +99,14 @@ trait Trait_Controller_MjolnirEmails
 			\app\Session::set('mjolnir:add-secondary-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:add-secondary-email:user', \app\Auth::id());
 
+			$base = \app\CFS::config('mjolnir/base');
+
 			// send code via email
 			$sent = \app\Email::instance()
 				->send
 				(
 					$_POST['email'],
-					null,
+					'no-reply@'.$base['domain'],
 					\app\Lang::term('Confirmation of Email ownership'),
 					\app\Lang::key('mjolnir:access/email-visit-url-to-finish', [':url' => $change_email_url])
 				);
@@ -167,12 +169,14 @@ trait Trait_Controller_MjolnirEmails
 			\app\Session::set('mjolnir:change-main-email:email', $_POST['email']);
 			\app\Session::set('mjolnir:change-main-email:user', \app\Auth::id());
 
+			$base = \app\CFS::config('mjolnir/base');
+
 			// send code via email
 			$sent = \app\Email::instance()
 				->send
 				(
 					$_POST['email'],
-					null,
+					'no-reply@'.$base['domain'],
 					\app\Lang::term('Confirmation of Email ownership'),
 					\app\Lang::key('mjolnir:access/email-visit-url-to-finish', [':url' => $change_email_url])
 				);
