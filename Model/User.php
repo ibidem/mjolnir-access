@@ -830,11 +830,12 @@ class Model_User
 		$user = static::entry($user_id);
 
 		// send code via email
+		$base = \app\CFS::config('mjolnir/base');
 		$sent = \app\Email::instance()
 			->send
 			(
 				$user['email'],
-				null,
+				'no-reply@'.$base['domain'],
 				\app\Lang::term('Confirmation of Email Ownership'),
 				\app\Lang::key
 					(
