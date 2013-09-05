@@ -125,6 +125,7 @@ class Model_User
 						'ipaddress',
 						'pwdverifier',
 						'pwdsalt',
+						'pwdalgorythm',
 						'pwddate',
 						'last_signin'
 					),
