@@ -1,4 +1,4 @@
-<?php return array // ăÎîŞşŢţâ
+<?php return array
 	(
 		'mjolnir:access/sign-up-now' => 'Inregistreazăte astăzi!',
 

@@ -1,4 +1,4 @@
-<?php return array // ăÎîŞşţâ
+<?php return array
 	(
 		'Sign In' => 'Autentificare',
 		'Sign Up' => 'Înregistrare',
