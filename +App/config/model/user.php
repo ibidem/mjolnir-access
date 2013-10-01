@@ -38,12 +38,14 @@
 				'nickname' => array
 					(
 						'not_empty' => 'You must type in a username.',
+						'not-empty' => 'You must type in a username.',
 						'max_length' => 'Please choose a shorter account name.',
 						':unique' => 'User with same name already exists.',
 					),
 				'password' => array
 					(
 						'not_empty' => 'Password is required.',
+						'not-empty' => 'Password is required.',
 						'min_length' => 'Your password is too short.',
 						'\app\Model_User::matching_password' => 'Passwords do not match.',
 					),

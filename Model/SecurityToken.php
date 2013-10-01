@@ -32,7 +32,7 @@ class Model_SecurityToken
 	static function check(array $fields)
 	{
 		return \app\Validator::instance($fields)
-			->rule('purpose', 'not_empty');
+			->rule('purpose', 'not-empty');
 	}
 
 	/**

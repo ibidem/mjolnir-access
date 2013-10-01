@@ -47,7 +47,7 @@ class Model_ProfileField
 		$errors = ['name' => ['unique' => 'Field with the same name already exists.']];
 		return \app\Validator::instance($fields)
 			->adderrormessages($errors)
-			->rule(['title', 'name', 'idx', 'type', 'required'], 'not_empty')
+			->rule(['title', 'name', 'idx', 'type', 'required'], 'not-empty')
 			->rule('name', 'unique', ! static::exists($fields['name'], 'name', $context));
 	}
 
@@ -84,7 +84,7 @@ class Model_ProfileField
 		{
 			if ($field['required'])
 			{
-				$validator->rule('field-'.$field['id'], 'not_empty');
+				$validator->rule('field-'.$field['id'], 'not-empty');
 			}
 		}
 

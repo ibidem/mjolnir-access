@@ -75,7 +75,7 @@ class Model_User
 
 		$validator = \app\Validator::instance($fields, $unique_email)
 			->adderrormessages($user_config['errors'])
-			->rule(['nickname', 'role'], 'not_empty')
+			->rule(['nickname', 'role'], 'not-empty')
 			->rule('nickname', 'max_length', \strlen($fields['nickname']) <= $user_config['fields']['nickname']['maxlength'])
 			->rule('nickname', ':unique', ! static::exists($fields['nickname'], 'nickname', $context));
 
@@ -84,7 +84,7 @@ class Model_User
 		if ($context === null)
 		{
 			$validator
-				->rule('password', 'not_empty')
+				->rule('password', 'not-empty')
 				->rule('password', 'min_length', \strlen($fields['password']) >= $user_config['fields']['password']['minlength'])
 				->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
 		}
@@ -98,7 +98,7 @@ class Model_User
 	static function email_checks(array $fields, \mjolnir\types\Validator $validator, $unique_email)
 	{
 		return $validator
-			->rule('email', 'not_empty')
+			->rule('email', 'not-empty')
 			->test('email', \app\Email::valid($fields['email']))
 			->rule('email', ':unique', $unique_email);
 	}
@@ -399,7 +399,7 @@ class Model_User
 	static function inferred_signup_check(array $fields)
 	{
 		return \app\Validator::instance($fields)
-			->rule(['identification', 'email', 'role', 'provider'], 'not_empty');
+			->rule(['identification', 'email', 'role', 'provider'], 'not-empty');
 	}
 
 	/**
@@ -466,7 +466,7 @@ class Model_User
 
 		return \app\Validator::instance($fields)
 			->adderrormessages($user_config['errors'])
-			->rule('password', 'not_empty')
+			->rule('password', 'not-empty')
 			->rule('verifier', 'equal_to', $fields['verifier'] == $fields['password']);
 	}
 
