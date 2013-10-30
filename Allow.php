@@ -16,7 +16,9 @@ class Allow
 	{
 		$args = \func_get_args();
 
-		return \app\Protocol::instance()->relays($args);
+		return \app\Protocol::instance()
+			->relays($args)
+			->is('Allow::relay Protocol');
 	}
 
 	/**
@@ -27,7 +29,8 @@ class Allow
 		return \app\Protocol::instance()
 			->relays([$relay])
 			->attrs($args)
-			->unrestricted();
+			->unrestricted()
+			->is('Allow::attrs Protocol');
 	}
 
 	/**
@@ -40,7 +43,8 @@ class Allow
 		return \app\Protocol::instance()
 			->relays(['mjolnir:backend.route'])
 			->attrs($args)
-			->unrestricted();
+			->unrestricted()
+			->is('Allow::backend Protocol');
 	}
 
 } # class

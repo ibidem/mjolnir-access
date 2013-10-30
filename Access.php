@@ -9,19 +9,28 @@
  */
 class Access
 {
+	/** @var string last object to declare ban/pass */
+	protected static $last_instigator = null;
+
+	/** @var string role/alias by which the ban/pass was declared */
+	protected static $last_matched_role = null;
+
 	/**
-	 * @var array
+	 * The match type of the last check
+	 *  0 -- no explict ban or pass
+	 *  1 -- direct pass (ie. protocol specific to user's role)
+	 *  2 -- indirect pass (ie. related protocol)
+	 *  3 -- ban (explicitly denied by protocol)
 	 */
+	protected static $last_matched_type = 0;
+
+	/** @var array */
 	protected static $whitelist;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected static $blacklist;
 
-	/**
-	 * @var array
-	 */
+	/** @var array */
 	protected static $aliaslist;
 
 	/**
@@ -71,6 +80,8 @@ class Access
 						// route must be object belonging to owner
 						if ($user == $context['owner'])
 						{
+							static::$last_instigator = $permission->identifier();
+
 							// matched
 							return true;
 						}
@@ -81,6 +92,8 @@ class Access
 						// route must be object NOT belonging to owner
 						if ($user != $context['owner'])
 						{
+							static::$last_instigator = $permission->identifier();
+
 							// matched
 							return true;
 						}
@@ -88,6 +101,8 @@ class Access
 				}
 				else # self is NULL, no further checks required
 				{
+					static::$last_instigator = $permission->identifier();
+
 					// matched
 					return true;
 				}
@@ -103,6 +118,10 @@ class Access
 	 */
 	static function can($relay, array $context = null, $attribute = null, $user_role = null)
 	{
+		static::$last_instigator = null;
+		static::$last_matched_role = null;
+		static::$last_matched_type = 0; # no explicit pass nor ban
+
 		// get role of current user
 		$user_role = $user_role !== null ? $user_role : \app\Auth::role();
 
@@ -113,6 +132,8 @@ class Access
 		{
 			// attempt to authorize
 			$status = static::match_check(static::$whitelist[$user_role], $relay, $context, $attribute);
+			static::$last_matched_type = 1; # direct pass
+			! $status or static::$last_matched_role = $user_role;
 		}
 
 		// failed authorization? check aliases for addition rules
@@ -123,6 +144,8 @@ class Access
 				if (isset(static::$whitelist[$alias]) && static::match_check(static::$whitelist[$alias], $relay, $context, $attribute))
 				{
 					$status = true; # authorized
+					static::$last_matched_type = 2; # indirect pass
+					static::$last_matched_role = $alias;
 					break;
 				}
 			}
@@ -131,10 +154,56 @@ class Access
 		// authorized? confirm blacklist
 		if ($status && isset(static::$blacklist[$user_role]) && static::match_check(static::$blacklist[$user_role], $relay, $context, $attribute))
 		{
+			static::$last_matched_role = $alias;
+			static::$last_matched_type = 3; # ban
 			$status = false; # cancel authorization
 		}
 
 		return $status;
+	}
+
+	/**
+	 * @return string
+	 */
+	static function last_matched_role()
+	{
+		return static::$last_matched_role;
+	}
+
+	/**
+	 * @return int
+	 */
+	static function last_matched_type_code()
+	{
+		return static::$last_matched_type;
+	}
+
+	/**
+	 * @return string
+	 */
+	static function last_matched_type()
+	{
+		switch (static::$last_matched_type)
+		{
+			case 0:
+				return 'no match';
+			case 1:
+				return 'direct match';
+			case 2:
+				return 'indirect match';
+			case 3:
+				return 'explicit ban';
+			default:
+				throw new \app\Exception('Logical error. Unknown last_matched_type in Access.');
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	static function last_instigator()
+	{
+		return static::$last_instigator;
 	}
 
 } # class

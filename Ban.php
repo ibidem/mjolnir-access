@@ -1,9 +1,6 @@
 <?php namespace mjolnir\access;
 
 /**
- * This class is merely syntactic sugar for \app\Allow which is syntactic sugar
- * for the \app\Protocol class.
- *
  * @package    mjolnir
  * @category   Access
  * @author     Ibidem Team
@@ -12,6 +9,42 @@
  */
 class Ban extends \app\Allow
 {
-	// empty
+	/**
+	 * @return \mjolnir\types\Protocol
+	 */
+	static function relays()
+	{
+		$args = \func_get_args();
+
+		return \app\Protocol::instance()
+			->relays($args)
+			->is('Ban::relay Protocol');
+	}
+
+	/**
+	 * @return \mjolnir\types\Protocol
+	 */
+	static function attrs($relay, array $args)
+	{
+		return \app\Protocol::instance()
+			->relays([$relay])
+			->attrs($args)
+			->unrestricted()
+			->is('Ban::attrs Protocol');
+	}
+
+	/**
+	 * @return \mjolnir\types\Protocol
+	 */
+	static function backend()
+	{
+		$args = \func_get_args();
+
+		return \app\Protocol::instance()
+			->relays(['mjolnir:backend.route'])
+			->attrs($args)
+			->unrestricted()
+			->is('Ban::backend Protocol');
+	}
 
 } # class
