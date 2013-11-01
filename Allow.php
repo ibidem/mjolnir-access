@@ -10,18 +10,33 @@
 class Allow
 {
 	/**
+	 * This method accepts both a single array of relays or list of parameters
+	 * representing the array of relays.
+	 *
 	 * @return \mjolnir\types\Protocol
 	 */
-	static function relays()
+	static function relays(/* args... */)
 	{
 		$args = \func_get_args();
 
+		if (\count($args) == 1 && \is_array($args[0]))
+		{
+			$relays = $args[0];
+		}
+		else # count != 1 || ! is_array(args[0])
+		{
+			$relays = $args;
+		}
+
 		return \app\Protocol::instance()
-			->relays($args)
+			->relays($relays)
 			->is('Allow::relay Protocol');
 	}
 
 	/**
+	 * This method accepts both a single array of attributes or list of
+	 * parameters representing the array of attributes.
+	 *
 	 * @return \mjolnir\types\Protocol
 	 */
 	static function attrs($relay, array $args)
@@ -34,11 +49,23 @@ class Allow
 	}
 
 	/**
+	  This method accepts both a single array of backend or list of
+	 * parameters representing the array of backends.
+	 *
 	 * @return \mjolnir\types\Protocol
 	 */
-	static function backend()
+	static function backend(/* args... */)
 	{
 		$args = \func_get_args();
+
+		if (\count($args) == 1 && \is_array($args[0]))
+		{
+			$relays = $args[0];
+		}
+		else # count != 1 || ! is_array(args[0])
+		{
+			$relays = $args;
+		}
 
 		return \app\Protocol::instance()
 			->relays(['mjolnir:backend.route'])
