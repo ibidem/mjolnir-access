@@ -5,7 +5,7 @@
 		'fields' => array
 			(
 				'id' => 'number',
-				'title' => 'string',
+				'nickname' => 'string',
 			),
 
 	); # config

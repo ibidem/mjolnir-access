@@ -12,7 +12,7 @@ class UserModel extends \app\MarionetteModel
 	/**
 	 * @var array
 	 */
-	static $configfile = 'mjolnir/models/acctg-journal';
+	static $configfile = 'mjolnir/models/user';
 
 	/**
 	 * @return string
