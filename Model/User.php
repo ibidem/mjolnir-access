@@ -194,12 +194,13 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					INSERT INTO `'.static::assoc_roles().'`
+					INSERT INTO `[user--role]`
 					(user, role) VALUES (:user, :role)
 				',
-				'mysql'
+				[
+					'[user--role]' => static::assoc_roles()
+				]
 			)
 			->num(':user', $id)
 			->num(':role', \app\Model_Role::by_name(\app\CFS::config('mjolnir/auth')['signup.default.role']))
@@ -351,13 +352,12 @@ class Model_User
 		{
 			$entry = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT entry.*,
 						       '.static::extraselectfields().'
 							   assoc.role role,
 							   role.title roletitle
-						  FROM :table entry
+						  FROM `[table]` entry
 
 						  JOIN `'.static::assoc_roles().'` assoc
 							ON entry.id = assoc.user
@@ -368,8 +368,7 @@ class Model_User
 						  '.static::extraselectjoins().'
 
 						 WHERE entry.id = :id
-					',
-					'mysql'
+					'
 				)
 				->num(':id', $id)
 				->run()
@@ -533,9 +532,8 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET last_signin = :date
 					 WHERE id = :id
 				'
@@ -552,13 +550,14 @@ class Model_User
 	{
 		$result = static::statement
 			(
-				__METHOD__,
 				'
 					SELECT *
-					  FROM `'.static::assoc_roles().'`
+					  FROM `[user--role]`
 					 WHERE `user` = :user
 				',
-				'mysql'
+				[
+					'[user--role]' => static::assoc_roles()
+				]
 			)
 			->num(':user', $id)
 			->run()
@@ -568,13 +567,14 @@ class Model_User
 		{
 			static::statement
 				(
-					__METHOD__,
 					'
-						INSERT INTO `'.static::assoc_roles().'`
+						INSERT INTO `[user--role]`
 							(`user`, `role`)
 						VALUES (:user, :role)
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles()
+					]
 				)
 				->num(':user', $id)
 				->num(':role', $role)
@@ -584,13 +584,14 @@ class Model_User
 		{
 			static::statement
 				(
-					__METHOD__,
 					'
-						UPDATE `'.static::assoc_roles().'`
+						UPDATE `[user--role]`
 						   SET `role` = :role
 						 WHERE `user` = :user
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles()
+					]
 				)
 				->num(':role', $role)
 				->num(':user', $id)
@@ -612,7 +613,7 @@ class Model_User
 			(
 				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET pwdverifier = :pwdverifier,
 					       pwdsalt = :pwdsalt,
 						   pwdalgorythm = :pwdalgorythm,
@@ -620,8 +621,7 @@ class Model_User
 					       ipaddress = :ipaddress
 					 WHERE nickname = :nickname
 					   AND provider IS NULL
-				',
-				'mysql'
+				'
 			)
 			->str(':pwdverifier', $pwd['verifier'])
 			->str(':pwdsalt', $pwd['salt'])
@@ -641,17 +641,16 @@ class Model_User
 		{
 			$user = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT user.*,
 							   assoc.role role,
 							   role.title roletitle
-						  FROM :table user
+						  FROM `[table]` user
 
-						  JOIN `'.static::assoc_roles().'` assoc
+						  JOIN `[user--role]` assoc
 							ON user.id = assoc.user
 
-						  JOIN `'.static::roles_table().'` role
+						  JOIN `[roles]` role
 							ON role.id = assoc.role
 
 						 WHERE user.nickname = :nickname
@@ -659,7 +658,10 @@ class Model_User
 						   AND user.`locked` = FALSE
 						 LIMIT 1
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles(),
+						'[roles]' => static::roles_table()
+					]
 				)
 				->bindstr(':nickname', $fields['identity'])
 				->run()
@@ -669,17 +671,16 @@ class Model_User
 		{
 			$user = static::statement
 				(
-					__METHOD__.':email_signin_check',
 					'
 						SELECT user.*,
 							   assoc.role role,
 							   role.title roletitle
-						  FROM :table user
+						  FROM `[table]` user
 
-						  JOIN `'.static::assoc_roles().'` assoc
+						  JOIN `[user--role]` assoc
 							ON user.id = assoc.user
 
-						  JOIN `'.static::roles_table().'` role
+						  JOIN `[roles]` role
 							ON role.id = assoc.role
 
 						 WHERE email = :email
@@ -687,7 +688,10 @@ class Model_User
 						   AND `locked` = FALSE
 						 LIMIT 1
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles(),
+						'[roles]' => static::roles_table()
+					]
 				)
 				->bindstr(':email', $fields['identity'])
 				->run()
@@ -720,16 +724,18 @@ class Model_User
 		{
 			$roles = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT role.title role
-						  FROM `'.static::roles_table().'` role
-						  JOIN `'.static::assoc_roles().'` assoc
+						  FROM `[roles]` role
+						  JOIN `[user--role]` assoc
 							ON assoc.role = role.id
 						 WHERE assoc.user = :user
 						 LIMIT 1
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles(),
+						'[roles]' => static::roles_table()
+					]
 				)
 				->num(':user', $user_id)
 				->run()
@@ -760,17 +766,16 @@ class Model_User
 		{
 			$result = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT user.*,
 							   assoc.role role,
 							   role.title roletitle
 						  FROM :table user
 
-						  JOIN `'.static::assoc_roles().'` assoc
+						  JOIN `[user--role]` assoc
 							ON user.id = assoc.user
 
-						  JOIN `'.static::roles_table().'` role
+						  JOIN `[roles]` role
 							ON role.id = assoc.role
 
 						 WHERE email = :email
@@ -778,7 +783,10 @@ class Model_User
 						   AND `active` = TRUE
 						 LIMIT 1
 					',
-					'mysql'
+					[
+						'[user--role]' => static::assoc_roles(),
+						'[roles]' => static::roles_table()
+					]
 				)
 				->str(':email', $email)
 				->run()
@@ -865,9 +873,8 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE `'.static::table().'`
+					UPDATE `[table]`
 					   SET active = TRUE
 					 WHERE id = :user_id
 				'
@@ -927,9 +934,8 @@ class Model_User
 
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET `email` = :email
 					 WHERE `id` = :id
 				'
@@ -951,10 +957,9 @@ class Model_User
 		// search for main emails
 		$entries = static::statement
 			(
-				__METHOD__,
 				'
 					SELECT id
-					  FROM :table
+					  FROM `[table]`
 					 WHERE `email` = :email
 					   AND NOT id <=> :context
 					   AND `locked` = FALSE
@@ -973,13 +978,15 @@ class Model_User
 		// search for secondary emails
 		$secondary_emails = static::statement
 			(
-				__METHOD__,
 				'
 					SELECT id
-					  FROM `'.\app\Model_SecondaryEmail::table().'`
+					  FROM `[secondary-emails]`
 					 WHERE `email` = :email
 					   AND NOT user <=> :context
-				'
+				',
+				[
+					'[secondary-emails]' => \app\Model_SecondaryEmail::table()
+				]
 			)
 			->str(':email', $email)
 			->num(':context', $context)
@@ -1003,9 +1010,8 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET `locked` = TRUE
 					 WHERE `id` = :id
 				'
@@ -1028,9 +1034,8 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET pwdattempts = pwdattempts + 1
 					 WHERE id = :user
 				'
@@ -1046,9 +1051,8 @@ class Model_User
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET pwdattempts = 0
 					 WHERE id = :user
 				'
@@ -1073,9 +1077,8 @@ class Model_User
 
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET `pwdreset` = :key,
 					       `pwdreset_expires` = :expires
 					 WHERE `id` = :user
@@ -1114,9 +1117,8 @@ class Model_User
 		// update
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET pwdverifier = :pwdverifier,
 					       pwdsalt = :pwdsalt,
 						   pwdalgorythm = :pwdalgorythm,
@@ -1125,8 +1127,7 @@ class Model_User
 						   pwdreset = NULL,
 						   pwdreset_expires = NULL
 					 WHERE id = :user
-				',
-				'mysql'
+				'
 			)
 			->str(':pwdverifier', $pwd['verifier'])
 			->str(':pwdsalt', $pwd['salt'])
@@ -1160,15 +1161,13 @@ class Model_User
 			// get user data
 			$entry = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT users.pwdsalt salt,
 							   users.pwdverifier verifier
-						  FROM :table users
+						  FROM `[table]` users
 						 WHERE users.id = :user
 						 LIMIT 1
-					',
-					'mysql'
+					'
 				)
 				->num(':user', $user)
 				->run()

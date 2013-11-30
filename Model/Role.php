@@ -50,10 +50,9 @@ class Model_Role
 	{
 		return (int) static::statement
 			(
-				__METHOD__,
 				'
 					SELECT id
-					  FROM :table
+					  FROM [table]
 					 WHERE title = :name
 				'
 			)
@@ -81,9 +80,8 @@ class Model_Role
 		{
 			static::statement
 				(
-					__METHOD__,
 					'
-						INSERT INTO :table
+						INSERT INTO [table]
 						(id, title)	VALUES (:id, :title)
 					'
 				)

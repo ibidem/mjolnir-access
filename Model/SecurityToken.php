@@ -60,9 +60,8 @@ class Model_SecurityToken
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					DELETE FROM :table
+					DELETE FROM [table]
 					 WHERE expires < NOW()
 				'
 			)

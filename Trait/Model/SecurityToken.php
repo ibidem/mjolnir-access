@@ -31,9 +31,8 @@ trait Trait_Model_SecurityToken
 		// remember the token id
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET `token` = :token_id
 					 WHERE `'.static::unique_key().'` = :entry_id
 				'
@@ -72,9 +71,8 @@ trait Trait_Model_SecurityToken
 	{
 		static::statement
 			(
-				__METHOD__,
 				'
-					UPDATE :table
+					UPDATE `[table]`
 					   SET `token` = NULL
 					 WHERE `'.static::unique_key().'` = :entry_id
 				'

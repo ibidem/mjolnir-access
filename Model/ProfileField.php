@@ -109,12 +109,13 @@ class Model_ProfileField
 			// remove all current fields
 			\app\SQL::prepare
 				(
-					__METHOD__.':cleanup',
 					'
-						DELETE FROM `'.static::assoc_user().'`
+						DELETE FROM `[user--profile]`
 						 WHERE user = :id
 					',
-					'mysql'
+					[
+						'[user--profile]' => static::assoc_user()
+					]
 				)
 				->num(':id', $id)
 				->run();
@@ -135,14 +136,15 @@ class Model_ProfileField
 						// update
 						\app\SQL::prepare
 							(
-								__METHOD__,
 								'
-									INSERT INTO `'.static::assoc_user().'`
+									INSERT INTO `[user--profile]`
 									   SET user = :user,
 										   field = :field,
 										   value = :value
 								',
-								'mysql'
+								[
+									'[user--profile]' => static::assoc_user()
+								]
 							)
 							->num(':user', $id)
 							->num(':field', $key)
@@ -216,20 +218,22 @@ class Model_ProfileField
 		{
 			$result = static::statement
 				(
-					__METHOD__,
 					'
 						SELECT field.id,
 							   field.title,
 							   field.name,
 							   field.type,
 							   profile.value value
-						  FROM :table field
+						  FROM [table] field
 						  LEFT OUTER
-						  JOIN `'.static::assoc_user().'` profile
+						  JOIN `[user--profile]` profile
 							ON profile.field = field.id
 						 WHERE profile.user = :user
 						 ORDER BY field.idx ASC
-					'
+					',
+					[
+						'[user--profile]' => static::assoc_user()
+					]
 				)
 				->num(':user', $id)
 				->run()
@@ -247,6 +251,9 @@ class Model_ProfileField
 		return $result;
 	}
 
+	/**
+	 * @return mixed
+	 */
 	static function profile_field($user, $field)
 	{
 		$profile_info = static::profile_info($user);

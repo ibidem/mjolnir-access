@@ -183,12 +183,13 @@ class Schematic_Mjolnir_Access_Base extends \app\Instantiatable implements \mjol
 			$title = null;
 			$statement = \app\SQL::prepare
 				(
-					__METHOD__,
 					'
-						INSERT INTO `'.\app\Model_Role::table().'`
+						INSERT INTO `[roles]`
 							(id, title) VALUES (:id, :title)
 					',
-					'mysql'
+					[
+						'[roles]' => \app\Model_Role::table()
+					]
 				)
 				->bindnum(':id', $id)
 				->bindstr(':title', $title);
