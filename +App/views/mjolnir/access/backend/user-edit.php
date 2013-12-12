@@ -16,7 +16,7 @@
 
 	<?= $form = HTML::form($control->action('update'), 'mjolnir:twitter')
 		->errors_are($errors['user-update'])
-		->autocomplete($user) ?>
+		->autocomplete_array($user) ?>
 
 	<div class="form-horizontal">
 		<fieldset>
