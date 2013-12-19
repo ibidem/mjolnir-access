@@ -1,7 +1,7 @@
 <?php namespace mjolnir\access;
 
 /**
- * Algorythms used:
+ * Uses:
  *  - Feistel Cipher (https://en.wikipedia.org/wiki/Feistel_cipher)
  *
  * @package    mjolnir
@@ -38,7 +38,7 @@ class Obfuscator extends \app\Instantiatable
 	}
 
 	/**
-	 * @return string
+	 * @return string numeric value
 	 */
 	function obfuscate($in)
 	{
@@ -79,7 +79,7 @@ class Obfuscator extends \app\Instantiatable
         return $a * static::$mod + $b;
 	}
 
-	// Algorythm sub-functions
+	// Feistel Cipher sub-functions
 	// ------------------------------------------------------------------------
 
 	/**
@@ -108,7 +108,7 @@ class Obfuscator extends \app\Instantiatable
 		return sprintf('%05s', $s);
 	}
 
-	// Algorythm Constants
+	// Feistel Cipher constants
 	// ------------------------------------------------------------------------
 
 	protected static $feistelRounds = 4;
