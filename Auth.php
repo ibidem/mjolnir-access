@@ -46,7 +46,7 @@ class Auth
 	 */
 	static function signout()
 	{
-		\app\Model_User::purgetoken(static::id());
+		\app\UserLib::purgetoken(static::id());
 		\app\Session::destroy();
 		\app\Cookie::delete('user');
 		\app\Cookie::delete('accesstoken');
@@ -58,8 +58,8 @@ class Auth
 	static function signin($user, $role)
 	{
 		// reset signin attempts
-		\app\Model_User::reset_pwdattempts($user);
-		\app\Model_User::update_last_singin($user);
+		\app\UserLib::reset_pwdattempts($user);
+		\app\UserLib::update_last_singin($user);
 
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
@@ -74,7 +74,7 @@ class Auth
 	static function inferred_signin($identification, $email, $provider, $attributes = null)
 	{
 		// check if user exists
-		$user = \app\Model_User::for_email($email);
+		$user = \app\UserLib::for_email($email);
 
 		// handle logged in state
 		if (static::role() !== static::Guest)
@@ -91,11 +91,11 @@ class Auth
 			if ($user !== null && $user !== static::id())
 			{
 				// close other account
-				\app\Model_User::lock($user);
+				\app\UserLib::lock($user);
 			}
 
 			// add email to current user's secondary emails
-			$errors = \app\Model_SecondaryEmail::push
+			$errors = \app\SecondaryEmailLib::push
 				(
 					[
 						'email' => $email,
@@ -116,14 +116,14 @@ class Auth
 					->save();
 			}
 
-			$user = \app\Model_User::entry(static::id())['id'];
+			$user = \app\UserLib::entry(static::id())['id'];
 		}
 
 		// continue signin process
 		if ($user !== null)
 		{
 			\app\Session::set('user', $user);
-			\app\Session::set('role', \app\Model_User::role_for($user));
+			\app\Session::set('role', \app\UserLib::role_for($user));
 		}
 		else # no user exists at the moment
 		{
@@ -132,7 +132,7 @@ class Auth
 			{
 				$default_role = \app\CFS::config('model/user')['signup']['role'];
 
-				\app\Model_User::inferred_signup
+				\app\UserLib::inferred_signup
 					(
 						[
 							'identification' => $identification,
@@ -142,10 +142,10 @@ class Auth
 						]
 					);
 
-				$user = \app\Model_User::last_inserted_id();
+				$user = \app\UserLib::last_inserted_id();
 
 				\app\Session::set('user', $user);
-				\app\Session::set('role', \app\Model_User::role_for($user));
+				\app\Session::set('role', \app\UserLib::role_for($user));
 
 				\app\Server::redirect(\app\Server::url_frontpage());
 			}
@@ -155,8 +155,8 @@ class Auth
 			}
 		}
 
-		\app\Model_User::update_last_singin($user);
-		return \app\Model_User::entry($user);
+		\app\UserLib::update_last_singin($user);
+		return \app\UserLib::entry($user);
 	}
 
 } # class

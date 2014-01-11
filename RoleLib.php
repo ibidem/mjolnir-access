@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_Role
+class RoleLib
 {
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Utilities;

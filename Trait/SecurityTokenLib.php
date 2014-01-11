@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-trait Trait_Model_SecurityToken
+trait Trait_SecurityTokenLib
 {
 	/**
 	 * Generates a token and stores a reference to it in the entry.
@@ -53,7 +53,7 @@ trait Trait_Model_SecurityToken
 	 */
 	static function confirm_token($entry_id, $token, $purpose = 'mjolnir:universal', $key = null)
 	{
-		$entry = \app\Model_User::entry($entry_id);
+		$entry = \app\UserLib::entry($entry_id);
 
 		// check if entry exists
 		if ($entry === null || empty($entry['token']))

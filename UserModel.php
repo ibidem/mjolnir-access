@@ -19,7 +19,7 @@ class UserModel extends \app\MarionetteModel
 	 */
 	static function table()
 	{
-		return \app\Model_User::table();
+		return \app\UserLib::table();
 	}
 
 } # class

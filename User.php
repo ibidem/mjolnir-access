@@ -38,7 +38,7 @@ class User extends \app\Instantiatable
 
 			if ($user !== null && $token !== null)
 			{
-				if (\app\Model_User::confirm_token($user, $token, 'mjolnir:access/remember-me'))
+				if (\app\UserLib::confirm_token($user, $token, 'mjolnir:access/remember-me'))
 				{
 					static::remember($user);
 				}
@@ -68,7 +68,7 @@ class User extends \app\Instantiatable
 	 */
 	static function remember($user)
 	{
-		$role = \app\Model_User::role_for($user);
+		$role = \app\UserLib::role_for($user);
 
 		\app\Session::set('user', $user);
 		\app\Session::set('role', $role);
@@ -78,7 +78,7 @@ class User extends \app\Instantiatable
 		$instance->role = $role;
 
 		// generate new token
-		$token = \app\Model_User::token($user, '+1 month', 'mjolnir:access/remember-me');
+		$token = \app\UserLib::token($user, '+1 month', 'mjolnir:access/remember-me');
 		$timeout = \app\CFS::config('mjolnir/auth')['remember_me.timeout'];
 
 		\app\Cookie::set('user', $user, $timeout);
@@ -106,7 +106,7 @@ class User extends \app\Instantiatable
 	 */
 	function info()
 	{
-		return \app\Model_User::entry($this->user);
+		return \app\UserLib::entry($this->user);
 	}
 
 } # class

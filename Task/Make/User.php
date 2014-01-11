@@ -21,20 +21,20 @@ class Task_Make_User extends \app\Task_Base
 		$email = $this->get('email', null);
 		$role = $this->get('role', 'member');
 
-		$errors = \app\Model_User::push
+		$errors = \app\UserLib::push
 			(
 				[
 					'nickname' => $username,
 					'password' => $password,
 					'email' => $email,
-					'role' => \app\Model_Role::by_name($role),
+					'role' => \app\RoleLib::by_name($role),
 				]
 			);
 
 		if ($errors === null)
 		{
 			$this->writer->writef(" Created $role: $username")->eol();
-			return \app\Model_User::last_inserted_id();
+			return \app\UserLib::last_inserted_id();
 		}
 		else # got errors
 		{

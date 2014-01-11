@@ -20,7 +20,7 @@ trait Trait_Controller_MjolnirPwdReset
 
 			if (isset($_POST['user'], $_POST['key']))
 			{
-				$errors = \app\Model_User::pwdreset($_POST['user'], $_POST['key'], $_POST['password']);
+				$errors = \app\UserLib::pwdreset($_POST['user'], $_POST['key'], $_POST['password']);
 				if ($errors === null)
 				{
 					$_POST['notice'] = \app\Lang::key('mjolnir:access/pwdreset-finished');
@@ -48,7 +48,7 @@ trait Trait_Controller_MjolnirPwdReset
 				}
 				else # captcha test passed
 				{
-					$user = \app\Model_User::detect_identity($_POST);
+					$user = \app\UserLib::detect_identity($_POST);
 
 					if ($user === null)
 					{
@@ -57,7 +57,7 @@ trait Trait_Controller_MjolnirPwdReset
 
 					if ($errors === null)
 					{
-						$key = \app\Model_User::pwdreset_key($user['id']);
+						$key = \app\UserLib::pwdreset_key($user['id']);
 
 						$pwdreset_url = \app\CFS::config('mjolnir/auth')['default.pwdreset'].'?user='.$user['id'].'&key='.$key;
 

@@ -12,19 +12,19 @@
 			(
 				'tables' => array
 					(
-						\app\Model_User::table(),
-						\app\Model_Role::table(),
-						\app\Model_User::assoc_roles(),
-						\app\Model_ProfileField::table(),
-						\app\Model_ProfileField::assoc_user(),
-						\app\Model_SecurityToken::table(),
-						\app\Model_SecondaryEmail::table(),
+						\app\UserLib::table(),
+						\app\RoleLib::table(),
+						\app\UserLib::assoc_roles(),
+						\app\ProfileFieldLib::table(),
+						\app\ProfileFieldLib::assoc_user(),
+						\app\SecurityTokenLib::table(),
+						\app\SecondaryEmailLib::table(),
 					),
 			),
 
 		'tables' => array
 			(
-				\app\Model_User::table() =>
+				\app\UserLib::table() =>
 					'
 						`id`           :key_primary,
 						`token`        :key_foreign,
@@ -50,21 +50,21 @@
 
 						PRIMARY KEY (`id`)
 					',
-				\app\Model_Role::table() =>
+				\app\RoleLib::table() =>
 					'
 						`id`    :key_primary,
 						`title` :title NOT NULL,
 
 						PRIMARY KEY (`id`)
 					',
-				\app\Model_User::assoc_roles() =>
+				\app\UserLib::assoc_roles() =>
 					'
 						`user` :key_foreign NOT NULL,
 						`role` :key_foreign NOT NULL,
 
 						KEY `user` (`user`)
 					',
-				\app\Model_ProfileField::table() =>
+				\app\ProfileFieldLib::table() =>
 					'
 						`id`       :key_primary,
 						`idx`      :counter DEFAULT 10,
@@ -75,7 +75,7 @@
 
 						PRIMARY KEY (`id`)
 					',
-				\app\Model_ProfileField::assoc_user() =>
+				\app\ProfileFieldLib::assoc_user() =>
 					'
 						`user`  :key_foreign NOT NULL,
 						`field` :key_foreign NOT NULL,
@@ -84,7 +84,7 @@
 						KEY `user` (`user`,`field`),
 						KEY `role` (`field`)
 					',
-				\app\Model_SecurityToken::table() =>
+				\app\SecurityTokenLib::table() =>
 					'
 						`id`      :key_primary,
 						`token`   :secure_hash,
@@ -93,7 +93,7 @@
 
 						PRIMARY KEY (`id`)
 					',
-				\app\Model_SecondaryEmail::table() =>
+				\app\SecondaryEmailLib::table() =>
 					'
 						`id`    :key_primary,
 						`user`  :key_foreign,
@@ -105,23 +105,23 @@
 
 		'bindings' => array
 			(
-				\app\Model_User::table() => array
+				\app\UserLib::table() => array
 					(
-						'token' => [ \app\Model_SecurityToken::table(), 'SET NULL', 'CASCADE' ],
+						'token' => [ \app\SecurityTokenLib::table(), 'SET NULL', 'CASCADE' ],
 					),
-				\app\Model_User::assoc_roles() => array
+				\app\UserLib::assoc_roles() => array
 					(
-						'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
-						'role'  => [ \app\Model_Role::table(), 'CASCADE', 'CASCADE' ],
+						'user'  => [ \app\UserLib::table(), 'CASCADE', 'CASCADE' ],
+						'role'  => [ \app\RoleLib::table(), 'CASCADE', 'CASCADE' ],
 					),
-				\app\Model_ProfileField::assoc_user() => array
+				\app\ProfileFieldLib::assoc_user() => array
 					(
-						'field' => [ \app\Model_ProfileField::table(), 'CASCADE', 'CASCADE' ],
-						'user'  => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
+						'field' => [ \app\ProfileFieldLib::table(), 'CASCADE', 'CASCADE' ],
+						'user'  => [ \app\UserLib::table(), 'CASCADE', 'CASCADE' ],
 					),
-				\app\Model_SecondaryEmail::table() => array
+				\app\SecondaryEmailLib::table() => array
 					(
-						'user' => [ \app\Model_User::table(), 'CASCADE', 'CASCADE' ],
+						'user' => [ \app\UserLib::table(), 'CASCADE', 'CASCADE' ],
 					),
 			),
 
@@ -137,7 +137,7 @@
 					$statement = $db->prepare
 						(
 							'
-								INSERT INTO `'.\app\Model_Role::table().'`
+								INSERT INTO `'.\app\RoleLib::table().'`
 									(id, title) VALUES (:id, :title)
 							'
 						)

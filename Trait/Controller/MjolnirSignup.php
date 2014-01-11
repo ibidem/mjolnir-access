@@ -29,7 +29,7 @@ trait Trait_Controller_MjolnirSignup
 
 		if (\app\Server::request_method() === 'POST')
 		{
-			$_POST['role'] = \app\Model_Role::by_name('member');
+			$_POST['role'] = \app\RoleLib::by_name('member');
 			$_POST['active'] = false;
 
 			// check recaptcha
@@ -41,7 +41,7 @@ trait Trait_Controller_MjolnirSignup
 
 			if ($error !== null)
 			{
-				$errors = \app\Model_User::check($_POST)->errors();
+				$errors = \app\UserLib::check($_POST)->errors();
 				if ( ! isset($errors['form']))
 				{
 					$errors['form'] = [];
@@ -53,14 +53,14 @@ trait Trait_Controller_MjolnirSignup
 			}
 			else # captcha test passed
 			{
-				$errors = \app\Model_User::push($_POST);
+				$errors = \app\UserLib::push($_POST);
 
 				if ($errors === null)
 				{
 					$this->signup_success();
 
-					$user = \app\Model_User::last_inserted_id();
-					\app\Model_User::send_activation_email($user);
+					$user = \app\UserLib::last_inserted_id();
+					\app\UserLib::send_activation_email($user);
 
 					\app\Notice::make(\app\Lang::key('mjolnir:access/sent-activation-email'))
 						->save();
@@ -77,9 +77,9 @@ trait Trait_Controller_MjolnirSignup
 		{
 			if (isset($_GET['key'], $_GET['user']))
 			{
-				if (\app\Model_User::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
+				if (\app\UserLib::confirm_token($_GET['user'], $_GET['key'], 'mjolnir:signup'))
 				{
-					\app\Model_User::activate_account($_GET['user']);
+					\app\UserLib::activate_account($_GET['user']);
 					\app\Notice::make(\app\Lang::key('mjolnir:access/account-activated'))->save();
 				}
 				else # error checking token

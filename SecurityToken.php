@@ -78,7 +78,7 @@ class SecurityToken
 		}
 
 		// create token
-		$errors = \app\Model_SecurityToken::push
+		$errors = \app\SecurityTokenLib::push
 			(
 				[
 					'purpose' => $purpose,
@@ -92,10 +92,10 @@ class SecurityToken
 			throw new \Exception('Failed to create security token.');
 		}
 
-		$token_id = \app\Model_SecurityToken::last_inserted_id();
+		$token_id = \app\SecurityTokenLib::last_inserted_id();
 
 		// purge all expired tokens
-		\app\Model_SecurityToken::purge();
+		\app\SecurityTokenLib::purge();
 
 		// return unkeyed token along with id
 		return [$nans, $token_id];
@@ -110,7 +110,7 @@ class SecurityToken
 	static function confirm($token_id, $test_token, $purpose = 'mjolnir:universal', $key = null)
 	{
 		// retrieve token at given key
-		$entry = \app\Model_SecurityToken::entry($token_id);
+		$entry = \app\SecurityTokenLib::entry($token_id);
 
 		// check if entry exists
 		if ($entry === null)
@@ -160,7 +160,7 @@ class SecurityToken
 	 */
 	static function delete(array $tokens)
 	{
-		\app\Model_SecurityToken::delete($tokens);
+		\app\SecurityTokenLib::delete($tokens);
 	}
 
 } # class
