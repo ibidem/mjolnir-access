@@ -9,7 +9,6 @@
 				// set all current stamps as authorized
 				$db->prepare
 					(
-						__METHOD__,
 						'
 							UPDATE `'.\app\Model_User::table().'`
 							   SET pwdalgorythm = "sha512"
