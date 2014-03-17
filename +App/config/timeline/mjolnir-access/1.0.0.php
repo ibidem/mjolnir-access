@@ -136,12 +136,10 @@
 					$title = null;
 					$statement = $db->prepare
 						(
-							__METHOD__,
 							'
 								INSERT INTO `'.\app\Model_Role::table().'`
 									(id, title) VALUES (:id, :title)
-							',
-							'mysql'
+							'
 						)
 						->bindnum(':id', $id)
 						->bindstr(':title', $title);

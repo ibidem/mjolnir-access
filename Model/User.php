@@ -611,7 +611,6 @@ class Model_User
 		// update
 		static::statement
 			(
-				__METHOD__,
 				'
 					UPDATE `[table]`
 					   SET pwdverifier = :pwdverifier,
