@@ -10,7 +10,7 @@
 				$db->prepare
 					(
 						'
-							UPDATE `'.\app\Model_User::table().'`
+							UPDATE `'.\app\UserLib::table().'`
 							   SET pwdalgorythm = "sha512"
 							 WHERE pwdalgorythm IS NULL
 						'

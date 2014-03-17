@@ -17,7 +17,7 @@ class Backend_User extends \app\Backend_Collection
 	 */
 	function roles()
 	{
-		return \app\Model_Role::entries(null, null);
+		return \app\RoleLib::entries(null, null);
 	}
 
 	/**
@@ -25,7 +25,7 @@ class Backend_User extends \app\Backend_Collection
 	 */
 	function profile_info($id)
 	{
-		return \app\Model_ProfileField::profile_info($id);
+		return \app\ProfileFieldLib::profile_info($id);
 	}
 
 	/**
@@ -33,7 +33,7 @@ class Backend_User extends \app\Backend_Collection
 	 */
 	function profile_fields()
 	{
-		return \app\Model_ProfileField::entries(null, null);
+		return \app\ProfileFieldLib::entries(null, null);
 	}
 
 	/**
@@ -43,7 +43,7 @@ class Backend_User extends \app\Backend_Collection
 	{
 		$id = $_POST['id'];
 
-		$validator = \app\Model_ProfileField::update_profile($id, $_POST);
+		$validator = \app\ProfileFieldLib::update_profile($id, $_POST);
 
 		$errors = [];
 		if ($validator !== null)

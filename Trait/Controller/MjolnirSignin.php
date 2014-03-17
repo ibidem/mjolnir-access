@@ -44,7 +44,7 @@ trait Trait_Controller_MjolnirSignin
 				$errors['password'] = ['Field is required.'];
 			}
 
-			$user = \app\Model_User::detect_identity($_POST);
+			$user = \app\UserLib::detect_identity($_POST);
 
 			if ( ! $user)
 			{
@@ -62,7 +62,7 @@ trait Trait_Controller_MjolnirSignin
 				{
 					isset($errors['form']) or $errors['form'] = [];
 					$errors['form'][] = \app\Lang::key('login.passwordattemps', $user['pwdattempts']);
-					\app\Model_User::bump_pwdattempts($user['id']);
+					\app\UserLib::bump_pwdattempts($user['id']);
 
 					return $this->signin_view($errors);
 				}
@@ -79,7 +79,7 @@ trait Trait_Controller_MjolnirSignin
 				{
 					isset($errors['form']) or $errors['form'] = [];
 					$errors['form'][] = \app\Lang::term('You\'ve failed the <a href="http://en.wikipedia.org/wiki/CAPTCHA">CAPTCHA</a> check.');
-					\app\Model_User::bump_pwdattempts($user['id']);
+					\app\UserLib::bump_pwdattempts($user['id']);
 
 					return $this->signin_view($errors);
 				}
@@ -111,7 +111,7 @@ trait Trait_Controller_MjolnirSignin
 			if ($pwdverifier !== $user['pwdverifier'])
 			{
 				$errors['password'] = [\app\Lang::term('The password you have entered is incorect.')];
-				\app\Model_User::bump_pwdattempts($user['id']);
+				\app\UserLib::bump_pwdattempts($user['id']);
 				return $this->signin_view($errors);
 			}
 
@@ -119,7 +119,7 @@ trait Trait_Controller_MjolnirSignin
 			if ( ! $user['active'])
 			{
 				$errors['form'][] = \app\Lang::key('mjolnir:access/your-account-is-inactive');
-				\app\Model_User::send_activation_email($user['id']);
+				\app\UserLib::send_activation_email($user['id']);
 				return $this->signin_view($errors);
 			}
 
@@ -130,7 +130,7 @@ trait Trait_Controller_MjolnirSignin
 			}
 			else # remember_me === off
 			{
-				\app\Auth::signin($user['id'], \app\Model_User::role_for($user['id']));
+				\app\Auth::signin($user['id'], \app\UserLib::role_for($user['id']));
 			}
 
 			\app\Server::redirect(\app\Server::url_homepage($user));

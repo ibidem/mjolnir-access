@@ -25,7 +25,7 @@ def ensure_compiler()
 	if ! File.exists? librarydir + 'compiler.jar'
 		Dir.chdir librarydir
 		if ! File.exists? librarydir+"/composer.zip"
-			download("closure-compiler.googlecode.com", "/files/compiler-latest.zip", librarydir+"/composer.zip")
+			download("dl.google.com", "/closure-compiler/compiler-latest.zip", librarydir+"/composer.zip")
 		end
 		Zip::ZipFile.open(librarydir+"/composer.zip") do |zipfile|
 			zipfile.each do |file|

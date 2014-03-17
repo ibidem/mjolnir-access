@@ -7,7 +7,7 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_SecondaryEmail
+class SecondaryEmailLib
 {
 	use \app\Trait_Model_Factory;
 	use \app\Trait_Model_Utilities;
@@ -85,7 +85,7 @@ class Model_SecondaryEmail
 	 */
 	static function unique_email($email, $user)
 	{
-		$detected_user_id = \app\Model_User::for_email($email);
+		$detected_user_id = \app\UserLib::for_email($email);
 
 		if ($detected_user_id !== null)
 		{

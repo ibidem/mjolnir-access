@@ -47,7 +47,7 @@
 						'not_empty' => 'Password is required.',
 						'not-empty' => 'Password is required.',
 						'min_length' => 'Your password is too short.',
-						'\app\Model_User::matching_password' => 'Passwords do not match.',
+						'\app\UserLib::matching_password' => 'Passwords do not match.',
 					),
 				'verifier' => array
 					(

@@ -7,10 +7,10 @@
  * @copyright  (c) 2012, Ibidem Team
  * @license    https://github.com/ibidem/ibidem/blob/master/LICENSE.md
  */
-class Model_User
+class UserLib
 {
 	use \app\Trait_ModelLib;
-	use \app\Trait_Model_SecurityToken;
+	use \app\Trait_SecurityTokenLib;
 
 	/**
 	 * @var string
@@ -40,7 +40,7 @@ class Model_User
 	 */
 	static function roles_table()
 	{
-		return \app\Model_Role::table();
+		return \app\RoleLib::table();
 	}
 
 	// -------------------------------------------------------------------------
@@ -62,7 +62,7 @@ class Model_User
 	{
 		$user_config = \app\CFS::config('model/user');
 
-		$user_for_email = \app\Model_User::for_email($fields['email']);
+		$user_for_email = \app\UserLib::for_email($fields['email']);
 
 		if ($user_for_email === null || $user_for_email === $context)
 		{
@@ -203,7 +203,7 @@ class Model_User
 				]
 			)
 			->num(':user', $id)
-			->num(':role', \app\Model_Role::by_name(\app\CFS::config('mjolnir/auth')['signup.default.role']))
+			->num(':role', \app\RoleLib::by_name(\app\CFS::config('mjolnir/auth')['signup.default.role']))
 			->run();
 	}
 
@@ -699,7 +699,7 @@ class Model_User
 			if ($user === null)
 			{
 				// check secondary emails
-				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $fields['identity']]);
+				$entry = \app\SecondaryEmailLib::find_entry(['email' => $fields['identity']]);
 
 				if ($entry !== null)
 				{
@@ -793,7 +793,7 @@ class Model_User
 
 			if (empty($result))
 			{
-				$entry = \app\Model_SecondaryEmail::find_entry(['email' => $email]);
+				$entry = \app\SecondaryEmailLib::find_entry(['email' => $email]);
 
 				if ($entry !== null)
 				{
@@ -832,7 +832,7 @@ class Model_User
 	 */
 	static function send_activation_email($user_id)
 	{
-		$key = \app\Model_User::token($user_id, '+7 days', 'mjolnir:signup');
+		$key = \app\UserLib::token($user_id, '+7 days', 'mjolnir:signup');
 		$confirm_email_url = \app\CFS::config('mjolnir/auth')['default.signup'].'?user='.$user_id.'&key='.$key;
 
 		$user = static::entry($user_id);
@@ -881,7 +881,7 @@ class Model_User
 			->num(':user_id', $user_id)
 			->run();
 
-		$user = \app\Model_User::entry($user_id);
+		$user = \app\UserLib::entry($user_id);
 
 		// close all other accounts with this email
 		static::autolock_for_email($user['email'], $user_id);
@@ -897,7 +897,7 @@ class Model_User
 	{
 		static::autolock_for_email($email, $user_id);
 
-		$entry = \app\Model_SecondaryEmail::find_entry
+		$entry = \app\SecondaryEmailLib::find_entry
 			(
 				[
 					'user' => $user_id,
@@ -908,7 +908,7 @@ class Model_User
 		// check if entry doesn't exist
 		if ($entry === null)
 		{
-			$errors = \app\Model_SecondaryEmail::push
+			$errors = \app\SecondaryEmailLib::push
 				(
 					[
 						'email' => $email,
@@ -984,7 +984,7 @@ class Model_User
 					   AND NOT user <=> :context
 				',
 				[
-					'[secondary-emails]' => \app\Model_SecondaryEmail::table()
+					'[secondary-emails]' => \app\SecondaryEmailLib::table()
 				]
 			)
 			->str(':email', $email)
@@ -1021,7 +1021,7 @@ class Model_User
 		static::purgetoken($user_id);
 
 		// remove all associated secondary emails
-		\app\Model_SecondaryEmail::purge_for($user_id);
+		\app\SecondaryEmailLib::purge_for($user_id);
 
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
 	}
@@ -1089,7 +1089,7 @@ class Model_User
 			->run();
 
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
-		\app\Model_User::clear_entry_cache($user);
+		\app\UserLib::clear_entry_cache($user);
 
 		return $pwdreset_key;
 	}
@@ -1137,7 +1137,7 @@ class Model_User
 			->run();
 
 		\app\Stash::purge(\app\Stash::tags(\get_called_class(), ['change']));
-		\app\Model_User::clear_entry_cache($user);
+		\app\UserLib::clear_entry_cache($user);
 
 		return null;
 	}

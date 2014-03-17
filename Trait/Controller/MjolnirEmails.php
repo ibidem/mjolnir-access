@@ -14,7 +14,7 @@ trait Trait_Controller_MjolnirEmails
 	 */
 	function mainemail()
 	{
-		return \app\Model_User::entry(\app\Auth::id())['email'];
+		return \app\UserLib::entry(\app\Auth::id())['email'];
 	}
 
 	/**
@@ -22,7 +22,7 @@ trait Trait_Controller_MjolnirEmails
 	 */
 	function secondaryemails($page = null, $limit = null, $offset = 0)
 	{
-		return \app\Model_SecondaryEmail::entries($page, $limit, $offset, [], ['user' => \app\Auth::id()]);
+		return \app\SecondaryEmailLib::entries($page, $limit, $offset, [], ['user' => \app\Auth::id()]);
 	}
 
 	/**
@@ -92,7 +92,7 @@ trait Trait_Controller_MjolnirEmails
 	{
 		if ($code === null)
 		{
-			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'add-secondary-email');
+			$token = \app\UserLib::token(\app\Auth::id(), '+3 hours', 'add-secondary-email');
 
 			$change_email_url = \app\CFS::config('mjolnir/auth')['default.emails_manager'].'?action=add_secondary_email&code='.$token;
 
@@ -136,9 +136,9 @@ trait Trait_Controller_MjolnirEmails
 			}
 
 			// verify
-			if (\app\Model_User::confirm_token(\app\Auth::id(), $code, 'add-secondary-email'))
+			if (\app\UserLib::confirm_token(\app\Auth::id(), $code, 'add-secondary-email'))
 			{
-				\app\Model_User::add_secondary_email(\app\Auth::id(), $email);
+				\app\UserLib::add_secondary_email(\app\Auth::id(), $email);
 
 				\app\Notice::make(\app\Lang::term('Succesfully added secondary email.'))
 					->classes(['alert-info'])
@@ -162,7 +162,7 @@ trait Trait_Controller_MjolnirEmails
 	{
 		if ($code === null)
 		{
-			$token = \app\Model_User::token(\app\Auth::id(), '+3 hours', 'change-main-email');
+			$token = \app\UserLib::token(\app\Auth::id(), '+3 hours', 'change-main-email');
 
 			$change_email_url = \app\CFS::config('mjolnir/auth')['default.emails_manager'].'?action=change_main_email&code='.$token;
 
@@ -206,9 +206,9 @@ trait Trait_Controller_MjolnirEmails
 			}
 
 			// verify
-			if (\app\Model_User::confirm_token(\app\Auth::id(), $code, 'change-main-email'))
+			if (\app\UserLib::confirm_token(\app\Auth::id(), $code, 'change-main-email'))
 			{
-				\app\Model_User::change_email(\app\Auth::id(), $email);
+				\app\UserLib::change_email(\app\Auth::id(), $email);
 				\app\Notice::make(\app\Lang::term('Main Email updated succesfully.'))
 					->classes(['alert-info'])
 					->save();
@@ -230,11 +230,11 @@ trait Trait_Controller_MjolnirEmails
 	protected function remove_secondary_email()
 	{
 		// verify secondary email belongs to user
-		$entry = \app\Model_SecondaryEmail::entry($_POST['id']);
+		$entry = \app\SecondaryEmailLib::entry($_POST['id']);
 
 		if ($entry['user'] == \app\Auth::id())
 		{
-			\app\Model_SecondaryEmail::delete([$_POST['id']]);
+			\app\SecondaryEmailLib::delete([$_POST['id']]);
 		}
 		else # major security violation
 		{

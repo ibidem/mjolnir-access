@@ -22,7 +22,7 @@ class UserCollection extends \app\MarionetteCollection
 	 */
 	static function table()
 	{
-		return \app\Model_User::table();
+		return \app\UserLib::table();
 	}
 
 } # class

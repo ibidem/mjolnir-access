@@ -57,7 +57,7 @@
 	<h2>New User</h2>
 	<br>
 	<?= $form = HTML::form($control->action('new'), 'mjolnir:twitter')
-		->autocomplete($_POST)
+		->autocomplete_array($_POST)
 		->errors_are($errors['user-new']) ?>
 
 	<div class="form-horizontal">
